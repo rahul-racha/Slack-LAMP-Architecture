@@ -1,3 +1,19 @@
+.SidebarHome{
+    list-style-type: none;
+    margin-bottom: 0%;
+    padding-bottom: 100%;
+    width: 200px;
+    background-color: #f1f1f1;
+}
+
+.messageHolder{
+    margin-left: 35%;
+    width: 100%;
+    margin-top: -80%;
+    padding-left: 10%;
+    
+}
+
 ul {
     list-style-type: none;
     margin: 0;
@@ -21,4 +37,10 @@ li a.active {
 li a:hover:not(.active) {
     background-color: #555;
     color: white;
+}
+
+head,body{
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
 }

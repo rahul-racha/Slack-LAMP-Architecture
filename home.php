@@ -5,32 +5,59 @@
 	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
 	<link rel="stylesheet" type="text/css" href="css/home.css">
 </head>
+<style>
+	input[type=text] {
+    width: 70%;
+    padding: 8px 8px;
+    margin-left: -30%;
+    display: inline-block;
+    border: 1px solid #ccc;
 
+	}
+	input[type=submit] {
+
+
+		background-color: #B7BBBB;
+	    color: Blue;
+	    padding: 14px 20px;
+	    margin: 8px 0;
+	    border: none;
+	    cursor: pointer;
+	    width: 5%;
+
+	}
+</style>
 <body>
-	<div class="container">
-		<ul>
-			<li><a class="active" href="#">Home</a></li>
-			<li><a href='home.php?id_no=0'>General</a></li>
-		    <li><a href="#">Monarchs</a></li>
-		    <li><a href="#">CS518</a></li>
-		    <li><a href="#">Random</a></li>
-		</ul>
+	<!-- <script type="text/javascript">
+		$(document).ready(function(){
+			function insert_message(){
+				var message =  $('#textArea').val();
+
+			}	
+		});
+	</script> -->
+	<div>
+		<div class="SidebarHome" >
+			<ul>
+				<li><a class="active" href="#">Home</a></li>
+				<li><a href= "fetching.php?channel=0">General</a></li>
+			    <li><a href="fetching.php?channel=1">Monarchs</a></li>
+			    <li><a href="fetching.php?channel=2">CS518</a></li>
+			    <li><a href="index.php?logout=true">Logout</a></li>
+			</ul>
+		</div>
+
+		<div class="messageHolder">
+			<form>
+	    		<input id="textArea" type="text" name="textfield" placeholder="Enter yout text here">
+	    		<input type="submit" name="submit" ></input>
+			</form>
+		</div>
 	</div>
 
 
-
-	<!-- <div style="margin-left:35% ; position: absolute; bottom: 0px";>
-		<form action="" method="post">
-	    	<p>
-	        	<input type="text" name="message" id="textfield" placeholder="What's in your mind">
-	    	</p>
-	    	<input type="submit" value="Send" name="message_submit">
-		</form>
-	</div> -->
-
-<?php include 'connect.php';
-	session_start();
-
+	<!-- session_start();
+	
 	if (isset($_GET['id_no'])) {
     	fetching_message($_GET['id_no']);
  	 }
@@ -42,7 +69,7 @@
 	function fetching_message($id_no){
 		if ($conn->connect_error) {
     		die("Connection failed: " . $conn->connect_error);
-		}
+		} 
 		$sql = "SELECT user_id, message,channel_id FROM channel_messages WHERE channel_id = '".$id_no."'";
 
 		$result = $conn->query($sql);
@@ -57,19 +84,19 @@
 		}
 	}
 
-	// function insert_message(){
-	// 	$message = mysqli_real_escape_string($link, $_REQUEST['message']);
-	// 	$sql = "INSERT INTO channel_messages (message) VALUES ('$message') ";
-	// 	if(mysqli_query($link, $sql)){
-	// 	    echo "Welldone !!!.";
-	// 	} else{
-	// 	    echo "Howle " . mysqli_error($link);
-	// 	}
+	function insert_message(){
+		$message = mysqli_real_escape_string($link, $_REQUEST['message']);
+		$sql = "INSERT INTO channel_messages (message) VALUES ('$message') ";
+		if(mysqli_query($link, $sql)){
+		    echo "Welldone !!!.";
+		} else{
+		    echo "error" . mysqli_error($link);
+		}
 
-	// }
+	}
 
 
-	$conn->close();
-?>
+	$conn->close(); -->
+
 </body>
 </html>
