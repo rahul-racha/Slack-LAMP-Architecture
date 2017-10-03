@@ -7,8 +7,8 @@ body {
     margin: 24px 0 12px 0;
 }
 img.avatar {
-    width: 40%;
-    border-radius: 50%;
+    //width: 40%;
+    //border-radius: 50%;
 }
 
 h3 {
@@ -29,11 +29,11 @@ input[type=text], input[type=password] {
     margin: 5px 0;
     display: inline-block;
     border: 1px solid #ccc;
-    
+
 }
 input[type=submit] {
-   
-   
+
+
 	background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
@@ -41,7 +41,7 @@ input[type=submit] {
     border: none;
     cursor: pointer;
     width: 15%;
-    
+
 }
 @media screen and (max-width: 300px) {
     span.psw {

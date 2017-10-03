@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="css/home.css">
 </head>
 
 <body>
@@ -16,9 +16,9 @@
 		    <li><a href="#">Random</a></li>
 		</ul>
 	</div>
-	
-		
-	
+
+
+
 	<!-- <div style="margin-left:35% ; position: absolute; bottom: 0px";>
 		<form action="" method="post">
 	    	<p>
@@ -30,7 +30,7 @@
 
 <?php include 'connect.php';
 	session_start();
-	
+
 	if (isset($_GET['id_no'])) {
     	fetching_message($_GET['id_no']);
  	 }
@@ -42,7 +42,7 @@
 	function fetching_message($id_no){
 		if ($conn->connect_error) {
     		die("Connection failed: " . $conn->connect_error);
-		} 
+		}
 		$sql = "SELECT user_id, message,channel_id FROM channel_messages WHERE channel_id = '".$id_no."'";
 
 		$result = $conn->query($sql);
