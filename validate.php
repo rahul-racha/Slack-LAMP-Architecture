@@ -1,6 +1,6 @@
 <?php
     session_start();
-  if (isset($_POST["submit"]) && $_SESSION['active'] == 'true') {
+      if (isset($_POST["submit"]) && $_SESSION['active'] == 'true') {
       require 'connect.php';
       if (!$conn) {
         die("Conenction failed - ".mysqli_connect_error());
@@ -9,7 +9,7 @@
       function directFailedLogin() {
         $_SESSION['invalidCredentials'] = 'true';
         $_SESSION['reason'] = 'password';
-        $_SESSION['active'] = 'false';
+        unset($_SESSION['active']);// = 'false';
         header("location:index.php");
       }
 
