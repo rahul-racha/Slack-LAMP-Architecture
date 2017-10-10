@@ -22,9 +22,9 @@
 			<img src="images/avatar.png" alt="Avatar" class="avatar">
 			<div class="container">
 				<center><h3>Login details</h3></center>
-				<div class="overall row well" align="center">
+				<div align="center">
 					<form action="<?php echo htmlspecialchars('../index.php'); ?>" method="post">
-						<div class="row well">
+						<div>
 							<label><strong>Userid </strong></label><br>
 							<input type="text" name="userid" placeholder="Enter Userid"><br>
 							<label><strong>Password </strong></label><br>

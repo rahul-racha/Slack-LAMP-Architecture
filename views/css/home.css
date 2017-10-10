@@ -13,8 +13,53 @@
     padding-left: 10%;
     
 }
+body{
+    margin: 0;
+    overflow: hidden;
+}
+.Main{
+    /*position: absolute;*/
+    /*top: 0; right: 0; bottom: 0; left: 0;*/
+    background-image: url("../images/crushedPaper.jpg");
+}
+.sideBar{
+    background-color: #8B999D;
+    padding-bottom: 100%;
+    height: 100% ;
+    overflow-y: auto;
+    min-width: 1% ;
+    max-width: 20%;
+}
 
-ul {
+.SideBarNav{
+    background-color: #8B999D;
+    height: 100% !important;
+    text-align: center;
+    overflow-y: auto;
+    min-width: auto;
+    max-width: auto;
+}
+.SideBarNav:hover {
+    background-color: #4C5C61;
+}
+.SideBarButton {
+    background-color: #8B999D;
+    border: none;
+    color: white;
+    padding: 4% 36%;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.SideBarButton:hover{
+    background-color: #4C5C61;
+
+}
+
+
+/*ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -43,4 +88,4 @@ head,body{
     width: 100%;
     margin: 0 auto;
     overflow: hidden;
-}
+}*/
