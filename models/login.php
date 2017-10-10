@@ -1,7 +1,7 @@
 <?php
   require_once('./models/connect.php');
 
-  class loginModel {
+  class LoginModel {
     private $dbConVar;
 
     public function validateInputs($data) {

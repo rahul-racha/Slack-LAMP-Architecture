@@ -1,5 +1,5 @@
 <?php
-  class dbConnect {
+  class DbConnect {
 	   private $servername = 'localhost';
   	 private $port = '3306';
   	 private $username = 'root';

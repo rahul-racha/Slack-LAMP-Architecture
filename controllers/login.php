@@ -2,7 +2,7 @@
     include './errors.php';
     require_once './models/login.php';
 
-    class loginController {
+    class LoginController {
         private $loginModelVar;
 
         public function __construct() {
@@ -11,17 +11,25 @@
 
       public function handleCredentials() {
 
-        if (isset($_REQUEST['userid']) && isset($_REQUEST['password']))
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['userid'])
+            && isset($_POST['password']))
         {
-          $userid = $this->loginModelVar->validateInputs($_REQUEST['userid']);
-          $password = $this->loginModelVar->validateInputs($_REQUEST['password']);
-
+          $userid = $this->loginModelVar->validateInputs($_POST['userid']);
+          $password = $this->loginModelVar->validateInputs($_POST['password']);
+          session_start();
           if ($this->loginModelVar->verifyCredentials($userid, $password) == true)
           {
+            $_SESSION['userid'] = $userid;
+            $_SESSION['password'] = $password;
             header("location:views/home.php");
+            session_write_close();
             //include './views/home.php';
           } else {
-            header("location:views/login.php");
+
+            $_SESSION['invalidCredentials'] = 'true';
+            $_SESSION['reason'] = 'password';
+            session_write_close();
+            header("location:views/login.php", true, 303);
             //include './views/login.php';
           }
           exit();
