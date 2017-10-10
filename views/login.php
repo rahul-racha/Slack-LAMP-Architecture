@@ -34,17 +34,14 @@
 					</form>
 					<p>
 					<?php
-					    //session_start();
-							//$reason = array('password'=>'Invalid username or password',
-							//						'blank'=>'You have left one or more fields');
-							if ($_SESSION['invalidCredentials'] == 'true') {
-								echo 'Wrong';
-								//unset($_POST);
+					    session_start();
+							$reason = array('password'=>'Invalid username or password',
+													'blank'=>'You have left one or more fields');
+							if (isset($_SESSION['invalidCredentials']) && $_SESSION['invalidCredentials'] == 'true') {
+								unset($_POST);
 								//$_SESSION['active'] = 'false';
-								//echo $reason[$_SESSION['reason']];
-								//session_destroy();
-							//} else {
-								//echo "Unknown Error";
+								echo $reason[$_SESSION['reason']];
+								session_destroy();
 							}
 					?>
 				</p>

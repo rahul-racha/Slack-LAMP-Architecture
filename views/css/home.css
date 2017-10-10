@@ -7,10 +7,13 @@
 }
 
 .messageHolder{
-    margin-left: 35%;
+    position: fixed;
+    bottom: 0;
     width: 100%;
-    margin-top: -80%;
-    padding-left: 10%;
+    margin-left: 20%;
+   /* padding-left: 1%;
+    padding-right: 100%;*/
+    font-size: 16px;
     
 }
 body{
@@ -35,13 +38,14 @@ body{
     background-color: #8B999D;
     height: 100% !important;
     text-align: center;
+    border: black;
     overflow-y: auto;
     min-width: auto;
     max-width: auto;
 }
-.SideBarNav:hover {
+/*.SideBarNav:hover {
     background-color: #4C5C61;
-}
+}*/
 .SideBarButton {
     background-color: #8B999D;
     border: none;
@@ -53,10 +57,10 @@ body{
     margin: 4px 2px;
     cursor: pointer;
 }
-.SideBarButton:hover{
+/*.SideBarButton:hover{
     background-color: #4C5C61;
 
-}
+}*/
 
 
 /*ul {
