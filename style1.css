@@ -1,0 +1,50 @@
+
+.login-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+}
+.form {
+  position: relative;
+  z-index: 1;
+  background: lightgray;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(1, 0, 0, 0.2), 0 5px 5px 0 rgba(1, 0, 0, 0.24);
+}
+
+input[type=submit] {
+	background-color: red;
+    color: white;
+    padding: 15px;
+    margin: 0 0 14px;
+    border: 0;
+    cursor: pointer;
+    width: 100%;
+    
+}
+
+h3 {
+    color: red;
+	font-size: 40px;
+	font-style: "bold"
+}
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+body {
+  background: black;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;      
+}
