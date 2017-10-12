@@ -9,26 +9,19 @@
 	<!DOCTYPE html>
 	<html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="css/login.css">
 	</head>
-	<style>
-	.container{
-		/*border: 3px solid black;*/
-		margin-top: 5%;
-	}
-	</style>
+
 	<body>
-		<div class="imgcontainer" align="center">
-			<img src="images/avatar.png" alt="Avatar" class="avatar">
-			<div class="container">
-				<center><h3>Login details</h3></center>
+		<!--<div class="imgcontainer" align="center">
+			<img src="images/avatar.png" alt="Avatar" class="avatar">-->
+			<div class="login-page">
+				<center><h3>Slack Login</h3></center>
 				<div align="center">
 					<form action="<?php echo htmlspecialchars('../index.php'); ?>" method="post">
-						<div>
-							<label><strong>Userid </strong></label><br>
-							<input type="text" name="userid" placeholder="Enter Userid"><br>
-							<label><strong>Password </strong></label><br>
-							<input type="password" name="password" placeholder="Enter Password"><br>
+						<div class="form">
+							<input type="text" name="userid" placeholder="userid"><br>					
+							<input type="password" name="password" placeholder="password"><br>
 							<input type="submit" name="submit" value="submit"></input>
 						</div>
 					</form>
@@ -47,6 +40,6 @@
 				</p>
 				</div>
 			</div>
-		</div>
+		<!--</div>-->
 	</body>
 	</html>
