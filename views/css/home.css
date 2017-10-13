@@ -1,6 +1,6 @@
 .MessageHome{
     position: fixed;
-    bottom: 0;
+    /*bottom: 0;*/
     width: 80%;
     margin-left: 20%;
     height: 100%;
@@ -9,9 +9,10 @@
 }
 .MessageEntry{
     /*margin-bottom: 1%;*/
+    margin-bottom: 0%;
 }
 #textArea{
-    padding-right: 45%;
+    padding-right: 42%;
     padding-left: 30%;
     padding-top: 1%;
     padding-bottom: 1%;
@@ -22,14 +23,36 @@
     padding-left: 1%;
     padding-top: 1%;
     padding-bottom: 1%;
-    /*font-size: 100%;*/
 }
 .MessageDisplay{
-    width: 80%;
+    /*position: relative;*/
+    width: 95%;
     margin-left: 4%;
-    margin-bottom: -5%;
-    height: 100%;
-    overflow-y: auto;
+    margin-bottom: 1%;
+    margin-right: 5%;
+    height: 89%;
+    overflow-y: scroll;
+}
+.UserName{
+    font-size: 120%;
+
+}
+.TimeStamp{
+    font-style:italic;
+    font-size: 80%;
+
+}
+.MessageUL{
+    list-style: none;
+
+}
+.MessageLI{
+    
+}
+.EntireMessage{
+    margin-right: 2%;
+    /*background-color: #EEEFF5;*/
+    box-shadow: 2px 2px 1px #888888;
 }
 body{
     margin: 0;

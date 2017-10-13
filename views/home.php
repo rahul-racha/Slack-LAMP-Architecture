@@ -13,7 +13,7 @@
 <body>
 	<div class="container MainDiv">
 		<div class="MessageHome">
-			<div class="MessageDisplay">
+			<div class="MessageDisplay" >
 			<?php
 				$homeControlVar1 = new HomeController();
 
@@ -21,15 +21,11 @@
 					$channelname = $_GET["channel"];
 
 					$channelmessages = $homeControlVar1->viewMessages($channelname);
-					$Msg = "";
-
 					foreach ($channelmessages as $key => $value) {
-						// print_r($value);
-						foreach ($value as $message) {
-							$Msg = $Msg."<div>".$message."</div>";	
-						}
-						echo $Msg;
-					}
+						$CurrentTime = new DateTime($value["created_time"]);
+						$strip = $CurrentTime->format('H : i');
+						$Name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["user_id"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value["message"]."</li>"."</ul>"."</div>";	
+						echo $Name;					}
 				}
 			?>
 			</div>
@@ -59,6 +55,7 @@
 					$messageInserted = $_POST["textfield"];
 					// echo $messageInserted;
 					$InsertedMessage = $homeControlVar->insertMessage($channelname,$messageInserted);
+					header('Location: home.php?channel='.$channelname);
 				}
 			 ?>
 		</div>
