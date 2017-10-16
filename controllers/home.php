@@ -1,8 +1,8 @@
 <?php
+  session_start();
   include_once '../errors.php';
   require_once '../models/home.php';
 
-  session_start();
   if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))
   {
     header("location:login.php", true, 303);
