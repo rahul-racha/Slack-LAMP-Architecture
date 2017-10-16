@@ -42,5 +42,10 @@
           echo 'Query returned an error';
         }
     }
+
+    public function destroyView(){
+      session_destroy();
+      header("location:login.php", true, 303);
+    }
   }
 ?>
