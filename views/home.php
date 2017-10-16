@@ -70,6 +70,14 @@
     unset($_POST["textarea"]);
     //}
   }
+
+  // for logout
+  if (isset($_GET['logout'])) {
+    global $homeControlVar;
+
+    $homeControlVar->destroyView();
+  }
+
 ?>
 
 <head>
@@ -80,8 +88,11 @@
 <body>
 	<div class="container MainDiv">
 		<div class="MessageHome">
+      <div class="Channelview">
+          <?php echo "#" . $channelName;?>
+      </div>
 			<div class="MessageDisplay" >
-			<?php displayMessages(); ?>
+			    <?php displayMessages(); ?>
 			</div>
 			<div class="MessageEntry">
 				<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
@@ -96,6 +107,7 @@
 			<h2><center>Workspace</center></h2>
 			<div class="SideBarNav">
 				<?php displayChannels(); ?>
+         <a href="home.php?logout=true" class="SideBarButton">Logout</a>
 			</div>
 		</div>
 

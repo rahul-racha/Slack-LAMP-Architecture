@@ -43,9 +43,9 @@
         }
     }
 
-    // public function displayHomeView()
-    // {
-    //   header("location:home.php");
-    // }
+    public function destroyView(){
+      session_destroy();
+      header("location:login.php", true, 303);
+    }
   }
 ?>
