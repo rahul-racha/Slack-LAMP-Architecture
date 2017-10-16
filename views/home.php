@@ -3,6 +3,55 @@
 
 <?php
   require_once '../controllers/home.php';
+
+  $homeControlVar = new HomeController();
+  $channelName = NULL;
+  $textArea = NULL;
+
+  if (isset($_POST["channel"])) {
+    global $channelName;
+    $channelName = $_POST["channel"];
+  } else {
+    global $channelName;
+    $channelName = 'general';
+  }
+
+  if (isset($_POST["textarea"])) {
+    global $textArea;
+    $textArea = $_POST["textarea"];
+    insertMessage($textArea);
+  }
+
+  function displayChannels() {
+    global $homeControlVar;
+    $channelList = $homeControlVar->viewChannels();
+    foreach ($channelList as $value) {
+      echo '<form method="post" action = "home.php">
+              <input type="hidden" name="channel" value="'.$value.'" />
+              <input type="submit" class="SideBarButton" value="'.$value.'" />
+            </form>';
+    }
+  }
+
+  function displayMessages() {
+    global $homeControlVar;
+    global $channelName;
+    $channelMessages = $homeControlVar->viewMessages($channelName);
+    foreach ($channelMessages as $key => $value) {
+      $CurrentTime = new DateTime($value["created_time"]);
+      $strip = $CurrentTime->format('H : i');
+      $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["user_id"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value["message"]."</li>"."</ul>"."</div>";
+      echo $name;
+    }
+  }
+
+  function insertMessage($textArea) {
+    global $homeControlVar;
+    global $channelName;
+    //global $textArea;
+    $homeControlVar->insertMessage($channelName,$textArea);
+    unset($_POST["textarea"]);
+  }
 ?>
 
 <head>
@@ -14,77 +63,25 @@
 	<div class="container MainDiv">
 		<div class="MessageHome">
 			<div class="MessageDisplay" >
-			<?php
-				$homeControlVar1 = new HomeController();
-
-				if(isset($_GET["channel"])){
-					$channelname = $_GET["channel"];
-
-					$channelmessages = $homeControlVar1->viewMessages($channelname);
-					foreach ($channelmessages as $key => $value) {
-						$CurrentTime = new DateTime($value["created_time"]);
-						$strip = $CurrentTime->format('H : i');
-						$Name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["user_id"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value["message"]."</li>"."</ul>"."</div>";	
-						echo $Name;					}
-				}
-			?>
+			<?php displayMessages(); ?>
 			</div>
 			<div class="MessageEntry">
-				<?php
-					if(isset($_GET["channel"])){
-						$channelname = $_GET["channel"];
-						// echo "hi:". $channelname;
-					}
-					if(isset($_POST["channel"])){
-						$channelname = $_POST["channel"]; 
-					}
-				?>
-				<form method="POST" action="home.php" >
-		    		<input id="textArea" type="text" name="textfield" placeholder="Enter yout text here"/>
-		    		<input type="hidden" name="channel" value="<?php echo $channelname;?>"/>
+				<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+		    		<input id="textArea" type="text" name="textarea" placeholder="Enter your text here"/>
+		    		<input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
 		    		<input id="SubmitButton" type="submit" name="submit"/>
 				</form>
 			</div>
-			<?php 
-				
-				// echo $channelname;
-				$homeControlVar = new HomeController();
-				if(isset($_POST["textfield"])){
-					$channelname = $_POST["channel"];	
-					// echo $channelname;
-					$messageInserted = $_POST["textfield"];
-					// echo $messageInserted;
-					$InsertedMessage = $homeControlVar->insertMessage($channelname,$messageInserted);
-					header('Location: home.php?channel='.$channelname);
-				}
-			 ?>
 		</div>
-		
+
 		<div class="sideBar">
 			<h2><center>Workspace</center></h2>
 			<div class="SideBarNav">
-				<?php
-	                $homeControlVar = new HomeController();
-
-	                $channelList = $homeControlVar->viewChannels();
-	                foreach ($channelList as $value) {
-	                	echo '<form method="GET" action = "home.php"> 
-	                			<input type="hidden" name="channel" value="'. $value.'" />
-	                			<input type="submit" class="SideBarButton" value= "'.$value.'" />
-					    		</form>';
-					}
-	                // echo "<br/>##################<br/>";
-	                // var_dump($homeControlVar->viewMessages('general'));
-	                // var_dump($homeControlVar->viewMessages('jazz'));                
-              	?>				
-			</div>		
+				<?php displayChannels(); ?>
+			</div>
 		</div>
-		
+
 	</div>
 </body>
 
-
 </html>
-
-
-

@@ -6,7 +6,9 @@
   if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))
   {
     header("location:login.php", true, 303);
-  }
+  } //else if (isset($_POST["textarea"])) {
+  //   header("location:..home.php", true, 303);
+  // }
 
   class HomeController {
     private $homeModelVar;
