@@ -42,5 +42,10 @@
           echo 'Query returned an error';
         }
     }
+
+    // public function displayHomeView()
+    // {
+    //   header("location:home.php");
+    // }
   }
 ?>

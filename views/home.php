@@ -8,6 +8,11 @@
   $channelName = NULL;
   $textArea = NULL;
 
+  /*if (isset($_SESSION["postFormVars"]["channel"])) {
+    global $channelName;
+    $channelName = $_SESSION["postFormVars"]["channel"];
+    echo "channel".$channelName;
+  } else */
   if (isset($_POST["channel"])) {
     global $channelName;
     $channelName = $_POST["channel"];
@@ -16,13 +21,21 @@
     $channelName = 'general';
   }
 
+  /*if (isset($_SESSION["postFormVars"]["textarea"]))
+  {
+    global $textArea;
+    $textArea = $_SESSION["postFormVars"]["textarea"];
+    echo "OYEE".$textArea;
+    insertMessage($textArea);
+  } else*/
   if (isset($_POST["textarea"])) {
     global $textArea;
     $textArea = $_POST["textarea"];
     insertMessage($textArea);
   }
 
-  function displayChannels() {
+  function displayChannels()
+  {
     global $homeControlVar;
     $channelList = $homeControlVar->viewChannels();
     foreach ($channelList as $value) {
@@ -50,7 +63,12 @@
     global $channelName;
     //global $textArea;
     $homeControlVar->insertMessage($channelName,$textArea);
+    // if (isset($_SESSION["postFormVars"]))
+    // {
+    //   unset($_SESSION["postFormVars"]);
+    // } else {
     unset($_POST["textarea"]);
+    //}
   }
 ?>
 
