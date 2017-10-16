@@ -26,7 +26,7 @@
             array_push($this->channels, $row['channel_name']);
         }
       }
-
+      mysqli_free_result($result);
       $dbConVar->closeConnectionObject($conn);
       return $this->channels;
     }
@@ -36,14 +36,14 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->messages = array();
-      $retMessages = "SELECT channel_id, user_id, message, created_time
-                      FROM channel_messages
+      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, message, created_time
+                      FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                       WHERE channel_id
                       IN (
                       SELECT channel_id
                       FROM workspace_channels
-                      WHERE channel_name = '$channelName'
-                      )";
+                      WHERE channel_name = '$channelName')
+                      ORDER BY created_time ASC";
       $result = mysqli_query($conn, $retMessages);
       if (mysqli_num_rows($result) > 0)
       {
@@ -51,6 +51,9 @@
           {
             array_push($this->messages, $row);
           }
+      }
+      if ($result) {
+      mysqli_free_result($result);
       }
       $dbConVar->closeConnectionObject($conn);
       return $this->messages;
@@ -73,7 +76,7 @@
           $chId = $row['channel_id'];
         }
       }
-      unset($result);
+      mysqli_free_result($result);
 
       if ($chId != NULL)
       {
@@ -90,7 +93,7 @@
             $msgId = $row['msg_id'];
           }
         }
-        unset($result);
+        mysqli_free_result($result);
         $msgId++;
         $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message)
                                 VALUES (?,?,?,?)");
