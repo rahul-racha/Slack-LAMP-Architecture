@@ -2,8 +2,8 @@
   class DbConnect {
 	   private $servername = 'localhost';
   	 private $port = '3306';
-  	 private $username = 'root';
-  	 private $password = 'root';
+  	 private $username = 'admin';
+  	 private $password = 'M0n@rch$';
   	 private $database = 'slack';
 
     	// $link = mysqli_init();
