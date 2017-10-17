@@ -112,15 +112,15 @@
 			</div>
 			<div class="MessageEntry">
 				<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'#bottom'); ?>">
-		    		<input id="textArea" type="text" name="textarea" placeholder="Enter your text here"/>
+		    		<input id="textArea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>"/>
 		    		<input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-		    		<input id="SubmitButton" type="submit" name="submit"/>
+		    		<input id="SubmitButton" type="hidden" name="submit"/>
 				</form>
 			</div>
 		</div>
 
 		<div class="sideBar">
-			<h1 style="color: white;"><center>Workspace</center></h1>
+			<h2 style="color: white; font-family: verdana;"><center>musicf17.slack.com</center></h2>
 			<div class="SideBarNav">
 				<?php displayChannels(); ?>
         

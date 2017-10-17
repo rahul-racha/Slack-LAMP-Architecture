@@ -9,25 +9,26 @@
     margin-left: 1%;
 }
 #textArea{
-    width: 89%;
+    width: 95%;
     padding-top: 1%;
     padding-bottom: 1%;
     padding-left: 1%;
     font-size: 100%;
+    border-radius: 1%;
 }
-#SubmitButton{
+/*#SubmitButton{
     padding-right: 1%;
     padding-left: 1%;
     padding-top: 1%;
     padding-bottom: 1%;
-}
+}*/
 .Channelview{
     color: #4d394b;
     position: fixed;
     border-bottom: 1px solid;
     border-left: 1px solid;
     margin: 0% 75% 1% 0%;
-    padding: 1% 72% 1% 1%;
+    padding: 1% 75% 1% 1%;
     font-size: 27px;
 }
 
@@ -109,7 +110,8 @@ body{
 .LogoutButton{
     background-color: #4d394b;
     border: none;
-    bottom: 30px;
+    position: relative;
+    bottom: 0;
     color: #D61C1C;
     padding: 1% 8%;
     text-align: center;
