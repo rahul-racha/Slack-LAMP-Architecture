@@ -20,7 +20,7 @@
 				<div align="center">
 					<form action="<?php echo htmlspecialchars('../index.php'); ?>" method="post">
 						<div class="form">
-							<input type="text" name="userid" placeholder="userid"><br>					
+							<input type="text" name="userid" placeholder="userid"><br>
 							<input type="password" name="password" placeholder="password"><br>
 							<input type="submit" name="submit" value="submit"></input>
 						</div>

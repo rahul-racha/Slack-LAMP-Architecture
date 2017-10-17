@@ -50,11 +50,18 @@
     global $homeControlVar;
     global $channelName;
     $channelMessages = $homeControlVar->viewMessages($channelName);
+    $i = 1;
     foreach ($channelMessages as $key => $value) {
       $CurrentTime = new DateTime($value["created_time"]);
-      $strip = $CurrentTime->format('H : i');
+      $strip = $CurrentTime->format('H:i @Y-m-d');
+      $name = NULL;
+      if (count($channelMessages) != $i) {
       $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value["message"]."</li>"."</ul>"."</div>";
+    } else {
+      $name = "<div id = 'bottom' class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value["message"]."</li>"."</ul>"."</div>";
+    }
       echo $name;
+      $i++;
     }
   }
 
@@ -72,11 +79,13 @@
   }
 
   // for logout
-  if (isset($_GET['logout'])) {
-    global $homeControlVar;
-
-    $homeControlVar->destroyView();
-  }
+  // if (isset($_GET["logout"])) {
+  //   //global $homeControlVar;
+  //   //$homeControlVar->destroyView();
+  //   session_destroy();
+  //   unset($_GET["logout"]);
+  //   header("location:login.php", true, 303);
+  // }
 
 ?>
 
@@ -89,13 +98,13 @@
 	<div class="container MainDiv">
 		<div class="MessageHome">
       <div class="Channelview">
-          <?php echo "#" . $channelName;?>
+          <?php echo "#".$channelName;?>
       </div>
 			<div class="MessageDisplay" >
 			    <?php displayMessages(); ?>
 			</div>
 			<div class="MessageEntry">
-				<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+				<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'#bottom'); ?>">
 		    		<input id="textArea" type="text" name="textarea" placeholder="Enter your text here"/>
 		    		<input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
 		    		<input id="SubmitButton" type="submit" name="submit"/>
@@ -107,7 +116,7 @@
 			<h2><center>Workspace</center></h2>
 			<div class="SideBarNav">
 				<?php displayChannels(); ?>
-         <a href="home.php?logout=true" class="SideBarButton">Logout</a>
+         <a href="<?php echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="SideBarButton">Logout</a>
 			</div>
 		</div>
 

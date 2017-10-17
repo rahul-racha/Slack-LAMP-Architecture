@@ -1,12 +1,13 @@
 <?php
+  //ob_start();
   session_start();
   include_once '../errors.php';
   require_once '../models/home.php';
 
-  if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))
-  {
-    header("location:login.php", true, 303);
-  } //else if (isset($_POST["textarea"])) {
+   if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))
+   {
+     header("location:login.php", true, 303);
+   } //else if (isset($_POST["textarea"])) {
   //   header("location:..home.php", true, 303);
   // }
 
@@ -43,9 +44,13 @@
         }
     }
 
-    public function destroyView(){
-      session_destroy();
-      header("location:login.php", true, 303);
-    }
+    //public function destroyView(){
+      //if (!isset($_SESSION))
+      //{
+        //session_start();
+        // session_destroy();
+        // header("location:login.php", true, 303);
+      //}
+    //}
   }
 ?>
