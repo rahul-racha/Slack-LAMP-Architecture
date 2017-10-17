@@ -19,6 +19,7 @@
   } else {
     global $channelName;
     $channelName = 'general';
+    $_POST["channel"] = 'general';
   }
 
   /*if (isset($_SESSION["postFormVars"]["textarea"]))
@@ -78,6 +79,12 @@
     //}
   }
 
+  if (isset($_GET['logout'])) {
+    global $homeControlVar;
+
+    $homeControlVar->destroyView();
+  }
+
   // for logout
   // if (isset($_GET["logout"])) {
   //   //global $homeControlVar;
@@ -98,7 +105,7 @@
 	<div class="container MainDiv">
 		<div class="MessageHome">
       <div class="Channelview">
-          <?php echo "#".$channelName;?>
+          <strong><?php echo "#" . $channelName;?></strong>
       </div>
 			<div class="MessageDisplay" >
 			    <?php displayMessages(); ?>
@@ -113,11 +120,14 @@
 		</div>
 
 		<div class="sideBar">
-			<h2><center>Workspace</center></h2>
+			<h1 style="color: white;"><center>Workspace</center></h1>
 			<div class="SideBarNav">
 				<?php displayChannels(); ?>
-         <a href="<?php echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="SideBarButton">Logout</a>
+        
 			</div>
+      <div>
+        <a href="<?php echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="LogoutButton">Logout</a>
+      </div>
 		</div>
 
 	</div>
