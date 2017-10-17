@@ -1,5 +1,5 @@
 <?php
-  include_once '../errors.php';
+  //include_once '../errors.php';
   require_once('../models/connect.php');
 
   class HomeModel {

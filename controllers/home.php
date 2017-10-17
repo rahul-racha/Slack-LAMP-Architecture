@@ -1,7 +1,7 @@
 <?php
   //ob_start();
   session_start();
-  include_once '../errors.php';
+  //include_once '../errors.php';
   require_once '../models/home.php';
 
    if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))

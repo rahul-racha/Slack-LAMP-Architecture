@@ -1,5 +1,5 @@
 <?php
-    include './errors.php';
+    //include './errors.php';
     require_once './models/login.php';
 
     class LoginController {
