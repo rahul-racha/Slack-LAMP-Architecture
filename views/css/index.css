@@ -1,0 +1,51 @@
+body {
+                 background: white;
+                 color: #80c0c0 }
+
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+img.avatar {
+    //width: 40%;
+    //border-radius: 50%;
+}
+
+h3 {
+    color: orange;
+	font-size: 60px;
+	font-style: "bold"
+}
+
+label {
+		color: blue;
+		font-size: 30px;
+		font-style: "bold"
+}
+
+input[type=text], input[type=password] {
+    width: 50%;
+    padding: 8px 8px;
+    margin: 5px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+
+}
+input[type=submit] {
+
+
+	background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 15%;
+
+}
+@media screen and (max-width: 300px) {
+    span.psw {
+        display: block;
+        float: none;
+    }
+}
