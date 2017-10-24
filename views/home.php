@@ -41,8 +41,10 @@
     $channelList = $homeControlVar->viewChannels();
     foreach ($channelList as $value) {
       echo '<form method="post" action = "home.php">
-              <input type="hidden" name="channel" value="'.$value.'" />
-              <input type="submit" class="SideBarButton" value="'.$value.'" />
+              <div class = "HoverChannel">
+                <input type="hidden" name="channel" value="'.$value.'" />
+                <input type="submit" class="SideBarButton" value="'.$value.'" />
+              </div>
             </form>';
     }
   }
