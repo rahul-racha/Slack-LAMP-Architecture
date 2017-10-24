@@ -1,5 +1,5 @@
 <?php
-  //include_once '../errors.php';
+  include_once '../errors.php';
   require_once('../models/connect.php');
 
   class HomeModel {
@@ -7,6 +7,13 @@
     private $channels = array();
     private $messages = array();
 
+    public function validMySQL($var) {
+      $var=stripslashes($var);
+      $var=htmlentities($var);
+      $var=strip_tags($var);
+      $var=mysql_real_escape_string($var);
+      return $var;
+    }
     public function retrieveChannels()
     {
       $dbConVar = new dbConnect();
@@ -59,6 +66,13 @@
       return $this->messages;
     }
 
+    public function validateInputs($data) {
+      $data = trim($data);
+      //$data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+    }
+
     public function insertMessage($channelName, $message)
     {
       $dbConVar = new dbConnect();
@@ -105,6 +119,52 @@
       }
       $dbConVar->closeConnectionObject($conn);
       return $affectedRows;
+    }
+
+    public function addUserToChannel($userId, $channelName, $workspaceUrl)
+    {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $channelId = NULL;
+      $affectedRows = NULL;
+      $getChannelId = "SELECT channel_id
+                       FROM workspace_channels
+                       WHERE channel_name = '$channelName' AND url = '$workspaceUrl'";
+      $result = mysqli_query($conn, $getChannelId);
+      if (mysqli_num_rows($result) > 0)
+      {
+        while ($row = $result->fetch_assoc())
+        {
+          $channelId = $row['channel_id'];
+        }
+      }
+      mysqli_free_result($result);
+      if ($channelId != NULL) {
+        $stmt = $conn->prepare("INSERT INTO inside_channel (channel_id, user_id)
+                                VALUES (?,?)");
+        $stmt->bind_param("ss", $channelId, $userId);
+        $stmt->execute();
+        $affectedRows = $stmt->affected_rows;
+        $stmt->close();
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $affectedRows;
+    }
+
+    public function createChannel($channelName, $purpose, $type, $workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+
+      $stmt = $conn->prepare("INSERT INTO workspace_channels (channel_id, channel_name, purpose, url, user_id, type)
+                              VALUES (?,?,?,?,?,?)");
+      $stmt->bind_param("ssssss", NULL, $channelName, $purpose, $workspaceUrl, $_SESSION['userid'], $type);
+      $stmt->execute();
+      $affectedRows = $stmt->affected_rows;
+      $stmt->close();
+
+      $isUserAdded = addUserToChannel($_SESSION['userid'], $channelName, $workspaceUrl);
+      $dbConVar->closeConnectionObject($conn);
+      return $isUserAdded;
     }
   }
 

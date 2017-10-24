@@ -1,7 +1,7 @@
 <?php
   //ob_start();
   session_start();
-  //include_once '../errors.php';
+  include_once '../errors.php';
   require_once '../models/home.php';
 
    if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))
@@ -13,6 +13,13 @@
 
   class HomeController {
     private $homeModelVar;
+
+    public function validateInputs($data) {
+      $data = trim($data);
+      //$data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+    }
 
     public function viewChannels()
     {
@@ -34,7 +41,9 @@
     public function insertMessage($channelName, $message)
     {
         $this->homeModelVar = new HomeModel();
+        //$message = $this->homeModelVar->validateInputs($message);
         $affectedRows = $this->homeModelVar->insertMessage($channelName, $message);
+
         if ($affectedRows == 0)
         {
             echo 'Message not inserted';
@@ -42,6 +51,18 @@
         {
           echo 'Query returned an error';
         }
+    }
+
+    public function createNewChannel($channelName, $purpose, $type, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $affectedRows = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
+      if ($affectedRows == 0)
+      {
+          echo "Channel ".$channelName." not created";
+      } else if ($affectedRows < 0)
+      {
+        echo 'Query returned an error';
+      }
     }
 
     //public function destroyView(){
