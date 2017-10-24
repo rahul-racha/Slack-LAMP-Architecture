@@ -2,7 +2,7 @@
     position: fixed;
     width: 80%;
     margin-left: 20%;
-    height: 90%;  
+    height: 90%;
 }
 .MessageEntry{
     margin-bottom: 0%;
@@ -55,7 +55,7 @@
 
 }
 .MessageLI{
-    
+
 }
 .EntireMessage{
     margin-right: 2%;
@@ -70,7 +70,7 @@ body{
 .container{
     /*position: absolute;*/
     /*top: 0; right: 0; bottom: 0; left: 0;*/
-    
+
     width: 100%;
     height: 100%;
     margin: auto;
@@ -93,6 +93,19 @@ body{
     overflow-y: auto;
     min-width: auto;
     max-width: auto;
+}
+
+.CreateChannel {
+    background-color: #4d394b;
+    border: none;
+    color: white;
+    padding: 4% 36%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
 }
 
 .SideBarButton {
@@ -123,3 +136,57 @@ body{
     font-family: arial;
     cursor: pointer;
 }
+
+.channelDialog {
+	position: fixed;
+	font-family: Arial, Helvetica, sans-serif;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0,0,0,0.8);
+	z-index: 99999;
+	opacity:0;
+	-webkit-transition: opacity 400ms ease-in;
+	-moz-transition: opacity 400ms ease-in;
+	transition: opacity 400ms ease-in;
+	pointer-events: none;
+}
+
+.channelDialog:target {
+	opacity:1;
+	pointer-events: auto;
+}
+
+.channelDialog > div {
+	width: 400px;
+	position: relative;
+	margin: 10% auto;
+	padding: 5px 20px 13px 20px;
+	border-radius: 10px;
+	background: #fff;
+	background: -moz-linear-gradient(#fff, #999);
+	background: -webkit-linear-gradient(#fff, #999);
+	background: -o-linear-gradient(#fff, #999);
+}
+
+.close {
+	background: #606061;
+	color: #FFFFFF;
+	line-height: 25px;
+	position: absolute;
+	right: -12px;
+	text-align: center;
+	top: -10px;
+	width: 24px;
+	text-decoration: none;
+	font-weight: bold;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	border-radius: 12px;
+	-moz-box-shadow: 1px 1px 3px #000;
+	-webkit-box-shadow: 1px 1px 3px #000;
+	box-shadow: 1px 1px 3px #000;
+}
+
+.close:hover { background: #00d9ff; }

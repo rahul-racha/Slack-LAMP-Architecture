@@ -1,5 +1,5 @@
 <?php
-    //include './errors.php';
+    include './errors.php';
     require_once './models/login.php';
 
     class LoginController {
@@ -38,6 +38,16 @@
           //include './views/login.php';
         }
         exit();
+       }
+
+       public function registerNewUser($userId, $email, $password, $first_name, $last_name, $workspaceUrl)
+       {
+         $profile = array();
+         $profile = $this->loginModelVar->checkUserExist($userId, $email);
+         if (empty($profile))
+         {
+           $this->loginModelVar->addNewUser($userId, $email, $password, $first_name, $last_name, $workspaceUrl);
+         }
        }
     }
 
