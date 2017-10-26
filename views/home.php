@@ -8,11 +8,6 @@
   $channelName = NULL;
   $textArea = NULL;
 
-  /*if (isset($_SESSION["postFormVars"]["channel"])) {
-    global $channelName;
-    $channelName = $_SESSION["postFormVars"]["channel"];
-    echo "channel".$channelName;
-  } else */
   if (isset($_POST["channel"])) {
     global $channelName;
     $channelName = $_POST["channel"];
@@ -22,13 +17,6 @@
     $_POST["channel"] = 'general';
   }
 
-  /*if (isset($_SESSION["postFormVars"]["textarea"]))
-  {
-    global $textArea;
-    $textArea = $_SESSION["postFormVars"]["textarea"];
-    echo "OYEE".$textArea;
-    insertMessage($textArea);
-  } else*/
   if (isset($_POST["textarea"])) {
     global $textArea;
     $textArea = $_POST["textarea"];
@@ -88,23 +76,15 @@
     $homeControlVar->destroyView();
   }
 
-  // for logout
-  // if (isset($_GET["logout"])) {
-  //   //global $homeControlVar;
-  //   //$homeControlVar->destroyView();
-  //   session_destroy();
-  //   unset($_GET["logout"]);
-  //   header("location:login.php", true, 303);
-  // }
-
 ?>
 
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="css/home.css">
-  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -126,14 +106,50 @@
 		</div>
 
 		<div class="sideBar">
-			<h2 style="color: white; font-family: verdana;"><center>musicf17.slack.com</center></h2>
-       <div>
+      <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open musicf17.slack.com</button>
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+              <form action="/action_page.php">
+                <div class="form-group">
+                  <label for="FirstName">First Name</label>
+                  <input type="text" class="form-control" placeholder="First Name" name="FirstName" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label for="LastName">Last Name</label>
+                  <input type="text" class="form-control" placeholder="Last Name" name="LastName" autocomplete="off">
+                </div>
+                <div class="checkbox">
+                  <label><input type="checkbox" name="remember"> Remember me</label>
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
          <a href="#channelModel">+ channel</a>
          <div id="channelModel" class="channelDialog">
            <div>
              <a href="#close" title="Close" class="close">X</a>
-		          <h2>Create Channel</h2>
-              
+             <form>
+                <h2>Create Channel</h2>
+                <label>Channel Name</label>
+                <input type="text" name="Channel name" placeholder="e.g. general"><br>
+                <label>Purpose (optional)</label>
+                <input type="text" name="purpose"><br>
+                <label>USERS</label>
+                <input type="text" name="UserName" placeholder="Search by name"><br>
+		         </form>
            </div>
          </div>
         <!--<form method="post" action="<?php echo htmlspecialchars('channel.php'); ?>">

@@ -9,7 +9,7 @@
           $this->loginModelVar = new loginModel();
         }
 
-      public function handleCredentials() {
+        public function handleCredentials() {
 
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['userid'])
             && isset($_POST['password']))
@@ -40,15 +40,15 @@
         exit();
        }
 
-       public function registerNewUser($userId, $email, $password, $first_name, $last_name, $workspaceUrl)
-       {
-         $profile = array();
-         $profile = $this->loginModelVar->checkUserExist($userId, $email);
-         if (empty($profile))
-         {
-           $this->loginModelVar->addNewUser($userId, $email, $password, $first_name, $last_name, $workspaceUrl);
-         }
-       }
+       // public function registerNewUser($userId, $email, $password, $first_name, $last_name, $workspaceUrl)
+       // {
+       //   $profile = array();
+       //   $profile = $this->loginModelVar->checkUserExist($userId, $email);
+       //   if (empty($profile))
+       //   {
+       //     $this->loginModelVar->addNewUser($userId, $email, $password, $first_name, $last_name, $workspaceUrl);
+       //   }
+       // }
     }
 
 ?>
