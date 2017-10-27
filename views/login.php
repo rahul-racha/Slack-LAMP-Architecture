@@ -124,7 +124,7 @@
 						<div>
 							<input type="text" name="userid" placeholder="userid"><br>
 							<input type="password" name="password" placeholder="password"><br>
-							<input type="submit" name="submit" value="submit"></input>
+							<input type="submit" name="submit" value="Sign in"></input>
 						</div>
 					</form>
 					<div>

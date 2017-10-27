@@ -29,7 +29,7 @@
     $channelList = $homeControlVar->viewChannels();
     foreach ($channelList as $value) {
       echo '<form method="post" action = "home.php">
-              <div class = "HoverChannel">
+              <div class = "ChannelDisplay">
                 <input type="hidden" name="channel" value="'.$value.'" />
                 <input type="submit" class="SideBarButton" value="'.$value.'" />
               </div>
@@ -85,40 +85,97 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
 	<div class="container-fluid">
     <div class="row">
       <!-- left panel -->
-  		<div class="col-sm-2 col-lg-2" >
+  		<div class="col-md-2" >
         <div class="navbar navbar-inverse navbar-fixed-left">
-          <button type="button" class="btn btn-info btn-lg SideBarButton " data-toggle="modal" data-target="#myModal">musicf17.slack.com</button>
-          <!-- <div class="SideBarNav"> -->
+          <button type="button" class="btn btn-info btn-lg SideBarButton " data-toggle="modal" data-target="#ProfileUpdate">musicf17.slack.com</button>
+          <div style="color: white;">
+            <h4>Channels
+              <button type="button" class = "btn btn-info btn-lg NewChannel" data-toggle="modal" data-target="#NewChannel">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+              </button>
+            </h4>
+          </div>
             <?php displayChannels(); ?>
-          <!-- </div> -->
-          <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal fade" id="ProfileUpdate" role="dialog">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Modal Header</h4>
+                  <h4 class="modal-title">Edit Your Profile</h4>
                 </div>
                 <div class="modal-body">
-                  <form action="/action_page.php">
-                    <div class="form-group">
-                      <label for="FirstName">First Name</label>
-                      <input type="text" class="form-control" placeholder="First Name" name="FirstName" autocomplete="off">
+                  <div class="row">
+                    <div class="col-md-8">
+                        <form action="/action_page.php">
+                          <div class="form-group">
+                            <label for="FirstName">First Name</label>
+                            <input type="text" class="form-control" placeholder="First Name" name="FirstName" autocomplete="off">
+                          </div>
+                          <div class="form-group">
+                            <label for="LastName">Last Name</label>
+                            <input type="text" class="form-control" placeholder="Last Name" name="LastName" autocomplete="off">
+                          </div>
+                          <div class="form-group">
+                            <label for="Status">Status</label>
+                            <input type="text" class="form-control" placeholder="What is your status" name="Status" autocomplete="off">
+                          </div>
+                          <div class="form-group">
+                            <label for="PhoneNumber">Phone number</label>
+                            <input type="text" class="form-control" placeholder="(123) 456-7891" name="PhoneNumber" autocomplete="off">
+                          </div>
+                          <div class="checkbox">
+                            <label><input type="checkbox" name="remember"> Remember me</label>
+                          </div>
+                          <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
                     </div>
-                    <div class="form-group">
-                      <label for="LastName">Last Name</label>
-                      <input type="text" class="form-control" placeholder="Last Name" name="LastName" autocomplete="off">
+                    <div class="col-md-4">
+                      <!-- avatar details goes here -->
+                      <input type="image" src="https://www.fancyhands.com/images/default-avatar-250x250.png" width="30px"/>
+                      <input type="file" id="my_file" style="display: none;" />
                     </div>
-                    <div class="checkbox">
-                      <label><input type="checkbox" name="remember"> Remember me</label>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="NewChannel" role="dialog">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Create New Channel</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-8">
+                        <form action="/action_page.php">
+                          <div class="form-group">
+                            <label for="FirstName">Channel Name</label>
+                            <input type="text" class="form-control" placeholder="First Name" name="Channel Name" autocomplete="off">
+                          </div>
+                          <div class="form-group">
+                            <label for="LastName">Purpose</label>
+                            <input type="text" class="form-control" placeholder="Last Name" name="Purpose of Channel" autocomplete="off">
+                          </div>
+                          <div class="checkbox">
+                            <label><input type="checkbox" name="Public">Public</label>
+                            <label><input type="checkbox" name="Private">Private</label>
+                          </div>
+                          <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                  </form>
+                  </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -127,33 +184,33 @@
             </div>
           </div>
           <!-- <div>
-             <a href="#channelModel">+ channel</a>
-             <div id="channelModel" class="channelDialog">
-               <div>
-                 <a href="#close" title="Close" class="close">X</a>
-                 <form>
-                    <h2>Create Channel</h2>
-                    <label>Channel Name</label>
-                    <input type="text" name="Channel name" placeholder="e.g. general"><br>
-                    <label>Purpose (optional)</label>
-                    <input type="text" name="purpose"><br>
-                    <label>USERS</label>
-                    <input type="text" name="UserName" placeholder="Search by name"><br>
-    		         </form>
-               </div>
-             </div>
+            <a href="#channelModel"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+            <div id="channelModel" class="channelDialog">
+              <div>
+                <a href="#close" title="Close" class="close">X</a>
+                <form>
+                  <h2>Create Channel</h2>
+                  <label>Channel Name</label>
+                  <input type="text" name="Channel name" placeholder="e.g. general"><br>
+                  <label>Purpose (optional)</label>
+                  <input type="text" name="purpose"><br>
+                  <label>USERS</label>
+                  <input type="text" name="UserName" placeholder="Search by name"><br>
+    		        </form>
+              </div>
+            </div>
             <form method="post" action="<?php echo htmlspecialchars('channel.php'); ?>">
               <input type="submit" class="CreateChannel" value="(+) channel">
-            </form> -->
-         <!--  </div> -->
+            </form>
+          </div> -->
     			
-         <!--  <div>
+          <!-- <div>
             <a href="<?php echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="LogoutButton">Logout</a>
           </div> -->
         </div>
   		</div>
       <!-- right column -->
-      <div class="col-sm-10 col-lg-10" >
+      <div class="col-md-10" >
         <div class="row">
             <div class="Channelview">
                   <strong><?php echo "#" . $channelName;?></strong>
@@ -172,7 +229,10 @@
       </div>
     </div>
 	</div>
-     <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*20/100)+"px"); </script> 
+    <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*20/100)+"px"); </script> 
+    <script type="text/javascript">$("input[type='image']").click(function() {
+      $("input[id='my_file']").click();
+    });</script>
 
 </body>
 
