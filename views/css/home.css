@@ -1,122 +1,46 @@
-.MessageHome{
-    position: fixed;
-    width: 80%;
-    margin-left: 20%;
-    height: 90%;
-}
-.MessageEntry{
-    margin-bottom: 0%;
-    margin-left: 1%;
-}
-#textArea{
-    width: 95%;
-    padding-top: 1%;
-    padding-bottom: 1%;
-    padding-left: 1%;
-    font-size: 100%;
-    border-radius: 1%;
-}
-/*#SubmitButton{
-    padding-right: 1%;
-    padding-left: 1%;
-    padding-top: 1%;
-    padding-bottom: 1%;
-}*/
-.Channelview{
-    color: #4d394b;
-    position: fixed;
-    border-bottom: 1px solid;
-    border-left: 1px solid;
-    margin: 0% 75% 1% 0%;
-    padding: 1% 75% 1% 1%;
-    font-size: 27px;
-}
+.container{
+    position: absolute;
+    /*top: 0; right: 0; bottom: 0; left: 0;*/
 
-.MessageDisplay{
-    width: 95%;
-    margin-left: 4%;
-    margin-bottom: 1%;
-    margin-right: 5%;
-    margin-top: 6%;
-    height: 89%;
-    overflow-y: scroll;
+    width: 1348px;
+    height: 100%;
+    margin: auto;
+    padding: 0px
 }
-.UserName{
-    font-size: 120%;
-
-}
-.TimeStamp{
-    font-style:italic;
-    font-size: 80%;
-
-}
-.MessageUL{
-    list-style: none;
-
-}
-.MessageLI{
-
-}
-.EntireMessage{
-    margin-right: 2%;
-    /*background-color: #EEEFF5;*/
-    box-shadow: 2px 2px 1px #888888;
-}
-body{
-    margin: 0;
-    overflow: hidden;
-    background-image: url("../images/crushedPaper.jpg");
-}
-.container {
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: -15px !important;
-}
-.sideBar{
-    background-color: #4d394b;
+/*.sideBar{
+    background-color: #4d394b !important;
     padding-bottom: 100%;
     height: 100% ;
     overflow-y: auto;
-    /*min-width: 1% ;*/
     max-width: 20%;
-}
-
-.SideBarNav{
-    background-color: #4d394b;
+}*/
+.navbar{
+    background-color: #4d394b !important;
     height: 100% !important;
-    text-align: center;
-    border: black;
-    overflow-y: auto;
-    min-width: auto;
-    max-width: auto;
-}
+    text-align: center !important;
+    border: black !important;
+    overflow-y: auto !important;
+    min-width: auto !important;
+    max-width: auto !important;
 
-.CreateChannel {
-    background-color: #4d394b;
-    border: none;
-    color: white;
-    padding: 4% 36%;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 20px;
-    margin: 4px 2px;
-    cursor: pointer;
 }
 
 .SideBarButton {
-    background-color: #4d394b;
-    border: none;
+    background-color: #4d394b !important;
+    border: black !important;
     color: white;
-    padding: 4% 36%;
-    text-align: center;
+    /*padding: 4% 36% !important;*/
+    text-align: center !important;
     text-decoration: none;
     display: inline-block;
-    font-size: 20px;
+    font-size: 20px ;
     margin: 4px 2px;
     cursor: pointer;
 }
+
+
+
+
 .LogoutButton{
     background-color: #4d394b;
     border: none;
@@ -133,7 +57,86 @@ body{
     font-family: arial;
     cursor: pointer;
 }
+.EntireMessage{
+    margin-right: 2%;
+    /*background-color: #EEEFF5;*/
+    box-shadow: 2px 2px 1px #888888;
+}
+.MessageHome{
+    position: fixed;
+    width: 80%;
+    margin-left: 20%;
+    height: 90%;
+}
+.Channelview{
+    color: #4d394b;
+   /* position: fixed;*/
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    margin: 0% 75% 1% 0%;
+    padding: 1% 75% 1% 1%;
+    font-size: 27px;
+}
+.MessageDisplay{
+    width: 100% !important;
+    /*margin-left: 4%;
+    margin-bottom: 1% !important;
+    margin-right: 5%;
+    margin-top: 11%;*/
+/*    height: 80% !important;
+*/    overflow-y: scroll !important;
+}
+.UserName{
+    font-size: 120%;
 
+}
+.TimeStamp{
+    font-style:italic;
+    font-size: 80%;
+
+}
+.MessageUL{
+    list-style: none;
+}
+
+.MessageEntry{
+    margin-bottom: 0%;
+    margin-left: 1%;
+}
+#textArea{
+    width: 97%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 1%;
+    font-size: 100%;
+    border-radius: 1%;
+}
+/*#SubmitButton{
+    padding-right: 1%;
+    padding-left: 1%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}*/
+body{
+    margin: 0;
+    overflow: hidden;
+    background-image: url("../images/crushedPaper.jpg");
+}
+
+
+/*Creating a new channel modal*/
+.CreateChannel {
+    background-color: #4d394b !important;
+    border: none;
+    color: white;
+    padding: 4% 36%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
 .channelDialog {
 	position: fixed;
 	font-family: Arial, Helvetica, sans-serif;
