@@ -48,9 +48,9 @@
       $name = NULL;
       $msg = $homeControlVar->validateInputs($value["message"]);
       if (count($channelMessages) != $i) {
-      $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."</div>";
+      $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."</div>";
     } else {
-      $name = "<div id = 'bottom' class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."</div>";
+      $name = "<div id = 'bottom' class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."</div>";
     }
       echo $name;
       $i++;
@@ -89,17 +89,17 @@
 </head>
 
 <body>
-	<div class="container-fluid">
+	<div class="container-fluid" style="padding-left: 0%;">
     <div class="row">
       <!-- left panel -->
   		<div class="col-md-2" >
         <div class="navbar navbar-inverse navbar-fixed-left">
           <button type="button" class="btn btn-info btn-lg SideBarButton " data-toggle="modal" data-target="#ProfileUpdate">musicf17.slack.com</button>
-          <div style="color: white;">
+          <div class="ChannelDisplay">
             <h4>Channels
-              <button type="button" class = "btn btn-info btn-lg NewChannel" data-toggle="modal" data-target="#NewChannel">
-                <i class="fa fa-plus-circle" aria-hidden="true"></i>
-              </button>
+              <a href="#" class="NewChannel" data-toggle="modal" data-target="#NewChannel">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </a>
             </h4>
           </div>
             <?php displayChannels(); ?>
@@ -161,18 +161,19 @@
                     <div class="col-md-8">
                         <form action="/action_page.php">
                           <div class="form-group">
-                            <label for="FirstName">Channel Name</label>
-                            <input type="text" class="form-control" placeholder="First Name" name="Channel Name" autocomplete="off">
+                            <label for="ChannelName">Channel Name</label>
+                            <input type="text" class="form-control" placeholder="Channel name" name="ChannelName" autocomplete="off">
                           </div>
                           <div class="form-group">
-                            <label for="LastName">Purpose</label>
-                            <input type="text" class="form-control" placeholder="Last Name" name="Purpose of Channel" autocomplete="off">
+                            <label for="Purpose">Purpose</label>
+                            <input type="text" class="form-control" placeholder="Purpose of Channel" name="Purpose" autocomplete="off">
                           </div>
                           <div class="checkbox">
                             <label><input type="checkbox" name="Public">Public</label>
                             <label><input type="checkbox" name="Private">Private</label>
                           </div>
-                          <button type="submit" class="btn btn-default">Submit</button>
+                          <input type="hidden" name="NewChannelSubmit" value="<?php echo $_POST["NewChannelSubmit"]; ?>"/>
+                          <input type="button" value="Sign Up" class="btn btn-primary btn-sm">
                         </form>
                     </div>
                   </div>
@@ -220,7 +221,7 @@
             </div>
             <div class="MessageEntry">
               <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'#bottom'); ?>">
-                <input id="textArea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>"/>
+                <input id="textArea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
                 <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
                 <input id="SubmitButton" type="hidden" name="submit"/>
               </form>

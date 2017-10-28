@@ -97,10 +97,8 @@
 		                                    <div class="col-sm-2">
 		                                    </div>
 		                                    <div class="col-sm-4">
-		                                    	<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'#bottom'); ?>">
-			                                    	<input type="hidden" name="Registration" value="<?php echo $_POST["Registration"]; ?>" autocomplete="off"/>
-			                                        <input type="button" name = "Sign Up" value="Sign Up" class="btn btn-primary btn-sm" autocomplete="off" >
-			                                    </form>                                 		
+		                                    	<input type="hidden" name="Registration" value="<?php echo $_POST["Registration"]; ?>"/>
+		                                        <input type="button" name = "Sign Up" value="Sign Up" class="btn btn-primary btn-sm">
 		                                    </div>
 		                                </div>
 		                                </form>
@@ -112,9 +110,6 @@
 		        </div>
 		    </div>
 		</div>
-
-	</body>
-	<body>
 		<!--<div class="imgcontainer" align="center">
 			<img src="images/avatar.png" alt="Avatar" class="avatar">-->
 			<div class="login-page">
