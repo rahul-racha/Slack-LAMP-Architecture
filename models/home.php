@@ -1,6 +1,6 @@
 <?php
-  include_once '../errors.php';
-  require_once('../models/connect.php');
+  include_once $_SESSION['basePath'].'errors.php';
+  require_once $_SESSION['basePath'].'models/connect.php';
 
   class HomeModel {
     private $dbConVar;

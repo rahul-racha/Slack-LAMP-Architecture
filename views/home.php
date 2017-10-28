@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <?php
-  require_once '../controllers/home.php';
+  session_start();
+  $_SESSION['basePath'] = '../';
+  session_write_close();
+  require_once $_SESSION['basePath'].'controllers/home.php';
 
   $homeControlVar = new HomeController();
   $channelName = NULL;
@@ -77,6 +77,9 @@
   }
 
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
 	<meta charset="UTF-8">
@@ -204,7 +207,7 @@
               <input type="submit" class="CreateChannel" value="(+) channel">
             </form>
           </div> -->
-    			
+
           <!-- <div>
             <a href="<?php echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="LogoutButton">Logout</a>
           </div> -->
@@ -230,7 +233,7 @@
       </div>
     </div>
 	</div>
-    <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*20/100)+"px"); </script> 
+    <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*20/100)+"px"); </script>
     <script type="text/javascript">$("input[type='image']").click(function() {
       $("input[id='my_file']").click();
     });</script>

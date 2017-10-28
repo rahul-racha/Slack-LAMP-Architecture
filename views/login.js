@@ -1,2 +1,2 @@
-$('#myModal').modal('show');
+//$('#myModal').modal('show');
 // www.jquery2dotnet.com

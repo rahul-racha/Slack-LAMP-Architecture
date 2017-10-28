@@ -1,6 +1,6 @@
 <?php
-    include './errors.php';
-    require_once './models/login.php';
+    include $_SESSION['basePath'].'errors.php';
+    require_once $_SESSION['basePath'].'models/login.php';
 
     class LoginController {
         private $loginModelVar;
@@ -40,15 +40,33 @@
         exit();
        }
 
-       // public function registerNewUser($userId, $email, $password, $first_name, $last_name, $workspaceUrl)
-       // {
-       //   $profile = array();
-       //   $profile = $this->loginModelVar->checkUserExist($userId, $email);
-       //   if (empty($profile))
-       //   {
-       //     $this->loginModelVar->addNewUser($userId, $email, $password, $first_name, $last_name, $workspaceUrl);
-       //   }
-       // }
+       public function registerNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl)
+       {
+         $profile = array();
+         $result = array();
+         $responseString = NULL;
+         $profile = $this->loginModelVar->checkUserExist($userId, $email);
+         if ($profile['user_id'] == NULL && $profile['email'] == NULL)
+         {
+           $result = $this->loginModelVar->addNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl);
+           if ($result['userInsRows'] < 1 || $result['workspaceInsRows'] < 1) {
+             $responseString = $userId." could not be inserted. Please try again.";
+           } else {
+             $responseString = $userId." is registered successfully. Please login with the new credentials";
+           }
+         } else {
+           $user = $profile['user_id'];
+           $mail = $profile['email'];
+           if ($profile['user_id'] != NULL) {
+             $responseString = $user." exists in the database";
+           } else if ($profile['email'] != NULL) {
+             $responseString = $mail." exists in the database";
+           } else {
+             $responseString = $user." and ".$mail." exist in the database";
+           }
+         }
+         return $responseString;
+       }
     }
 
 ?>
