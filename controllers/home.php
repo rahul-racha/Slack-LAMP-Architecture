@@ -1,8 +1,8 @@
 <?php
   //ob_start();
-  session_start();
-  include_once '../errors.php';
-  require_once '../models/home.php';
+  //session_start();
+  include_once $_SESSION['basePath'].'errors.php';
+  require_once $_SESSION['basePath'].'models/home.php';
 
    if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))
    {
