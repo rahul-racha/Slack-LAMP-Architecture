@@ -1,6 +1,12 @@
 <?php
   //ob_start();
   //session_start();
+
+  //retrieve public channels
+  //retrieve private channels for a user in workspace
+  //identify if a channel is public or private
+  
+
   include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/home.php';
 
@@ -13,13 +19,6 @@
 
   class HomeController {
     private $homeModelVar;
-
-    public function validateInputs($data) {
-      $data = trim($data);
-      //$data = stripslashes($data);
-      $data = htmlspecialchars($data);
-      return $data;
-    }
 
     public function viewChannels()
     {
@@ -53,6 +52,7 @@
         }
     }
 
+    //create new channel for a workspace
     public function createNewChannel($channelName, $purpose, $type, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $affectedRows = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
@@ -65,13 +65,22 @@
       }
     }
 
-    //public function destroyView(){
-      //if (!isset($_SESSION))
-      //{
-        //session_start();
-        // session_destroy();
-        // header("location:login.php", true, 303);
-      //}
-    //}
+    //add list of users to a channel
+    public function inviteUsersToChannel($users, $channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $invitationResults = array('success' => array(), 'failed' => array());
+      foreach ($users as $userId) {
+        $successFeeds = $this->homeModelVar->addUserToChannel($userId, $channelName, $workspaceUrl);
+        if ($successFeeds < 1) {
+          array_push($invitationResults['failed'], $userId);
+        } else {
+          array_push($invitationResults['success'], $userId);
+        }
+      }
+      return $invitationResults;
+    }
+
+
+
   }
 ?>

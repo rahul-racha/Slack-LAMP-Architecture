@@ -46,11 +46,11 @@
       $CurrentTime = new DateTime($value["created_time"]);
       $strip = $CurrentTime->format('H:i @Y-m-d');
       $name = NULL;
-      $msg = $homeControlVar->validateInputs($value["message"]);
+      //$msg = $homeControlVar->validateInputs($value["message"]);
       if (count($channelMessages) != $i) {
-      $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."</div>";
+      $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value["message"]."</li>"."</ul>"."</div>";
     } else {
-      $name = "<div id = 'bottom' class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."</div>";
+      $name = "<div id = 'bottom' class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value["message"]."</li>"."</ul>"."</div>";
     }
       echo $name;
       $i++;
