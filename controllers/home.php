@@ -7,6 +7,12 @@
   //identify if a channel is public or private
   //get all replies of a thread. input <- msg id(div id)
   //insert replies to db
+  //add reaction to db for each msg_id
+  //delete/reject for duplicate reaction for every userid per msg_id
+  //duplicate channel names
+  //page refresh
+  //validate mysql insertions and retrieval
+  //client side validation
 
 
   include_once $_SESSION['basePath'].'errors.php';
@@ -101,15 +107,30 @@
     public function createNewChannel($channelName, $purpose, $type, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $responseString = NULL;
-      $affectedRows = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
-      if ($affectedRows == 0)
-      {
-        $responseString = "Channel ".$channelName." not created";
-        echo $responseString;
-      } else if ($affectedRows < 0)
-      {
-        $responseString = 'Query returned an error';
-        echo $responseString;
+      $status = array();
+      $status = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
+      switch ($status['channelStatus']) {
+        case 0:
+          $responseString = "Channel ".$channelName." not created";
+          break;
+        case 1:
+          $responseString = "Channel ".$channelName." is created";
+          break;
+        default:
+          $responseString = 'Query returned an error';
+          break;
+      }
+
+      switch ($status['userStatus']) {
+        case 0:
+          $responseString = $responseString." and ".$_SESSION['userid']." is not added to channel";
+          break;
+        case 1:
+          $responseString = $responseString." and ".$_SESSION['userid']." is added to channel";
+          break;
+        default:
+          //$responseString = 'Query returned an error';
+          break;
       }
       return $responseString;
     }
@@ -138,6 +159,66 @@
         echo "No replies found for the thread";
       }
       return $replyList;
+    }
+
+    public function getEmoInfo($msgId, $emoName) {
+      $this->homeModelVar = new HomeModel();
+      $info = array();
+      $emoId = $this->homeModelVar->getEmoId($emoName);
+      if ($emoId != NULL) {
+        $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
+      }
+      return $info;
+    }
+
+    public function isUserExistsForReaction($users) {
+      $isExists = NULL;
+      $pos = strpos($users, ";".$_SESSION['userid'].";");
+      if ($pos === false) {
+        $isExists = false;
+      } else {
+        $isExists = true;
+      }
+      return $isExists;
+    }
+
+    public function handleReactionForMsg($msgId, $emoName, $isInsert) {
+      $this->homeModelVar = new HomeModel();
+      $responseString = NULL;
+      $affectedRows = NULL;
+      $info = array();
+      $emoId = $this->homeModelVar->getEmoId($emoName);
+      if ($emoId != NULL) {
+        $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
+        if ($info['users'] != NULL) {
+          if ($this->isUserExistsForReaction($info['users']) === false) {
+            if ($isInsert === true) {
+              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
+            }
+          } else {
+            if ($isInsert === false) {
+              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
+            }
+          }
+        } else {
+          if ($isInsert === true) {
+            $info['count'] = 0;
+            $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
+          }
+        }
+        if ($affectedRows == 1) {
+          $responseString = "success";
+        } else {
+          $responseString = "failed";
+        }
+      } else {
+        $responseString = $emoName." is not found in database";
+      }
+      return $responseString;
+    }
+
+    public function delReactionForMsg($msgId, $emoName) {
+
     }
 
   }
