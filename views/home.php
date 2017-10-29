@@ -23,6 +23,22 @@
     insertMessage($textArea);
   }
 
+  if (isset($_POST['newChannelSubmit'])) {
+    $channelName = $_POST["channelName"];
+    $purpose = $_POST['purpose'];
+    $channeltype = $_POST['phanneltype'];
+    $workspaceUrl = "musicf17.slack.com";
+    $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
+    
+  }
+
+  // if (isset($_POST['newInvite'])) {
+  //   $newUser = $_POST['inviteUsers'];
+  //   $channelName = $_POST['channel'];
+  //   $workspaceUrl = "musicf17.slack.com";
+  //   $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl);
+  // }
+
   function displayChannels()
   {
     global $homeControlVar;
@@ -37,6 +53,18 @@
     }
   }
 
+  // function Channelview(){
+  //   global $homeControlVar;
+  //   global $channelName;
+  //   $userCount = array();
+  //   $channelMessages = $homeControlVar->viewMessages($channelName);
+  //   foreach ($channelMessages as $key => $value) {
+  //     $userCount = $value['user_id'];
+  //     echo $value;
+  //   }
+  //   echo count($userCount);
+  // }
+
   function displayMessages() {
     global $homeControlVar;
     global $channelName;
@@ -48,9 +76,9 @@
       $name = NULL;
       //$msg = $homeControlVar->validateInputs($value["message"]);
       if (count($channelMessages) != $i) {
-      $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value["message"]."</li>"."</ul>"."</div>";
+      $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."</div>";
     } else {
-      $name = "<div id = 'bottom' class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."</strong>"."<strong class = 'UserName'>"." ".$value["last_name"]."</strong>"		."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value["message"]."</li>"."</ul>"."</div>";
+      $name = "<div id = 'bottom' class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."</div>";
     }
       echo $name;
       $i++;
@@ -76,6 +104,7 @@
     $homeControlVar->destroyView();
   }
 
+
 ?>
 
 <!DOCTYPE html>
@@ -92,17 +121,17 @@
 </head>
 
 <body>
-	<div class="container-fluid">
+	<div class="container-fluid" style="padding-left: 0%;">
     <div class="row">
       <!-- left panel -->
   		<div class="col-md-2" >
         <div class="navbar navbar-inverse navbar-fixed-left">
           <button type="button" class="btn btn-info btn-lg SideBarButton " data-toggle="modal" data-target="#ProfileUpdate">musicf17.slack.com</button>
-          <div style="color: white;">
+          <div class="ChannelDisplay">
             <h4>Channels
-              <button type="button" class = "btn btn-info btn-lg NewChannel" data-toggle="modal" data-target="#NewChannel">
-                <i class="fa fa-plus-circle" aria-hidden="true"></i>
-              </button>
+              <a href="#" class="NewChannel" data-toggle="modal" data-target="#NewChannel">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </a>
             </h4>
           </div>
             <?php displayChannels(); ?>
@@ -162,20 +191,25 @@
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-8">
-                        <form action="/action_page.php">
+                        <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                           <div class="form-group">
-                            <label for="FirstName">Channel Name</label>
-                            <input type="text" class="form-control" placeholder="First Name" name="Channel Name" autocomplete="off">
+                            <label for="ChannelName">Channel Name</label>
+                            <input type="text" class="form-control" placeholder="Channel name" name="ChannelName" autocomplete="off">
                           </div>
                           <div class="form-group">
-                            <label for="LastName">Purpose</label>
-                            <input type="text" class="form-control" placeholder="Last Name" name="Purpose of Channel" autocomplete="off">
+                            <label for="Purpose">Purpose</label>
+                            <input type="text" class="form-control" placeholder="Purpose of Channel" name="Purpose" autocomplete="off">
                           </div>
-                          <div class="checkbox">
-                            <label><input type="checkbox" name="Public">Public</label>
-                            <label><input type="checkbox" name="Private">Private</label>
+                          <div class="radio">
+                            <label><input type="radio" name="Channeltype" value="Public">Public</label>
+                            <label><input type="radio" name="Channeltype" value="Private">Private</label>
+
+                          
+                          <!-- <span class="error">* <?php echo $genderErr;?></span> -->
+                        
                           </div>
-                          <button type="submit" class="btn btn-default">Submit</button>
+                          <input type="hidden" name="NewChannelSubmit">
+                          <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
                         </form>
                     </div>
                   </div>
@@ -215,21 +249,46 @@
       <!-- right column -->
       <div class="col-md-10" >
         <div class="row">
-            <div class="Channelview">
-                  <strong><?php echo "#" . $channelName;?></strong>
-            </div>
+          <div class="Channelview">
+            <strong><?php echo "#" . $channelName;?></strong>
+            <!-- <div class="inviteUsers">
+              <a href="#" data-toggle="modal" data-target = "#inviteUsers">
+                <i class="fa fa-user-o" aria-hidden="true"></i>
+              </a>
+            </div> -->
+          </div>
+        </div>
             <div class="MessageDisplay" >
                 <?php displayMessages(); ?>
             </div>
             <div class="MessageEntry">
               <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'#bottom'); ?>">
-                <input id="textArea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>"/>
+                <input id="textArea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
                 <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
                 <input id="SubmitButton" type="hidden" name="submit"/>
               </form>
             </div>
-        </div>
       </div>
+      <!-- Invite memebers modal -->
+       <!--  <div class="modal fade" id="inviteUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog dialog" role="document">
+            <div class="modal-content content">
+              <div class="modal-header header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body body">
+                <h4>Invite Persons</h4>
+                <form class="navbar-form modalForm" role="search">
+                  <div class="form-group">
+                    <input type="text" name = "inviteUsers" class="form-control" placeholder="Search">
+                  </div>
+                  <input type="hidden" name="newInvite">
+                  <input type="submit" value="Invite" class="btn btn-default">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div> -->
     </div>
 	</div>
     <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*20/100)+"px"); </script>
