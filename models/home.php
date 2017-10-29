@@ -7,13 +7,21 @@
     private $channels = array();
     private $messages = array();
 
-    public function validMySQL($var) {
-      $var=stripslashes($var);
-      $var=htmlentities($var);
-      $var=strip_tags($var);
-      $var=mysql_real_escape_string($var);
-      return $var;
+    public function validMySQL($data) {
+      $data = stripslashes($data);
+      $data = htmlentities($data);
+      $data = strip_tags($data);
+      $data = mysql_real_escape_string($data);
+      return $data;
     }
+
+    public function validateInputs($data) {
+      $data = trim($data);
+      //$data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+    }
+
     public function retrieveChannels()
     {
       $dbConVar = new dbConnect();
@@ -30,7 +38,7 @@
       {
         while ($row = $result->fetch_assoc())
         {
-            array_push($this->channels, $row['channel_name']);
+            array_push($this->channels, $this->validateInputs($row['channel_name']));
         }
       }
       mysqli_free_result($result);
@@ -56,6 +64,7 @@
       {
           while ($row = $result->fetch_assoc())
           {
+            $row['message'] = $this->validateInputs($row['message']);
             array_push($this->messages, $row);
           }
       }
@@ -66,14 +75,7 @@
       return $this->messages;
     }
 
-    public function validateInputs($data) {
-      $data = trim($data);
-      //$data = stripslashes($data);
-      $data = htmlspecialchars($data);
-      return $data;
-    }
-
-    public function insertMessage($channelName, $message)
+    public function insertMessage($channelName, $message, $threadId, $type)
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
@@ -109,15 +111,34 @@
         }
         mysqli_free_result($result);
         $msgId++;
-        $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message)
-                                VALUES (?,?,?,?)");
-        $stmt->bind_param("ssss", $chId, $_SESSION['userid'], $msgId, $message);
+        $dependency = NULL;
+        if ($threadId == NULL) {
+          $dependency = $msgId;
+        } else {
+          $dependency = $threadId;
+        }
+
+        $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message, type, dependency)
+                                VALUES (?,?,?,?,?,?)");
+        $stmt->bind_param("ssssss", $chId, $_SESSION['userid'], $msgId, $message, $type, $dependency);
         $stmt->execute();
         //if ($stmt->affected_rows > 0) {}
         $affectedRows = $stmt->affected_rows;
         $stmt->close();
       }
+
       $dbConVar->closeConnectionObject($conn);
+      return $affectedRows;
+    }
+
+    public function updateMessageType($threadId, $type) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $updateType = "UPDATE channel_messages
+                     SET type = $type
+                     WHERE msg_id = $threadId";
+      $result = mysqli_query($conn, $updateType);
+      $affectedRows = mysqli_affected_rows($conn);
       return $affectedRows;
     }
 
@@ -162,10 +183,34 @@
       $affectedRows = $stmt->affected_rows;
       $stmt->close();
 
-      $isUserAdded = addUserToChannel($_SESSION['userid'], $channelName, $workspaceUrl);
+      $isUserAdded = $this->addUserToChannel($_SESSION['userid'], $channelName, $workspaceUrl);
       $dbConVar->closeConnectionObject($conn);
       return $isUserAdded;
     }
+
+    public function retrieveReplies($threadId) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $this->replies = array();
+      $getReplies = "SELECT user_id, msg_id, message, created_time
+                     FROM channel_messages
+                     WHERE dependency = $threadId;
+                     ORDER BY created_time ASC";
+      $result = mysqli_query($conn, $getReplies);
+      if (mysqli_num_rows($result) > 0) {
+        while ($row = $result->fetch_assoc())
+        {
+          $row['message'] = $this->validateInputs($row['message']);
+          array_push($this->replies, $row);
+        }
+      }
+      if ($result) {
+      mysqli_free_result($result);
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $this->replies;
+    }
+
   }
 
 ?>

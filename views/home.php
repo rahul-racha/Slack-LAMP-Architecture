@@ -46,7 +46,7 @@
       $CurrentTime = new DateTime($value["created_time"]);
       $strip = $CurrentTime->format('H:i @Y-m-d');
       $name = NULL;
-      $msg = $homeControlVar->validateInputs($value["message"]);
+      //$msg = $homeControlVar->validateInputs($value["message"]);
       if (count($channelMessages) != $i) {
       $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."</div>";
     } else {

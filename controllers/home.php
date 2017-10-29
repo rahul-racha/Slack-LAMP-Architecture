@@ -1,6 +1,14 @@
 <?php
   //ob_start();
   //session_start();
+
+  //retrieve public channels
+  //retrieve private channels for a user in workspace
+  //identify if a channel is public or private
+  //get all replies of a thread. input <- msg id(div id)
+  //insert replies to db
+
+
   include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/home.php';
 
@@ -13,13 +21,6 @@
 
   class HomeController {
     private $homeModelVar;
-
-    public function validateInputs($data) {
-      $data = trim($data);
-      //$data = stripslashes($data);
-      $data = htmlspecialchars($data);
-      return $data;
-    }
 
     public function viewChannels()
     {
@@ -38,40 +39,106 @@
         return $messages;
     }
 
-    public function insertMessage($channelName, $message)
+    public function getMessageType($messageType) {
+      $type = NULL;
+      switch ($messageType) {
+        case 'post':
+          $type = 1;
+          break;
+        case 'thread':
+          $type = 2;
+          break;
+        case 'reply':
+          $type = 3;
+          break;
+        default:
+          $type = NULL;
+          break;
+      }
+      return $type;
+    }
+
+    //function should be called to set the message type to 'thread'
+    //before the first reply is inserted
+    public function setMessageType($threadId, $messageType) {
+      $type = $this->getMessageType($messageType);
+      $responseString = NULL;
+      $this->homeModelVar = new HomeModel();
+      $affectedRows = $this->homeModelVar->updateMessageType($threadId, $type);
+      if ($affectedRows < 1) {
+        $responseString = 'Message type is not updated';
+        echo $responseString;
+      } else {
+        $responseString = 'Message type is updated';
+        echo $responseString;
+      }
+      return $responseString;
+    }
+
+    //function is used for inserting messages and replies
+    public function insertMessage($channelName, $message, $threadId, $messageType)
     {
         $this->homeModelVar = new HomeModel();
         //$message = $this->homeModelVar->validateInputs($message);
-        $affectedRows = $this->homeModelVar->insertMessage($channelName, $message);
+        $responseString = NULL;
+        $type = $this->getMessageType($messageType);
+
+        $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $threadId, $type);
 
         if ($affectedRows == 0)
         {
-            echo 'Message not inserted';
+            $responseString = 'Message not inserted';
+            echo $responseString;
         } else if ($affectedRows < 0)
         {
-          echo 'Query returned an error';
+          $responseString = 'Query returned an error';
+          echo $responseString;
         }
+        return $responseString;
     }
 
+    //create new channel for a workspace
     public function createNewChannel($channelName, $purpose, $type, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
+      $responseString = NULL;
       $affectedRows = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
       if ($affectedRows == 0)
       {
-          echo "Channel ".$channelName." not created";
+        $responseString = "Channel ".$channelName." not created";
+        echo $responseString;
       } else if ($affectedRows < 0)
       {
-        echo 'Query returned an error';
+        $responseString = 'Query returned an error';
+        echo $responseString;
       }
+      return $responseString;
     }
 
-    //public function destroyView(){
-      //if (!isset($_SESSION))
-      //{
-        //session_start();
-        // session_destroy();
-        // header("location:login.php", true, 303);
-      //}
-    //}
+    //add list of users to a channel
+    public function inviteUsersToChannel($users, $channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $invitationResults = array('success' => array(), 'failed' => array());
+      foreach ($users as $userId) {
+        $successFeeds = $this->homeModelVar->addUserToChannel($userId, $channelName, $workspaceUrl);
+        if ($successFeeds < 1) {
+          array_push($invitationResults['failed'], $userId);
+        } else {
+          array_push($invitationResults['success'], $userId);
+        }
+      }
+      return $invitationResults;
+    }
+
+    public function getRepliesForThread($threadId) {
+      $this->homeModelVar = new HomeModel();
+      $responseString = NULL;
+      $replyList = array();
+      $replyList = $this->homeModelVar->retrieveReplies($threadId);
+      if (empty($replyList)) {
+        echo "No replies found for the thread";
+      }
+      return $replyList;
+    }
+
   }
 ?>
