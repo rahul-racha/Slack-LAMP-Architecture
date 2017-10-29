@@ -23,6 +23,22 @@
     insertMessage($textArea);
   }
 
+  if (isset($_POST['newChannelSubmit'])) {
+    $channelName = $_POST["channelName"];
+    $purpose = $_POST['purpose'];
+    $channeltype = $_POST['phanneltype'];
+    $workspaceUrl = "musicf17.slack.com";
+    $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
+    
+  }
+
+  // if (isset($_POST['newInvite'])) {
+  //   $newUser = $_POST['inviteUsers'];
+  //   $channelName = $_POST['channel'];
+  //   $workspaceUrl = "musicf17.slack.com";
+  //   $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl);
+  // }
+
   function displayChannels()
   {
     global $homeControlVar;
@@ -36,6 +52,18 @@
             </form>';
     }
   }
+
+  // function Channelview(){
+  //   global $homeControlVar;
+  //   global $channelName;
+  //   $userCount = array();
+  //   $channelMessages = $homeControlVar->viewMessages($channelName);
+  //   foreach ($channelMessages as $key => $value) {
+  //     $userCount = $value['user_id'];
+  //     echo $value;
+  //   }
+  //   echo count($userCount);
+  // }
 
   function displayMessages() {
     global $homeControlVar;
@@ -75,6 +103,7 @@
 
     $homeControlVar->destroyView();
   }
+
 
 ?>
 
@@ -162,7 +191,7 @@
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-8">
-                        <form action="/action_page.php">
+                        <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                           <div class="form-group">
                             <label for="ChannelName">Channel Name</label>
                             <input type="text" class="form-control" placeholder="Channel name" name="ChannelName" autocomplete="off">
@@ -171,12 +200,16 @@
                             <label for="Purpose">Purpose</label>
                             <input type="text" class="form-control" placeholder="Purpose of Channel" name="Purpose" autocomplete="off">
                           </div>
-                          <div class="checkbox">
-                            <label><input type="checkbox" name="Public">Public</label>
-                            <label><input type="checkbox" name="Private">Private</label>
+                          <div class="radio">
+                            <label><input type="radio" name="Channeltype" value="Public">Public</label>
+                            <label><input type="radio" name="Channeltype" value="Private">Private</label>
+
+                          
+                          <!-- <span class="error">* <?php echo $genderErr;?></span> -->
+                        
                           </div>
-                          <input type="hidden" name="NewChannelSubmit" value="<?php echo $_POST["NewChannelSubmit"]; ?>"/>
-                          <input type="button" value="Sign Up" class="btn btn-primary btn-sm">
+                          <input type="hidden" name="NewChannelSubmit">
+                          <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
                         </form>
                     </div>
                   </div>
@@ -216,9 +249,15 @@
       <!-- right column -->
       <div class="col-md-10" >
         <div class="row">
-            <div class="Channelview">
-                  <strong><?php echo "#" . $channelName;?></strong>
-            </div>
+          <div class="Channelview">
+            <strong><?php echo "#" . $channelName;?></strong>
+            <!-- <div class="inviteUsers">
+              <a href="#" data-toggle="modal" data-target = "#inviteUsers">
+                <i class="fa fa-user-o" aria-hidden="true"></i>
+              </a>
+            </div> -->
+          </div>
+        </div>
             <div class="MessageDisplay" >
                 <?php displayMessages(); ?>
             </div>
@@ -229,8 +268,27 @@
                 <input id="SubmitButton" type="hidden" name="submit"/>
               </form>
             </div>
-        </div>
       </div>
+      <!-- Invite memebers modal -->
+       <!--  <div class="modal fade" id="inviteUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog dialog" role="document">
+            <div class="modal-content content">
+              <div class="modal-header header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body body">
+                <h4>Invite Persons</h4>
+                <form class="navbar-form modalForm" role="search">
+                  <div class="form-group">
+                    <input type="text" name = "inviteUsers" class="form-control" placeholder="Search">
+                  </div>
+                  <input type="hidden" name="newInvite">
+                  <input type="submit" value="Invite" class="btn btn-default">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div> -->
     </div>
 	</div>
     <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*20/100)+"px"); </script>

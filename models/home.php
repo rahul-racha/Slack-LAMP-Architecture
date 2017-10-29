@@ -176,9 +176,9 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
 
-      $stmt = $conn->prepare("INSERT INTO workspace_channels (channel_id, channel_name, purpose, url, user_id, type)
-                              VALUES (?,?,?,?,?,?)");
-      $stmt->bind_param("ssssss", NULL, $channelName, $purpose, $workspaceUrl, $_SESSION['userid'], $type);
+      $stmt = $conn->prepare("INSERT INTO workspace_channels (/*channel_id, */channel_name, url, user_id, purpose, type)
+                              VALUES (?,?,?,?,?)");
+      $stmt->bind_param("sssss", $channelName, $workspaceUrl, $_SESSION['userid'], $purpose, $type);
       $stmt->execute();
       $affectedRows = $stmt->affected_rows;
       $stmt->close();

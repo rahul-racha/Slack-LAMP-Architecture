@@ -69,6 +69,9 @@
     padding: 1% 99% 1% 1%;
     font-size: 27px;
 }
+.inviteUsers{
+    font-size: 38% ;
+}
 .MessageDisplay{
     width: 100% !important;
     /*margin-left: 4%;
@@ -185,3 +188,46 @@ body{
 
 .close:hover { background: #00d9ff; }
 
+/*users invitation modal */
+/* Jacob Lett - https//BootstrapCreative.com - Reference / Refresh / Repetition */
+
+.header {
+  border-bottom: none;
+}
+
+.dialog {
+    overflow: hidden;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0;
+}
+
+/*.modal-backdrop {
+    background-color:#fff;
+    opacity:1!important;
+    border: 10px solid rgba(136, 136, 136, .4);
+}*/
+
+/*.modal-open .modal {
+    overflow-y: hidden !important;
+    padding: 0%;
+}
+*/
+.content {
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.body {
+  text-align: center;
+}
+
+.modalForm {
+  margin: 0 auto;
+  float: none;
+  width: 300px;
+}
