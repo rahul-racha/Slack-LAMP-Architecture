@@ -10,21 +10,6 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="js/login.js"></script>
-		<!--<script>
-			// $( document ).ready(function() {
-    	// 	var msg = "<?php //echo $message; ?>";
-    	// 	var isAlertDisplayed = "<?php //echo $_SESSION['isAlertDisplayed']; ?>";
-			// 	<?php //unset($message);
-			// 	 ?>
-			//
-			// 		if (!msg.empty) {
-			// 			$('.ResponseDisplay').html('<h5>' + msg + '</h5>');
-			// 		}
-			// 		$('#SignupResponseModal').modal('show');
-			//
-			// 	});
-
-		</script>-->
 
 	</head>
 	<body>
@@ -44,7 +29,7 @@
 		                    <div class="col-md-8" style="border-right: 1px dotted #C2C2C2;padding-right: 30px;">
 		                        <div class="tab-content">
 		                            <div class="tab-pane active" id="Registration">
-		                                <form role="form" class="form-horizontal" name= "registraionForm"  id="registraionForm" onsubmit = "event.preventDefault(); doClientValidation();" method="post" action="<?php echo htmlspecialchars('./router.php?register=new'); ?>">
+		                                <form role="form" class="form-horizontal" name= "registraionForm"  id="registraionForm" method="post" onsubmit = "event.preventDefault(); doClientValidation();" action="<?php echo htmlspecialchars('./router.php?register=new'); ?>">
 			                                <div class="form-group">
 		                                    <label for="firstName" class="col-sm-3 control-label">
 		                                       First Name</label>
@@ -66,7 +51,7 @@
 		                                        Email</label>
 		                                    <div class="col-sm-8">
 		                                      <input type="email" class="form-control" name="email" id="email" placeholder="Email" autocomplete="off" required />
-		                                      <span id="nameErrMsg2" class="error"></span>
+		                                      <span id="nameErrMsg5" class="error"></span>
 		                                   	</div>
 		                                  </div>
 		                                  <div class="form-group">
@@ -74,7 +59,7 @@
 		                                      Choose your username</label>
 		                                    <div class="col-sm-8">
 		                                      <input type="text" class="form-control" name="userId" id="userId" placeholder="eg: d3rp" autocomplete="off" required />
-		                                    <span id="nameErrMsg3" class="error"></span>
+		                                    <span id="nameErrMsg2" class="error"></span>
 		                                    </div>
 		                                 	</div>
 		                                 	<div class="form-group">
@@ -82,7 +67,7 @@
 		                                      Create a Password</label>
 		                                    <div class="col-sm-8">
 		                                      <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete="off" required/>
-		                                    <span id="nameErrMsg4" class="error"></span>
+		                                    <span id="nameErrMsg3" class="error"></span>
 		                                    </div>
 		                                 	</div>
 		                                 	<div class="form-group">
@@ -90,7 +75,7 @@
 		                                     Confirm your Password</label>
 		                                    <div class="col-sm-8">
 		                                      <input type="password" class="form-control" name="confirmpassword" id="confirmpassword" placeholder="Password" autocomplete="off" required/>
-		                                    <span id="nameErrMsg5" class="error"></span>
+		                                    <span id="nameErrMsg4" class="error"></span>
 		                                    </div>
 		                                 </div>
 		                                 <div class="row">
