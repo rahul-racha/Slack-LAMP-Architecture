@@ -129,10 +129,10 @@
           } else {
             $dependency = $threadId;
           }
-          echo "string";
-          var_dump($chId); 
-          var_dump($_SESSION['userid']);
-          var_dump($msgId);var_dump($message);var_dump($type);var_dump($dependency);
+          // echo "string";
+          // var_dump($chId); 
+          // var_dump($_SESSION['userid']);
+          // var_dump($msgId);var_dump($message);var_dump($type);var_dump($dependency);
           $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message, type, dependency)
                                   VALUES (?,?,?,?,?,?)");
           $stmt->bind_param("ssssss", $chId, $_SESSION['userid'], $msgId, $message, $type, $dependency);
@@ -236,11 +236,12 @@
       $info = array();
       $getUsers = "SELECT users, count
                    FROM reactions
-                   WHERE msg_id = '$msgId' AND emo_id = $emoId";
+                   WHERE msg_id = $msgId AND emo_id = $emoId";
       $result = mysqli_query($conn, $getUsers);
       if (mysqli_num_rows($result) == 1) {
         while ($row = $result->fetch_assoc()) {
-          $info = $row;
+          $info['users'] = $row['users'];
+          $info['count'] = $row['count'];
         }
       }
       if ($result) {
@@ -275,7 +276,7 @@
       $conn = $dbConVar->createConnectionObject();
       $users = $info['users'];
       $count = NULL;
-      if ($isInsert === true) {
+      if ($isInsert == "true") {
         $count = $info['count'] + 1;
       } else {
         if ($count > 0) {
@@ -285,16 +286,18 @@
       $affectedRows = NULL;
       if ($emoId != NULL && $count != NULL) {
         if($users != NULL) {
-            if ($isInsert === true) {
+            if ($isInsert == "true") {
               $users = $users.$_SESSION['userid'].";";
             } else {
               str_replace(";".$_SESSION['userid'].";", ";", $users);
             }
         } else {
-            if ($isInsert === true) {
+            if ($isInsert == "true") {
               $users = ";".$_SESSION['userid'].";";
             }
         }
+          var_dump($users);
+          var_dump($count);
           $stmt = $conn->prepare("INSERT INTO reactions (msg_id, emo_id, users, count)
                                   VALUES (?,?,?,?)");
           $stmt->bind_param("ssss", $msgId, $emoId, $users, $count);

@@ -7,6 +7,7 @@
   $homeControlVar = new HomeController();
   $channelName = NULL;
   $textArea = NULL;
+  $temp = NULL;
   $newInviteUserResponse = array();
 
   if (isset($_POST["channel"])) {
@@ -30,15 +31,26 @@
     $channeltype = $_POST['Channeltype'];
     $workspaceUrl = "musicf17.slack.com";
     $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
-    unset($_POST['NewChannelSubmit']);
+    // 
     // header("Location:home.php");
   }
 
-  if (isset($_POST['newInvite'] )) {
+  if (isset($_POST['NewChannelSubmit'] )) {
     global $newInviteUserResponse;
     global $channelName;
     $workspaceUrl = "musicf17.slack.com";
     $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
+    // unset($_POST['NewChannelSubmit']);
+  }
+
+  if(isset($_POST['treadIdSubmit'])){
+    // $homeControlVar = new HomeController();
+    $treadsArr = array();
+    echo $_POST['threadId'];
+    // $i = 4;
+    $treadsArr = $homeControlVar->getRepliesForThread($_POST['threadId']);//$_POST['threadId']
+    var_dump($treadsArr);
+
   }
 
   function displayChannels()
@@ -77,15 +89,60 @@
       $strip = $CurrentTime->format('H:i @Y-m-d');
       $name = NULL;
       if (count($channelMessages) != $i) {
-      $name = "<div class = 'EntireMessage col-xs-12'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value['message']."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."<a id = ".$value["msgId"]."><i class='fa fa-reply' aria-hidden='true'></i></a>"."</div>";
+        $msgId = $value['msg_id'];
+      // $name = "<div class = 'EntireMessage col-xs-12'>
+      //           <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+      //           "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+      //           <ul class = 'MessageUL'>
+      //             <li class = 'MessageLI'>".$value['message']."</li>
+      //           </ul>
+      //           <label id='reactions' onclick=reactions(".$msgId.",'like','true')><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp 
+      //           <label>
+      //           <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp 
+      //           <form method='post'>
+      //             <input type='hidden'
+      //              name='threadId' value=". $msgId.">
+      //             <input type='submit' name='treadIdSubmit' value='reply'>
+      //           </form>
+      //         </div>";
+
+
+
+        $name = "<div class = 'EntireMessage col-xs-12'>
+                <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+                "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+                <ul class = 'MessageUL'>
+                  <li class = 'MessageLI'>".$value['message']."</li>
+                </ul>
+                <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp 
+                <label>
+                <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp 
+                <form method='post'>
+                  <input type='hidden'
+                   name='threadId' value=". $msgId.">
+                  <input type='submit' name='treadIdSubmit' value='reply'>
+                </form>
+              </div>";
+              
       } else {
-      $name = "<div id = 'bottom' class = 'EntireMessage col-xs-12'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value['message']."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."<a id = ".$value["msgId"]."><i class='fa fa-reply' aria-hidden='true'></i></a>"."</div>";
+      $name = "<div id='bottom' class = 'EntireMessage col-xs-12'>
+                <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+                "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+                <ul class = 'MessageUL'>
+                  <li class = 'MessageLI'>".$value['message']."</li>
+                </ul>
+                <a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a> &nbsp &nbsp 
+                <a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a> &nbsp &nbsp 
+                <form method='post'>
+                  <input type='hidden' name='threadId' value=". $msgId.">
+                  <input type='submit' name='treadIdSubmit' value='reply'>
+                </form>
+              </div>";
     }
       echo $name;
       $i++;
     }
   }
-
   function insertMessage($textArea) {
     global $homeControlVar;
     global $channelName;
@@ -120,7 +177,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="home.js"></script>
+  <script type="text/javascript" src="js/home.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -129,8 +186,8 @@
       <!-- left panel -->
   		<div class="col-xs-2 nopadding sideBar" >
         <div class="navbar navbar-inverse navbar-fixed-left">
-            <div class="col-xs-12">
-              <button type="button" class="btn btn-info btn-lg " data-toggle="modal" data-target="#ProfileUpdate">musicf17.slack.com</button>
+            <div class="col-xs-12 workspaceUrlDisplay">
+              <input type="submit" class="btn btn-info btn-lg workspaceUrlDisplay" data-toggle="modal" data-target="#ProfileUpdate" value="musicf17.slack.com">
             </div>
             <div class="ChannelDisplay col-xs-12">
               <h4>Channels
@@ -186,6 +243,7 @@
                 </div>
               </div>
             </div>
+            <!-- create new channel -->
             <div class="modal fade" id="NewChannel" role="dialog">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -208,10 +266,10 @@
                             <div class="radio">
                               <label><input type="radio" name="Channeltype" value="Public">Public</label>
                               <label><input type="radio" name="Channeltype" value="Private">Private</label>
-
-                            
-                            <!-- <span class="error">* <?php echo $genderErr;?></span> -->
-                          
+                            </div>
+                            <div class="form-group">
+                              <label for="invitingNewUsers">Invite members to this channel</label>
+                              <input type="text" class="form-control" name="newUserSearch[]">
                             </div>
                             <input type="hidden" name="NewChannelSubmit">
                             <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
@@ -252,15 +310,15 @@
   		</div>
       </div>
       <!-- right column -->
-      <div class="col-xs-10" >
+      <div class="col-xs-10 MessageHome" >
         <!-- <div class="row"> -->
           <div class="Channelview col-xs-12">
             <h4><strong><?php echo "#" . $channelName;?></strong></h4>
-            <div class="inviteUsers">
+            <!-- <div class="inviteUsers">
               <a href="#" data-toggle="modal" data-target = "#inviteUsers">
                 <i class="fa fa-user-o" aria-hidden="true"></i>
               </a>
-            </div>
+            </div> -->
           </div>
         <!-- </div> -->
           <div class="MessageDisplay col-xs-12" >
@@ -273,28 +331,28 @@
               <input id="SubmitButton" type="hidden" name="submit"/>
             </form>
           </div>
-      
+          
       <!-- Invite memebers modal -->
-        <div class="modal fade" id="inviteUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div class="modal-dialog dialog" role="document">
-            <div class="modal-content content">
-              <div class="modal-header header">
+        <!-- <div class="modal fade" id="inviteUsers" role="dialog">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Invite Persons</h4>
               </div>
-              <div class="modal-body body">
-                <h4>Invite Persons</h4>
-                <form class="navbar-form modalForm" method="POST" role="search">
+              <div class="modal-body">
+                <form method="POST">
                   <div class="form-group">
                     <input type="text" name = "newUserSearch[]" class="form-control" placeholder="Search">
                   </div>
                   <input type="hidden" name="newInvite">
-                   <input type="hidden" name="channel" value="<?php echo $_POST['channel']; ?>">
+                  <input type="hidden" name="channel" value="<?php echo $_POST['channel']; ?>">
                   <input type="submit" value="Invite" class="btn btn-default">
                 </form>
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
 	</div>

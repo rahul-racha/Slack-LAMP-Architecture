@@ -27,6 +27,8 @@
   //   header("location:..home.php", true, 303);
   // }
 
+
+
   class HomeController {
     private $homeModelVar;
 
@@ -191,19 +193,21 @@
       $info = array();
       $emoId = $this->homeModelVar->getEmoId($emoName);
       if ($emoId != NULL) {
+        $emoidString = "emo id ".$emoId;
         $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
-        if ($info['users'] != NULL) {
-          if ($this->isUserExistsForReaction($info['users']) === false) {
-            if ($isInsert === true) {
+        if ($info != NULL && $info['users'] != NULL) {
+          $userString = " users: ".$info['users'];
+          if ($this->isUserExistsForReaction($info['users']) == "false") {
+            if ($isInsert == "true") {
               $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
             }
           } else {
-            if ($isInsert === false) {
+            if ($isInsert == "false") {
               $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
             }
           }
         } else {
-          if ($isInsert === true) {
+          if ($isInsert == "true") {
             $info['count'] = 0;
             $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
           }
