@@ -6,11 +6,10 @@ function checkName() {
 	var isSuccess = "false";
 	for(var id = 0; id <= input.length; id++){
 		errMsgHolder[id] = document.getElementById("nameErrMsg" + id);
-		// console.log(errMsgHolder[id]);
 	}
 	for (var i=0; i<=input.length; i++) {
 		isSuccess = validatespaces(input[i]);
-	  if (isSuccess == "true") 
+	  	if (isSuccess == "true") 
 		{
 			continue;
 		} else {
@@ -18,26 +17,21 @@ function checkName() {
 			break;
 		}	
 	}
-	if (input[3] != input[4]) {
+	if (input[3] !== input[4]) {
 		errMsgHolder[4].innerHTML = "Password mismatch";
 		isSuccess = "false";
-	}
-	else{
+	} else{
 		isSuccess = "true";
 	}
-	//password reverivation
-	if (isSuccess == "true") {
-		document.getElementById("registraionForm").action = "login.php"; // Setting form action to "success.php" page
-		document.getElementById("registraionForm").submit(); // Submitting form
-		// $('#SignupModal').modal('hide');
-		
+
+		document.getElementById("registraionForm").action = "login.php";
+		document.getElementById("registraionForm").submit();		
 	}
 }
 
 function validatespaces(value) {
 	var response;
-	if (!((/^\S{3,}$/).test(value))) {
-	    
+	if (!((/^\S{3,}$/).test(value))) {	    
 	    response = "false";
 	  } else {
 	    response = "true";

@@ -3,12 +3,13 @@
     height: 100% !important;
     /*text-align: center !important;*/
     border: black !important;
-    overflow-y: auto !important;
+    /*overflow-y: auto !important;*/
     min-width: auto !important;
     max-width: auto !important;
-
 }
-
+.col-md-2{
+    /*overflow-y: auto !important;*/
+}
 .SideBarButton {
     background-color: #4d394b !important;
     border: black !important;
@@ -29,7 +30,7 @@
 }
 .ChannelDisplay{
     color: white;
-    padding: 0% 5%;
+    padding: 0% 10% !important;
 }
 
 

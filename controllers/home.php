@@ -121,9 +121,9 @@
       foreach ($users as $userId) {
         $successFeeds = $this->homeModelVar->addUserToChannel($userId, $channelName, $workspaceUrl);
         if ($successFeeds < 1) {
-          array_push($invitationResults['failed'], $userId);
+          array_push($invitationResults['failed'], $userId." ".$channelName);
         } else {
-          array_push($invitationResults['success'], $userId);
+          array_push($invitationResults['success'], $userId." ".$channelName);
         }
       }
       return $invitationResults;

@@ -1,21 +1,24 @@
 <?php
-		session_start();
-		$_SESSION['basePath'] = '../';
-		session_write_close();
-	  require_once $_SESSION['basePath'].'controllers/login.php';
+	session_start();
+	$_SESSION['basePath'] = '../';
+	session_write_close();
+  	require_once $_SESSION['basePath'].'controllers/login.php';
 
-		$loginControlVar = new LoginController();
-
-		if (isset($_POST["registration"]) && $_POST["registration"] == "yes") {
-		    $firstName = $_POST["firstName"];
-		    $lastName = $_POST["lastName"];
-		    $email = $_POST["email"];
-		    $userId = $_POST["userId"];
-		    $password = $_POST["password"];
-		    $workspaceUrl = "musicf17.slack.com";
-		    $message = $loginControlVar->registerNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl);
-				unset($_POST["registration"]);
-		}
+	$loginControlVar = new LoginController();
+	$message = NULL;
+	if (isset($_POST["registration"]) && $_POST["registration"] == "yes") {
+		global $message;
+	    $firstName = $_POST["firstName"];
+	    $lastName = $_POST["lastName"];
+	    $email = $_POST["email"];
+	    $userId = $_POST["userId"];
+	    $password = $_POST["password"];
+	    $workspaceUrl = "musicf17.slack.com";
+	    $message = $loginControlVar->registerNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl);
+		unset($_POST);
+		echo $message;
+		// header("location:login.php", true, 303);
+	}
 ?>
 
 <!DOCTYPE html>
@@ -27,21 +30,17 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="login.js"></script>
 		<script>
-			$( document ).ready(function() {
+			$(document).ready(function() {
     		var msg = "<?php echo $message; ?>";
-    		var isAlertDisplayed = "<?php echo $_SESSION['isAlertDisplayed']; ?>";
-				<?php unset($message);
-				 ?>
-
-					if (!msg.empty) {
+    		// var isAlertDisplayed = "<?php //echo $_SESSION['isAlertDisplayed']; ?>";
+    		console.log(msg);
+				<?php unset($message); ?>
+					if (msg != NULL) {
 						$('.ResponseDisplay').html('<h5>' + msg + '</h5>');
+						$('#SignupResponseModal').modal('show');
 					}
-					$('#SignupResponseModal').modal('show');
-
 				});
-			
 		</script>
-
 	</head>
 	<body>
 		<!-- Large modal -->
