@@ -41,7 +41,7 @@
 					}
 				});
 		</script>
-	</head>
+
 	<body>
 		<!-- Large modal -->
 		<div class="modal fade" id="SignupModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -59,7 +59,7 @@
 		                    <div class="col-md-8" style="border-right: 1px dotted #C2C2C2;padding-right: 30px;">
 		                        <div class="tab-content">
 		                            <div class="tab-pane active" id="Registration">
-		                                <form role="form" class="form-horizontal" method="post" name= "registraionForm"  id="registraionForm" onsubmit = "event.preventDefault(); checkName();">
+		                                <form role="form" class="form-horizontal" name= "registraionForm"  id="registraionForm" onsubmit = "event.preventDefault(); doClientValidation();" method="post" action="<?php echo htmlspecialchars('./router.php?register=new'); ?>">
 			                                <div class="form-group">
 		                                    <label for="firstName" class="col-sm-3 control-label">
 		                                       First Name</label>
@@ -161,13 +161,15 @@
 					</div>
 					<p id="formMsg">
 					<?php
-					    //session_start();
 							$reason = array('password'=>'Invalid username or password',
 													'blank'=>'You have left one or more fields');
 							if (isset($_SESSION['invalidCredentials']) && $_SESSION['invalidCredentials'] == 'true') {
 								unset($_POST);
-								//$_SESSION['active'] = 'false';
 								echo $reason[$_SESSION['reason']];
+								session_destroy();
+							} else if (isset($_SESSION['registerResponse'])) {
+								echo $_SESSION['registerResponse'];
+								unset($_POST);
 								session_destroy();
 							}
 					?>

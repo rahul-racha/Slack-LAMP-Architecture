@@ -16,7 +16,7 @@
         {
           $userid = $this->loginModelVar->validateInputs($_POST['userid']);
           $password = $this->loginModelVar->validateInputs($_POST['password']);
-          session_start();
+          //session_start();
           if ($this->loginModelVar->verifyCredentials($userid, $password) == true)
           {
             $_SESSION['userid'] = $userid;
@@ -45,6 +45,7 @@
          $profile = array();
          $result = array();
          $responseString = NULL;
+
          $profile = $this->loginModelVar->checkUserExist($userId, $email);
          if ($profile['user_id'] == NULL && $profile['email'] == NULL)
          {
@@ -65,6 +66,8 @@
              $responseString = $user." and ".$mail." exist in the database";
            }
          }
+         $_SESSION['registerResponse'] = $responseString;
+         header("location:login.php", true, 303);
          return $responseString;
        }
     }

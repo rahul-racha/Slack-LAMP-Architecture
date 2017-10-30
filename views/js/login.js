@@ -1,41 +1,47 @@
-function checkName() {
+function doClientValidation() {
 	var x = document.registraionForm;
 	var input = [x.firstName.value, x.lastName.value, x.userId.value, x.password.value, x.confirmpassword.value];
 	var responseArray = ['first name', 'last name', 'userid', 'password' ];
 	var errMsgHolder = new Array(input.length);
 	var isSuccess = "false";
+	var isPwdMatch = "false";
 	for(var id = 0; id <= input.length; id++){
 		errMsgHolder[id] = document.getElementById("nameErrMsg" + id);
+		errMsgHolder[id].innerHTML = "";
 	}
 	for (var i=0; i<=input.length; i++) {
-		isSuccess = validatespaces(input[i]);
-	  	if (isSuccess == "true") 
+		isSuccess = validateData(input[i]);
+	  if (isSuccess == "true")
 		{
 			continue;
 		} else {
-			errMsgHolder[i].innerHTML = responseArray[i] + "cannot contain whitespace";
+			errMsgHolder[i].innerHTML = responseArray[i] + " cannot contain whitespace and length should be more than 3.";
 			break;
-		}	
+		}
 	}
 	if (input[3] !== input[4]) {
 		errMsgHolder[4].innerHTML = "Password mismatch";
-		isSuccess = "false";
+		isPwdMatch = "false";
 	} else{
-		isSuccess = "true";
+		isPwdMatch = "true";
 	}
-
-		document.getElementById("registraionForm").action = "login.php";
-		document.getElementById("registraionForm").submit();		
+	//password reverivation
+	if (isSuccess == "true" && isPwdMatch == "true") {
+		//document.getElementById("registraionForm").action = "login.php"; // Setting form action to "success.php" page
+		document.getElementById("registraionForm").submit(); // Submitting form
+		// $('#SignupModal').modal('hide')
 	}
 }
 
-function validatespaces(value) {
+function validateData(value) {
 	var response;
-	if (!((/^\S{3,}$/).test(value))) {	    
-	    response = "false";
-	  } else {
-	    response = "true";
-	  }
+	var reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#\$%\^&\*]).{8,15}$/ ; // /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})$/;
+	var whiteSpace = /^\S$/;
+	if (value.match(reg) && !value.match(whiteSpace)) {//if (!((/^\S{3,}$/).test(value))) {
+    response = "true";
+  } else {
+    response = "false";
+  }
 	 return response;
 }
 // function ValidateMinChar(){
