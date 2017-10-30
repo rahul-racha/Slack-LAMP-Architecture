@@ -7,6 +7,7 @@
   $homeControlVar = new HomeController();
   $channelName = NULL;
   $textArea = NULL;
+  $newInviteUserResponse = array();
 
   if (isset($_POST["channel"])) {
     global $channelName;
@@ -23,21 +24,22 @@
     insertMessage($textArea);
   }
 
-  if (isset($_POST['newChannelSubmit'])) {
-    $channelName = $_POST["channelName"];
-    $purpose = $_POST['purpose'];
-    $channeltype = $_POST['phanneltype'];
+  if (isset($_POST['NewChannelSubmit'])) {
+    $channelName = $_POST["ChannelName"];
+    $purpose = $_POST['Purpose'];
+    $channeltype = $_POST['Channeltype'];
     $workspaceUrl = "musicf17.slack.com";
-    $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
-    
+    $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
+    unset($_POST['NewChannelSubmit']);
+    // header("Location:home.php");
   }
 
-  // if (isset($_POST['newInvite'])) {
-  //   $newUser = $_POST['inviteUsers'];
-  //   $channelName = $_POST['channel'];
-  //   $workspaceUrl = "musicf17.slack.com";
-  //   $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl);
-  // }
+  if (isset($_POST['newInvite'] )) {
+    global $newInviteUserResponse;
+    global $channelName;
+    $workspaceUrl = "musicf17.slack.com";
+    $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
+  }
 
   function displayChannels()
   {
@@ -45,7 +47,7 @@
     $channelList = $homeControlVar->viewChannels();
     foreach ($channelList as $value) {
       echo '<form method="post" action = "home.php">
-              <div class = "ChannelDisplay">
+              <div class = "ChannelDisplay col-xs-12">
                 <input type="hidden" name="channel" value="'.$value.'" />
                 <input type="submit" class="SideBarButton" value="'.$value.'" />
               </div>
@@ -74,11 +76,10 @@
       $CurrentTime = new DateTime($value["created_time"]);
       $strip = $CurrentTime->format('H:i @Y-m-d');
       $name = NULL;
-      //$msg = $homeControlVar->validateInputs($value["message"]);
       if (count($channelMessages) != $i) {
-      $name = "<div class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."</div>";
-    } else {
-      $name = "<div id = 'bottom' class = 'EntireMessage'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$msg."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."</div>";
+      $name = "<div class = 'EntireMessage col-xs-12'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value['message']."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."<a id = ".$value["msgId"]."><i class='fa fa-reply' aria-hidden='true'></i></a>"."</div>";
+      } else {
+      $name = "<div id = 'bottom' class = 'EntireMessage col-xs-12'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value['message']."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."<a id = ".$value["msgId"]."><i class='fa fa-reply' aria-hidden='true'></i></a>"."</div>";
     }
       echo $name;
       $i++;
@@ -88,8 +89,10 @@
   function insertMessage($textArea) {
     global $homeControlVar;
     global $channelName;
+    $threadId = NULL;
+    $messageType = 'post';
     //global $textArea;
-    $homeControlVar->insertMessage($channelName,$textArea);
+    $homeControlVar->insertMessage($channelName,$textArea,$threadId,$messageType);
     // if (isset($_SESSION["postFormVars"]))
     // {
     //   unset($_SESSION["postFormVars"]);
@@ -117,160 +120,162 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="home.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-	<div class="container-fluid" style="padding-left: 0%;">
-    <div class="row">
+	<div class="container-fluid nopadding" style="padding-left: 0%;">
       <!-- left panel -->
-  		<div class="col-md-2" >
+  		<div class="col-xs-2 nopadding sideBar" >
         <div class="navbar navbar-inverse navbar-fixed-left">
-          <button type="button" class="btn btn-info btn-lg SideBarButton " data-toggle="modal" data-target="#ProfileUpdate">musicf17.slack.com</button>
-          <div class="ChannelDisplay">
-            <h4>Channels
-              <a href="#" class="NewChannel" data-toggle="modal" data-target="#NewChannel">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-              </a>
-            </h4>
-          </div>
-            <?php displayChannels(); ?>
-          <div class="modal fade" id="ProfileUpdate" role="dialog">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Edit Your Profile</h4>
-                </div>
-                <div class="modal-body">
-                  <div class="row">
-                    <div class="col-md-8">
-                        <form action="/action_page.php">
-                          <div class="form-group">
-                            <label for="FirstName">First Name</label>
-                            <input type="text" class="form-control" placeholder="First Name" name="FirstName" autocomplete="off">
-                          </div>
-                          <div class="form-group">
-                            <label for="LastName">Last Name</label>
-                            <input type="text" class="form-control" placeholder="Last Name" name="LastName" autocomplete="off">
-                          </div>
-                          <div class="form-group">
-                            <label for="Status">Status</label>
-                            <input type="text" class="form-control" placeholder="What is your status" name="Status" autocomplete="off">
-                          </div>
-                          <div class="form-group">
-                            <label for="PhoneNumber">Phone number</label>
-                            <input type="text" class="form-control" placeholder="(123) 456-7891" name="PhoneNumber" autocomplete="off">
-                          </div>
-                          <div class="checkbox">
-                            <label><input type="checkbox" name="remember"> Remember me</label>
-                          </div>
-                          <button type="submit" class="btn btn-default">Submit</button>
-                        </form>
-                    </div>
-                    <div class="col-md-4">
-                      <!-- avatar details goes here -->
-                      <input type="image" src="https://www.fancyhands.com/images/default-avatar-250x250.png" width="30px"/>
-                      <input type="file" id="my_file" style="display: none;" />
+            <div class="col-xs-12">
+              <button type="button" class="btn btn-info btn-lg " data-toggle="modal" data-target="#ProfileUpdate">musicf17.slack.com</button>
+            </div>
+            <div class="ChannelDisplay col-xs-12">
+              <h4>Channels
+                <a href="#" class="NewChannel" data-toggle="modal" data-target="#NewChannel">
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </a>
+              </h4>
+            </div>
+              <?php displayChannels(); ?>
+            <div class="modal fade" id="ProfileUpdate" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Your Profile</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-xs-8">
+                          <form action="/action_page.php">
+                            <div class="form-group">
+                              <label for="FirstName">First Name</label>
+                              <input type="text" class="form-control" placeholder="First Name" name="FirstName" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                              <label for="LastName">Last Name</label>
+                              <input type="text" class="form-control" placeholder="Last Name" name="LastName" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                              <label for="Status">Status</label>
+                              <input type="text" class="form-control" placeholder="What is your status" name="Status" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                              <label for="PhoneNumber">Phone number</label>
+                              <input type="text" class="form-control" placeholder="(123) 456-7891" name="PhoneNumber" autocomplete="off">
+                            </div>
+                            <div class="checkbox">
+                              <label><input type="checkbox" name="remember"> Remember me</label>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                          </form>
+                      </div>
+                      <div class="col-xs-4">
+                        <!-- avatar details goes here -->
+                        <input type="image" src="https://www.fancyhands.com/images/default-avatar-250x250.png" width="30px"/>
+                        <input type="file" id="my_file" style="display: none;" />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="modal fade" id="NewChannel" role="dialog">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Create New Channel</h4>
-                </div>
-                <div class="modal-body">
-                  <div class="row">
-                    <div class="col-md-8">
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-                          <div class="form-group">
-                            <label for="ChannelName">Channel Name</label>
-                            <input type="text" class="form-control" placeholder="Channel name" name="ChannelName" autocomplete="off">
-                          </div>
-                          <div class="form-group">
-                            <label for="Purpose">Purpose</label>
-                            <input type="text" class="form-control" placeholder="Purpose of Channel" name="Purpose" autocomplete="off">
-                          </div>
-                          <div class="radio">
-                            <label><input type="radio" name="Channeltype" value="Public">Public</label>
-                            <label><input type="radio" name="Channeltype" value="Private">Private</label>
+            <div class="modal fade" id="NewChannel" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create New Channel</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-xs-8">
+                          <form method="post" id= "NewChannel">
+                            <div class="form-group">
+                              <label for="ChannelName">Channel Name</label>
+                              <input type="text" class="form-control" placeholder="Channel name" name="ChannelName" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                              <label for="Purpose">Purpose</label>
+                              <input type="text" class="form-control" placeholder="Purpose of Channel" name="Purpose" autocomplete="off">
+                            </div>
+                            <div class="radio">
+                              <label><input type="radio" name="Channeltype" value="Public">Public</label>
+                              <label><input type="radio" name="Channeltype" value="Private">Private</label>
 
+                            
+                            <!-- <span class="error">* <?php echo $genderErr;?></span> -->
                           
-                          <!-- <span class="error">* <?php echo $genderErr;?></span> -->
-                        
-                          </div>
-                          <input type="hidden" name="NewChannelSubmit">
-                          <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
-                        </form>
+                            </div>
+                            <input type="hidden" name="NewChannelSubmit">
+                            <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
+                          </form>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- <div>
-            <a href="#channelModel"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
-            <div id="channelModel" class="channelDialog">
-              <div>
-                <a href="#close" title="Close" class="close">X</a>
-                <form>
-                  <h2>Create Channel</h2>
-                  <label>Channel Name</label>
-                  <input type="text" name="Channel name" placeholder="e.g. general"><br>
-                  <label>Purpose (optional)</label>
-                  <input type="text" name="purpose"><br>
-                  <label>USERS</label>
-                  <input type="text" name="UserName" placeholder="Search by name"><br>
-    		        </form>
+            <!-- <div>
+              <a href="#channelModel"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+              <div id="channelModel" class="channelDialog">
+                <div>
+                  <a href="#close" title="Close" class="close">X</a>
+                  <form>
+                    <h2>Create Channel</h2>
+                    <label>Channel Name</label>
+                    <input type="text" name="Channel name" placeholder="e.g. general"><br>
+                    <label>Purpose (optional)</label>
+                    <input type="text" name="purpose"><br>
+                    <label>USERS</label>
+                    <input type="text" name="UserName" placeholder="Search by name"><br>
+      		        </form>
+                </div>
               </div>
-            </div>
-            <form method="post" action="<?php echo htmlspecialchars('channel.php'); ?>">
-              <input type="submit" class="CreateChannel" value="(+) channel">
-            </form>
-          </div> -->
+              <form method="post" action="<?php echo htmlspecialchars('channel.php'); ?>">
+                <input type="submit" class="CreateChannel" value="(+) channel">
+              </form>
+            </div> -->
 
-          <!-- <div>
-            <a href="<?php echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="LogoutButton">Logout</a>
-          </div> -->
-        </div>
+            <!-- <div>
+              <a href="<?php echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="LogoutButton">Logout</a>
+            </div> -->
   		</div>
+      </div>
       <!-- right column -->
-      <div class="col-md-10" >
-        <div class="row">
-          <div class="Channelview">
-            <strong><?php echo "#" . $channelName;?></strong>
-            <!-- <div class="inviteUsers">
+      <div class="col-xs-10" >
+        <!-- <div class="row"> -->
+          <div class="Channelview col-xs-12">
+            <h4><strong><?php echo "#" . $channelName;?></strong></h4>
+            <div class="inviteUsers">
               <a href="#" data-toggle="modal" data-target = "#inviteUsers">
                 <i class="fa fa-user-o" aria-hidden="true"></i>
               </a>
-            </div> -->
+            </div>
           </div>
-        </div>
-            <div class="MessageDisplay" >
+        <!-- </div> -->
+          <div class="MessageDisplay col-xs-12" >
                 <?php displayMessages(); ?>
-            </div>
-            <div class="MessageEntry">
-              <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'#bottom'); ?>">
-                <input id="textArea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
-                <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-                <input id="SubmitButton" type="hidden" name="submit"/>
-              </form>
-            </div>
-      </div>
+          </div>
+          <div class="MessageEntry col-xs-12">
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'#bottom'); ?>">
+              <input id="textArea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
+              <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+              <input id="SubmitButton" type="hidden" name="submit"/>
+            </form>
+          </div>
+      
       <!-- Invite memebers modal -->
-       <!--  <div class="modal fade" id="inviteUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="inviteUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
           <div class="modal-dialog dialog" role="document">
             <div class="modal-content content">
               <div class="modal-header header">
@@ -278,23 +283,28 @@
               </div>
               <div class="modal-body body">
                 <h4>Invite Persons</h4>
-                <form class="navbar-form modalForm" role="search">
+                <form class="navbar-form modalForm" method="POST" role="search">
                   <div class="form-group">
-                    <input type="text" name = "inviteUsers" class="form-control" placeholder="Search">
+                    <input type="text" name = "newUserSearch[]" class="form-control" placeholder="Search">
                   </div>
                   <input type="hidden" name="newInvite">
+                   <input type="hidden" name="channel" value="<?php echo $_POST['channel']; ?>">
                   <input type="submit" value="Invite" class="btn btn-default">
                 </form>
               </div>
             </div>
           </div>
-        </div> -->
-    </div>
+        </div>
+      </div>
+
 	</div>
-    <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*20/100)+"px"); </script>
+  <!-- message display height -->
+    <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*22/100)+"px"); </script>
     <script type="text/javascript">$("input[type='image']").click(function() {
       $("input[id='my_file']").click();
     });</script>
+    <!-- nav bar height -->
+    <script type="text/javascript">$(".sideBar").height($(window).height()-($(window).height()*0/100)+"px");</script>
 
 </body>
 
