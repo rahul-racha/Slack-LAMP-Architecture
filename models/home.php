@@ -51,7 +51,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->messages = array();
-      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, message, created_time
+      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, message, msg_id, created_time
                       FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                       WHERE channel_id
                       IN (
@@ -103,7 +103,7 @@
       $chId = $this->getChannelId($channelName);
       if ($chId != NULL)
       {
-        $msgId = 0;
+        $msgId = NULL;
         $getMsgId = "SELECT msg_id
                      FROM channel_messages
                      ORDER BY msg_id
@@ -113,25 +113,34 @@
         {
           while ($row = $result->fetch_assoc())
           {
-            $msgId = $row['msg_id'];
+            $msgId = $row['msg_id']; 
           }
-        }
-        mysqli_free_result($result);
-        $msgId++;
-        $dependency = NULL;
-        if ($threadId == NULL) {
-          $dependency = $msgId;
         } else {
-          $dependency = $threadId;
+          $msgId = 0;
         }
-
-        $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message, type, dependency)
-                                VALUES (?,?,?,?,?,?)");
-        $stmt->bind_param("ssssss", $chId, $_SESSION['userid'], $msgId, $message, $type, $dependency);
-        $stmt->execute();
-        //if ($stmt->affected_rows > 0) {}
-        $affectedRows = $stmt->affected_rows;
-        $stmt->close();
+        if ($result) {
+          mysqli_free_result($result);
+        }
+        if ($msgId >= 0) {
+          $msgId++;
+          $dependency = NULL;
+          if ($threadId == NULL) {
+            $dependency = $msgId;
+          } else {
+            $dependency = $threadId;
+          }
+          echo "string";
+          var_dump($chId); 
+          var_dump($_SESSION['userid']);
+          var_dump($msgId);var_dump($message);var_dump($type);var_dump($dependency);
+          $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message, type, dependency)
+                                  VALUES (?,?,?,?,?,?)");
+          $stmt->bind_param("ssssss", $chId, $_SESSION['userid'], $msgId, $message, $type, $dependency);
+          
+          $stmt->execute();
+          $affectedRows = $stmt->affected_rows;
+          $stmt->close();
+        }
       }
 
       $dbConVar->closeConnectionObject($conn);

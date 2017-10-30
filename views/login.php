@@ -28,19 +28,19 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="login.js"></script>
-		<script>
+		<script type="text/javascript" src="js/	login.js"></script>
+		<!--<script>
 			$(document).ready(function() {
-    		var msg = "<?php echo $message; ?>";
+    		var msg = "<?php //echo $message; ?>";
     		// var isAlertDisplayed = "<?php //echo $_SESSION['isAlertDisplayed']; ?>";
     		console.log(msg);
-				<?php unset($message); ?>
+				<?php //unset($message); ?>
 					if (msg != NULL) {
 						$('.ResponseDisplay').html('<h5>' + msg + '</h5>');
 						$('#SignupResponseModal').modal('show');
 					}
 				});
-		</script>
+		</script>-->
 
 	<body>
 		<!-- Large modal -->

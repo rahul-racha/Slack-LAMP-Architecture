@@ -1,14 +1,15 @@
 .navbar{
     background-color: #4d394b !important;
     height: 100% !important;
-    /*text-align: center !important;*/
+
     border: black !important;
-    /*overflow-y: auto !important;*/
+
     min-width: auto !important;
     max-width: auto !important;
 }
-.col-md-2{
-    /*overflow-y: auto !important;*/
+.sideBar{
+    height: 100hv;
+    padding-left: 0% !important;
 }
 .SideBarButton {
     background-color: #4d394b !important;
@@ -116,7 +117,7 @@
     padding-bottom: 1%;
 }*/
 body{
-    margin: 0;
+    height: 100%;
     overflow: hidden;
     background-image: url("../images/crushedPaper.jpg");
 }
