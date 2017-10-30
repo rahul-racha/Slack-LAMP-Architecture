@@ -1,21 +1,5 @@
 <?php
-		session_start();
-		$_SESSION['basePath'] = '../';
-		session_write_close();
-	  require_once $_SESSION['basePath'].'controllers/login.php';
-
-		$loginControlVar = new LoginController();
-
-		if (isset($_POST["registration"]) && $_POST["registration"] == "yes") {
-		    $firstName = $_POST["firstName"];
-		    $lastName = $_POST["lastName"];
-		    $email = $_POST["email"];
-		    $userId = $_POST["userId"];
-		    $password = $_POST["password"];
-		    $workspaceUrl = "musicf17.slack.com";
-		    $message = $loginControlVar->registerNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl);
-				unset($_POST["registration"]);
-		}
+		 session_start();
 ?>
 
 <!DOCTYPE html>
@@ -25,22 +9,22 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="login.js"></script>
-		<script>
-			$( document ).ready(function() {
-    		var msg = "<?php echo $message; ?>";
-    		var isAlertDisplayed = "<?php echo $_SESSION['isAlertDisplayed']; ?>";
-				<?php unset($message);
-				 ?>
+		<script src="js/login.js"></script>
+		<!--<script>
+			// $( document ).ready(function() {
+    	// 	var msg = "<?php //echo $message; ?>";
+    	// 	var isAlertDisplayed = "<?php //echo $_SESSION['isAlertDisplayed']; ?>";
+			// 	<?php //unset($message);
+			// 	 ?>
+			//
+			// 		if (!msg.empty) {
+			// 			$('.ResponseDisplay').html('<h5>' + msg + '</h5>');
+			// 		}
+			// 		$('#SignupResponseModal').modal('show');
+			//
+			// 	});
 
-					if (!msg.empty) {
-						$('.ResponseDisplay').html('<h5>' + msg + '</h5>');
-					}
-					$('#SignupResponseModal').modal('show');
-
-				});
-			
-		</script>
+		</script>-->
 
 	</head>
 	<body>
@@ -60,7 +44,7 @@
 		                    <div class="col-md-8" style="border-right: 1px dotted #C2C2C2;padding-right: 30px;">
 		                        <div class="tab-content">
 		                            <div class="tab-pane active" id="Registration">
-		                                <form role="form" class="form-horizontal" method="post" name= "registraionForm"  id="registraionForm" onsubmit = "event.preventDefault(); checkName();">
+		                                <form role="form" class="form-horizontal" name= "registraionForm"  id="registraionForm" onsubmit = "event.preventDefault(); doClientValidation();" method="post" action="<?php echo htmlspecialchars('./router.php?register=new'); ?>">
 			                                <div class="form-group">
 		                                    <label for="firstName" class="col-sm-3 control-label">
 		                                       First Name</label>
@@ -162,13 +146,15 @@
 					</div>
 					<p id="formMsg">
 					<?php
-					    //session_start();
 							$reason = array('password'=>'Invalid username or password',
 													'blank'=>'You have left one or more fields');
 							if (isset($_SESSION['invalidCredentials']) && $_SESSION['invalidCredentials'] == 'true') {
 								unset($_POST);
-								//$_SESSION['active'] = 'false';
 								echo $reason[$_SESSION['reason']];
+								session_destroy();
+							} else if (isset($_SESSION['registerResponse'])) {
+								echo $_SESSION['registerResponse'];
+								unset($_POST);
 								session_destroy();
 							}
 					?>

@@ -13,6 +13,8 @@
   //page refresh
   //validate mysql insertions and retrieval
   //client side validation
+  //check if user is in channel before inviting
+  //check if user exists in db when inviting
 
 
   include_once $_SESSION['basePath'].'errors.php';
@@ -208,6 +210,8 @@
         }
         if ($affectedRows == 1) {
           $responseString = "success";
+        } else if ($affectedRows == NULL) {
+          $responseString = NULL;
         } else {
           $responseString = "failed";
         }
@@ -215,10 +219,6 @@
         $responseString = $emoName." is not found in database";
       }
       return $responseString;
-    }
-
-    public function delReactionForMsg($msgId, $emoName) {
-
     }
 
   }
