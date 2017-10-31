@@ -15,7 +15,6 @@
   if (isset($_POST["channel"])) {
     global $channelName;
     $channelName = $_POST["channel"];
-    echo "HERe";
   } else {
     global $channelName;
     $channelName = 'general';
@@ -40,10 +39,8 @@
   if(isset($_POST['threadId'])) {
     global $threadsArr;
     global $homeControlVar;
-    echo $_POST['threadId'];
+    //echo $_POST['threadId'];
     $threadsArr = $homeControlVar->getRepliesForThread($_POST['threadId']);
-    var_dump($threadsArr);
-    //threadReply($treadsArr);
   }
   //
   function createChannel($channelName, $purpose, $channeltype) {
@@ -105,7 +102,7 @@
   //   }
   //   echo count($userCount);
   // }
-
+//<a data-toggle='modal' data-target='#threadReply'>
   function displayMessages() {
     global $homeControlVar;
     global $channelName;
@@ -126,16 +123,20 @@
                   <ul class = 'MessageUL'>
                     <li class = 'MessageLI'>".$value['message']."</li>
                   </ul>
-                  <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp
-                  </label><span class = 'likeResponse".$msgId."'> </span>
-                  <label class='dislike' name='dislike' id=".$msgId."><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
-                  </label><span class = 'dislikeResponse".$msgId."'> </span>
-                  <a data-toggle='modal' data-target='#threadReply'>
-                    <form method='post' action=".$actionUrl.">
-                      <input type='hidden' name='threadId' value=". $msgId.">
-                      <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply'>
+                  <label class='like' name='like' id=".$msgId.">
+                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+                   </label>&nbsp &nbsp
+                  <span class = 'likeResponse".$msgId."'> </span>
+                  <label class='dislike' name='dislike' id=".$msgId.">
+                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
+                  </label> &nbsp &nbsp
+                  <span class = 'dislikeResponse".$msgId."'> </span>
+
+                    <form method='post' class = 'replyForm' action=".$actionUrl." >
+                      <input type='hidden' name='threadId' value=". $msgId." />
+                      <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply' />
                     </form>
-                  </a>
+
                 </div>";
 
       }  else {
@@ -146,16 +147,18 @@
               <ul class = 'MessageUL'>
                 <li class = 'MessageLI'>".$value['message']."</li>
               </ul>
-              <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp
+              <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+              </label> &nbsp &nbsp
               <label>
-              <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
-              <a data-toggle='modal' data-target='#threadReply'>
-                <form method='post' action=".$actionUrl.">
+              <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
+              </label> &nbsp &nbsp
+
+                <form class = 'replyForm' method='post' action=".$actionUrl.">
                   <input type='hidden' name='threadId' value=".$msgId.">
                   <input type='hidden' name='channel' value= ".$_POST['channel'].">
                   <input type='submit' class='threadIdSubmit' name='threadIdSubmit' value='reply'>
                 </form>
-              </a>
+
             </div>";
     }
       echo $name;
@@ -183,8 +186,6 @@
     global $threadsArr;
     if (!empty($threadsArr) && $threadsArr != NULL) {
       var_dump($threadsArr);
-    } else {
-      echo "<p>OYEEEEE</p>";
     }
   }
   //
@@ -260,8 +261,7 @@
                 </a>
               </h4>
             </div>
-              <?php displayChannels();
-               displayReplies();?>
+              <?php displayChannels();?>
             <div class="modal fade" id="ProfileUpdate" role="dialog">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -416,7 +416,7 @@
                 <?php displayMessages(); ?>
           </div>
           <div class="MessageEntry col-xs-12">
-            <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'.bottomMsg'); ?>">
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'#bottomMsg'); ?>">
               <input id="textArea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
               <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
               <input id="SubmitButton" type="hidden" name="submit"/>

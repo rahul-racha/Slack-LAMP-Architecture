@@ -224,7 +224,7 @@
       $this->replies = array();
       $getReplies = "SELECT user_id, msg_id, message, created_time
                      FROM channel_messages
-                     WHERE dependency = $threadId;
+                     WHERE dependency = $threadId
                      ORDER BY created_time ASC";
       $result = mysqli_query($conn, $getReplies);
       if (mysqli_num_rows($result) > 0) {

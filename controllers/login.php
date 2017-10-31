@@ -21,7 +21,7 @@
           {
             $_SESSION['userid'] = $userid;
             $_SESSION['password'] = $password;
-            header("location:views/home.php.bottomMsg");
+            header("location:views/home.php#bottomMsg");
             session_write_close();
             //include './views/home.php';
           } else {

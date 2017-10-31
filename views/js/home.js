@@ -1,3 +1,8 @@
+$(".replyForm").submit(function(){
+    //alert("Submitted");
+		console.log("hai");
+});
+
 $(document).ready(function(){
 		$(".like").on("click",function(e){
 			// console.log("adass");
