@@ -114,23 +114,25 @@
       $strip = $CurrentTime->format('H:i @Y-m-d');
       $name = NULL;
       $msgId = $value['msg_id'];
-      $actionUrl = htmlspecialchars($_SERVER['PHP_SELF']);//.'#'.$msgId);
+      $msgIdRef = $msgId."action";
+      $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgIdRef);
       echo $actionUrl;
       if (count($channelMessages) != $i) {
-        $name = "<div id= ".$msgId." class = 'EntireMessage'>
+        $name = "<div id= ".$msgIdRef." class = 'EntireMessage'>
                   <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
                   "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
                   <ul class = 'MessageUL'>
                     <li class = 'MessageLI'>".$value['message']."</li>
                   </ul>
+
                   <label class='like' name='like' id=".$msgId.">
                   <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
                    </label>&nbsp &nbsp
-                  <span class = 'likeResponse".$msgId."'> </span>
+                  <span id = 'likeResponse".$msgId."'> </span>
                   <label class='dislike' name='dislike' id=".$msgId.">
                   <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
                   </label> &nbsp &nbsp
-                  <span class = 'dislikeResponse".$msgId."'> </span>
+                  <span id = 'dislikeResponse".$msgId."'> </span>
 
                     <form method='post' class = 'replyForm' action=".$actionUrl." >
                       <input type='hidden' name='threadId' value=". $msgId." />
@@ -140,19 +142,23 @@
                 </div>";
 
       }  else {
-      $name = "<div id=".$msgId." class = 'EntireMessage'>
+      $name = "<div id=".$msgIdRef." class = 'EntireMessage'>
               <p id='bottomMsg'></p>
               <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
               "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
               <ul class = 'MessageUL'>
                 <li class = 'MessageLI'>".$value['message']."</li>
               </ul>
-              <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-              </label> &nbsp &nbsp
-              <label>
+
+              <label class='like' name='like' id=".$msgId.">
+              <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+               </label>&nbsp &nbsp
+              <span id = 'likeResponse".$msgId."'> </span>
+              <label class='dislike' name='dislike' id=".$msgId.">
               <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
               </label> &nbsp &nbsp
-
+              <span id = 'dislikeResponse".$msgId."'> </span>
+              
                 <form class = 'replyForm' method='post' action=".$actionUrl.">
                   <input type='hidden' name='threadId' value=".$msgId.">
                   <input type='hidden' name='channel' value= ".$_POST['channel'].">

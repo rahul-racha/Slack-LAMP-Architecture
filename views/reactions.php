@@ -7,14 +7,15 @@ require_once $_SESSION['basePath'].'controllers/home.php';
 $homeControlVar = new HomeController();
 
 
-if (isset($_POST['reactionsData'])) {
+if (isset($_POST['msgId']) && isset($_POST['emoName'])) {
     // echo "Hello I'm here";
     $reactionResponse = array();
 
     global $homeControlVar;
-    $reactionsData=$_POST['reactionsData'];
-    $msgId=$reactionsData['msgId'];
-    $emoName =$reactionsData['emoName'];
+    //$reactionsData = array();
+    //$reactionsData=json_decode(stripslashes($_POST['reactionsData']));
+    $msgId=$_POST['msgId'];
+    $emoName =$_POST['emoName'];
     $reactionHandling = $homeControlVar->handleReactionForMsg($msgId, $emoName);
     $reactionResponse = $homeControlVar->getReactionInfoForMsg($msgId, $emoName);
     // var_dump($reactionResponse);
@@ -24,15 +25,17 @@ if (isset($_POST['reactionsData'])) {
   if (isset($_POST['checkReactions'])) {
     $reactionResponse = array();
     global $homeControlVar;
-    $reactionsData=$_POST['reactionsData'];
-    $msgId=$reactionsData['msgId'];
-    $emoName =$reactionsData['emoName'];
+    //$reactionsData = array();
+    //$reactionsData=json_decode(stripslashes($_POST['reactionsData']));
+    $msgId=$_POST['msgId'];
+    $emoName =$_POST['emoName'];
     $checkOtherArr = array();
     $checkOtherArr = $homeControlVar->getReactionInfoForMsg($msgId, $emoName);
-    $checkOther = $checkOther['users'];
+    $checkOther = array();
+    $checkOther = $checkOtherArr['users'];
     $userInfo = $homeControlVar->isUserExistsForReaction($checkOther);
     // echo $userInfo;
-    if($userInfo == 'true')
+    if($userInfo == true)
     {
       $reactionResponse = $$homeControlVar->handleReactionForMsg($msgId, $emoName);
       echo $reactionResponse["count"];

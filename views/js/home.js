@@ -1,18 +1,13 @@
-$(".replyForm").submit(function(){
-    //alert("Submitted");
-		console.log("hai");
-});
-
 $(document).ready(function(){
 		$(".like").on("click",function(e){
 			// console.log("adass");
-			emoName = e.currentTarget.className;
-			msgId = parseInt(e.currentTarget.id);
+			var emoName = e.currentTarget.className;
+			var msgId = parseInt(e.currentTarget.id);
 			var reactionsArr = {'msgId':msgId,'emoName':emoName};
 			$.ajax({
 				method: 'post',
 				url: './reactions.php',
-				data: {'reactionsData':reactionsArr},
+				data: {'msgId':msgId, 'emoName':emoName},
 				// success: success,
 				dataType: 'text',
 				success: function(data){
@@ -20,14 +15,14 @@ $(document).ready(function(){
 					$.ajax({
 						method: 'post',
 						url: './reactions.php',
-						data: {'checkReactions':reactionsArr},
+						data: {'msgId':msgId, 'emoName':emoName},
 						dataType: 'text',
 						success: function(data){
-							$(".likeResponse" + msgId).html(data);
+							$("#likeResponse" + msgId).html(data);
 						},
 					});
 
-						$(".likeResponse" + msgId).html(data);
+						$("#likeResponse" + msgId).html(data);
 							// console.log(data);
 			       	// $('#response pre').html( JSON.stringify( data ) );
 		    	},
@@ -38,26 +33,26 @@ $(document).ready(function(){
 		});
 
 		$(".dislike").on("click",function(e){
-			emoName = e.currentTarget.className;
+			var emoName = e.currentTarget.className;
 			console.log(emoName);
-			msgId = parseInt(e.currentTarget.id);
+			var msgId = parseInt(e.currentTarget.id);
 			var reactionsArr = {'msgId':msgId,'emoName':emoName};
 			$.ajax({
 				method: 'post',
 				url: './reactions.php',
-				data: {'reactionsData':reactionsArr},
+				data: {'msgId':msgId, 'emoName':emoName},
 				// success: success,
 				dataType: 'text',
 				success: function(data){
 					// console.log(data);
-						$('.dislikeResponse' + msgId).html(data);
+						$('#dislikeResponse' + msgId).html(data);
 						$.ajax({
 							method: 'post',
 							url: './reactions.php',
-							data: {'checkReactions':reactionsArr},
+							data: {'msgId':msgId, 'emoName':emoName},
 							dataType: 'text',
 							success: function(data){
-								$(".dislikeResponse" + msgId).html(data);
+								$("#dislikeResponse" + msgId).html(data);
 							},
 						});
 							// console.log(data);
