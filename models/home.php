@@ -1,5 +1,5 @@
 <?php
-  include_once $_SESSION['basePath'].'errors.php';
+  //include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/connect.php';
 
   class HomeModel {
@@ -9,9 +9,9 @@
 
     public function validMySQL($data) {
       $data = stripslashes($data);
-      $data = htmlentities($data);
+      //$data = htmlentities($data);
       $data = strip_tags($data);
-      $data = mysql_real_escape_string($data);
+      //$data = mysql_real_escape_string($data);
       return $data;
     }
 
@@ -34,6 +34,7 @@
        {
          while ($row = $result->fetch_assoc())
          {
+
            array_push($userProfile, $row);
          }
        }
@@ -56,6 +57,8 @@
        {
          while ($row = $result->fetch_assoc())
          {
+           $row['channel_name'] = $this->validateInputs($row['channel_name']);
+           $row['type'] = $this->validateInputs($row['type']);
            array_push($userMembership, $row);
          }
        }
@@ -289,6 +292,8 @@
       $result = mysqli_query($conn, $getUsers);
       if (mysqli_num_rows($result) == 1) {
         while ($row = $result->fetch_assoc()) {
+          $row['users'] = $this->validateInputs($row['users']);
+          $row['count'] = $this->validateInputs($row['count']);
           $info['users'] = $row['users'];
           $info['count'] = $row['count'];
         }

@@ -53,7 +53,7 @@
     $channeltype = $_POST['Channeltype'];
     $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
     $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
-    var_dump($newInviteUserResponse);
+    //var_dump($newInviteUserResponse);
   }
 
   if (isset($_POST['inviteUsersExistingChannel']) && $_POST['inviteUsersExistingChannel'] == 'inviteUser') {
@@ -61,7 +61,7 @@
     global $channelName;
     global $workspaceUrl;
     global $homeControlVar;
-    echo $channelName;
+    //echo $channelName;
     $temp = array();
     $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
     if ($newChannelResponse == true && $_POST["newUserSearch"] != NULL && !empty($_POST["newUserSearch"])) {
@@ -237,11 +237,11 @@
   //               </div>
   //             </div>
   //           </div>";
-  if (isset($_GET['logout'])) {
-    global $homeControlVar;
-
-    $homeControlVar->destroyView();
-  }
+  // if (isset($_GET['logout'])) {
+  //   global $homeControlVar;
+  //
+  //   $homeControlVar->destroyView();
+  // }
 
 
 ?>
@@ -385,9 +385,9 @@
               </form>
             </div> -->
 
-            <!-- <div>
-              <a href="<?php //echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="LogoutButton">Logout</a>
-            </div> -->
+             <div>
+              <a href="<?php echo htmlspecialchars('prgHelper.php'); ?>" class="LogoutButton">Logout</a>
+            </div>
   		</div>
       </div>
       <!-- right column -->
@@ -439,10 +439,6 @@
             </form>
           </div>
         </div>
-
-
-
-
       </div>
       <div class = 'threadDiv col-xs-1'>
         <?php  displayReplies(); ?>

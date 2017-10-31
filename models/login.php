@@ -1,10 +1,18 @@
 <?php
 
-  include_once $_SESSION['basePath'].'errors.php';
+  //include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/connect.php';
 
   class LoginModel {
     private $dbConVar;
+
+    public function validMySQL($data) {
+      $data = stripslashes($data);
+      $data = htmlentities($data);
+      $data = strip_tags($data);
+      //$data = mysql_real_escape_string($data);
+      return $data;
+    }
 
     public function validateInputs($data) {
       $data = trim($data);
@@ -74,6 +82,9 @@
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
+      $userId = $this->validMySQL($userId);
+      $workspaceUrl = $this->validMySQL($workspaceUrl);
+      $createdBy = $this->validMySQL($createdBy);
 
       $stmt = $conn->prepare("INSERT INTO workspace (url, user_id, created_by)
                               VALUES (?,?,?)");
@@ -89,6 +100,12 @@
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
+      $userId = $this->validMySQL($userId);
+      $email = $this->validMySQL($email);
+      $password = $this->validMySQL($password);
+      $firstName = $this->validMySQL($firstName);
+      $lastName = $this->validMySQL($lastName);
+      $workspaceUrl = $this->validMySQL($workspaceUrl);
 
       $stmt = $conn->prepare("INSERT INTO user_info (user_id, password, first_name, last_name, email)
                               VALUES (?,?,?,?,?)");

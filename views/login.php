@@ -158,7 +158,9 @@
 							} else if (isset($_SESSION['registerResponse'])) {
 								echo $_SESSION['registerResponse'];
 								unset($_POST);
+								if (isset($_SESSION)) {
 								session_destroy();
+							}
 							}
 					?>
 				</p>
