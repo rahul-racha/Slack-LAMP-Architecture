@@ -29,20 +29,28 @@
 
   if (isset($_POST['NewChannelSubmit'])) {
     global $workspaceUrl;
+    global $newInviteUserResponse;
+    global $channelName;
+    global $homeControlVar;
     $channelName = $_POST["ChannelName"];
     $purpose = $_POST['Purpose'];
     $channeltype = $_POST['Channeltype'];
     $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
+    $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
+    var_dump($newInviteUserResponse);
   }
 
-  if (isset($_POST['NewChannelSubmit'])) {
+  if (isset($_POST['inviteUsersExistingChannel']) && $_POST['inviteUsersExistingChannel'] == 'inviteUser') {
     global $newInviteUserResponse;
     global $channelName;
     global $workspaceUrl;
+    global $homeControlVar;
+    echo $channelName;
     $temp = array();
-    $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
-    $temp = $newInviteUserResponse['success'];
-    echo "<script type='text/javascript'>alert('$temp[0]');</script>";
+    $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["addUserExistingChannel"], $channelName, $workspaceUrl);
+    // $temp = $newInviteUserResponse['success'];
+    // var_dump($newInviteUserResponse);
+    // echo "<script type='text/javascript'>alert(".$temp[0].");</script>";
   }
 
   if(isset($_POST['treadIdSubmit'])){
@@ -95,14 +103,34 @@
       $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgId);
       if (count($channelMessages) != $i) {
         $name = "<div id= ".$msgId." class = 'EntireMessage '>
+                  <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+                  <ul class = 'MessageUL'>
+                    <li class = 'MessageLI'>".$value['message']."</li>
+                  </ul>
+                  <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp
+                  </label><span class = 'likeResponse".$msgId."'> </span>
+                  <label class='dislike' name='dislike' id=".$msgId."><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
+                  </label><span class = 'dislikeResponse".$msgId."'> </span>
+                  <a data-toggle='modal' data-target='#threadReply'>
+                    <form method='post' action=".$actionUrl.">
+                      <input type='hidden' name='threadId' value=". $msgId.">
+                      <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply'>
+                    </form>
+                  </a>
+                </div>";
+
+      } else {
+      $name = "<div id= 'bottom' class = 'EntireMessage '>
                 <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
                 "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
                 <ul class = 'MessageUL'>
                   <li class = 'MessageLI'>".$value['message']."</li>
                 </ul>
                 <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp
-                <label>
-                <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
+                </label><span class = 'likeResponse".$msgId."'> </span>
+                <label class='dislike' name='dislike' id=".$msgId."><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
+                </label><span class = 'dislikeResponse".$msgId."'> </span>
                 <a data-toggle='modal' data-target='#threadReply'>
                   <form method='post' action=".$actionUrl.">
                     <input type='hidden' name='threadId' value=". $msgId.">
@@ -110,24 +138,6 @@
                   </form>
                 </a>
               </div>";
-
-      } else {
-      $name = "<div id='bottom' class = 'EntireMessage '>
-              <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
-              "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
-              <ul class = 'MessageUL'>
-                <li class = 'MessageLI'>".$value['message']."</li>
-              </ul>
-              <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp
-              <label>
-              <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
-              <a data-toggle='modal' data-target='#threadReply'>
-                <form method='post'>
-                  <input type='hidden' name='threadId' value=". $msgId.">
-                  <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply'>
-                </form>
-              </a>
-            </div>";
     }
       echo $name;
       $i++;
@@ -170,22 +180,6 @@
     }
     echo $thread;
   }
-  // "<div class='modal fade' id='threadReply' role='dialog'>
-  //             <div class='modal-dialog modal-lg'>
-  //               <div class='modal-content'>
-  //                 <div class='modal-header'>
-  //                   <button type='button' class='close' data-dismiss='modal'>&times;</button>
-  //                   <h4 class='modal-title'>Reply for the thread</h4>
-  //                 </div>
-  //                 <div class='modal-body'>
-  //                   ".$reply."
-  //                 </div>
-  //                 <div class='modal-footer'>
-  //                   <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-  //                 </div>
-  //               </div>
-  //             </div>
-  //           </div>";
   if (isset($_GET['logout'])) {
     global $homeControlVar;
 
@@ -301,7 +295,7 @@
                               <label for="invitingNewUsers">Invite members to this channel</label>
                               <input type="text" class="form-control" name="newUserSearch[]">
                             </div>
-                            <input type="hidden" name="NewChannelSubmit">
+                            <input type="hidden" name="NewChannelSubmit" >
                             <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
                           </form>
                       </div>
@@ -350,16 +344,24 @@
                 <i class="fa fa-user-o" aria-hidden="true"></i>
               </a>
             </div>
-            <!-- to invite members to channels -->
+            <!-- to invite members to existing channels -->
             <div class="modal fade" id="inviteUsers" role="dialog">
               <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
+                    <h4 class="modal-title">Invitation</h4>
                   </div>
                   <div class="modal-body">
-                    <p>This is a small modal.</p>
+                    <form method="post">
+                      <div class="form-group">
+                        <label for="invitingNewUsers">Invite members</label>
+                        <input type="text" class="form-control" name="addUserExistingChannel[]">
+                      </div>
+                        <input type="hidden" name = "channel" value = "<?php echo $_POST["channel"]; ?>" >
+                        <input type="hidden" name="inviteUsersExistingChannel" value = "inviteUser">
+                        <input type="submit" value="Invite" class="btn btn-primary btn-sm">
+                    </form>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
