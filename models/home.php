@@ -22,6 +22,13 @@
       return $data;
     }
 
+    public function getUserProfile() {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $userProfile = array();
+      $getProfile = "SELECT user_id, first_name, last_name, email, ";
+    }
+
     public function retrieveChannels($workspaceUrl)
     {
       $dbConVar = new dbConnect();
