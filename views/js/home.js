@@ -21,4 +21,23 @@ $(document).ready(function(){
 		    	}
 			});
 		});
+
+		$(".treadIdSubmit").submit(function(event){
+			event.preventDefault();
+			$(this)
+			$(".MessageHome").removeClass("col-xs-10");
+			$(".MessageHome").addClass("col-xs-8");
+
+			// $(".threadDiv").show("slow");
+			$(".threadDiv").show();
+
+
+				// .closest('[class^="MessageHome"]')
+				// .removeClass('col-xs-10')
+				// .addClass('col-md-8')
+				//
+				// .siblings('[class^="threadExtension"]')
+		    // .removeClass('col-xs-0')
+		    // .addClass('col-md-2');
+		});
 });
