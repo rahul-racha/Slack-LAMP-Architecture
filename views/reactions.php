@@ -22,7 +22,7 @@ if (isset($_POST['msgId']) && isset($_POST['emoName'])) {
     echo $reactionResponse["count"];
 
   }
-  if (isset($_POST['checkReactions'])) {
+  if (isset($_POST['msgId']) && $_POST['emoName']) {
     $reactionResponse = array();
     global $homeControlVar;
     //$reactionsData = array();
@@ -37,8 +37,8 @@ if (isset($_POST['msgId']) && isset($_POST['emoName'])) {
     // echo $userInfo;
     if($userInfo == true)
     {
-      $reactionResponse = $$homeControlVar->handleReactionForMsg($msgId, $emoName);
-      echo $reactionResponse["count"];
+      $reactionResponse = $homeControlVar->handleReactionForMsg($msgId, $emoName);
+      echo $reactionResponse['count'];
     }
     else{
       echo "error";

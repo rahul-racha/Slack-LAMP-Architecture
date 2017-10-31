@@ -12,15 +12,15 @@ $(document).ready(function(){
 				dataType: 'text',
 				success: function(data){
 					// console.log(data);
-					$.ajax({
-						method: 'post',
-						url: './reactions.php',
-						data: {'msgId':msgId, 'emoName':emoName},
-						dataType: 'text',
-						success: function(data){
-							$("#likeResponse" + msgId).html(data);
-						},
-					});
+					// $.ajax({
+					// 	method: 'post',
+					// 	url: './reactions.php',
+					// 	data: {'msgId':msgId, 'emoName':emoName},
+					// 	dataType: 'text',
+					// 	success: function(data){
+					// 		$("#likeResponse" + msgId).html(data);
+					// 	},
+					// });
 
 						$("#likeResponse" + msgId).html(data);
 							// console.log(data);
@@ -45,16 +45,18 @@ $(document).ready(function(){
 				dataType: 'text',
 				success: function(data){
 					// console.log(data);
-						$('#dislikeResponse' + msgId).html(data);
-						$.ajax({
-							method: 'post',
-							url: './reactions.php',
-							data: {'msgId':msgId, 'emoName':emoName},
-							dataType: 'text',
-							success: function(data){
-								$("#dislikeResponse" + msgId).html(data);
-							},
-						});
+						// $('#dislikeResponse' + msgId).html(data);
+						// $.ajax({
+						// 	method: 'post',
+						// 	url: './reactions.php',
+						// 	data: {'msgId':msgId, 'emoName':emoName},
+						// 	dataType: 'text',
+						// 	success: function(data){
+						// 		$("#dislikeResponse" + msgId).html(data);
+						// 	},
+						// });
+
+						$("#dislikeResponse" + msgId).html(data);
 							// console.log(data);
 			       	// $('#response pre').html( JSON.stringify( data ) );
 		    	},

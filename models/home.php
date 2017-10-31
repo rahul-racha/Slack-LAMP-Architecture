@@ -22,11 +22,49 @@
       return $data;
     }
 
-    public function getUserProfile() {
+    public function getUserProfile($name) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $userProfile = array();
-      $getProfile = "SELECT user_id, first_name, last_name, email, ";
+      $getProfile = "SELECT user_id, first_name, last_name, email, avatar
+                     FROM user_info
+                     WHERE user_id = '$name'";
+      $result = mysqli_query($conn, $getProfile);
+      if (mysqli_num_rows($result) > 0)
+       {
+         while ($row = $result->fetch_assoc())
+         {
+           array_push($userProfile, $row);
+         }
+       }
+      if ($result) {
+        mysqli_free_result($result);
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $userProfile;
+    }
+
+    public function getUserMembership($name) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $userMembership = array();
+      $getMembership = "SELECT channel_name, type
+                        FROM workspace_channels
+                        WHERE user_id = '$name'";
+      $result = mysqli_query($conn, $getMembership);
+      if (mysqli_num_rows($result) > 0)
+       {
+         while ($row = $result->fetch_assoc())
+         {
+           array_push($userMembership, $row);
+         }
+       }
+      if ($result) {
+        mysqli_free_result($result);
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $userMembership;
+
     }
 
     public function retrieveChannels($workspaceUrl)
@@ -286,7 +324,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $users = NULL;
-      if ($info['users'] != NULL && !empty($info['users'])) {
+      if ($info != NULL && $info['users'] != NULL && !empty($info['users'])) {
       $users = $info['users'];
       }
       $count = NULL;

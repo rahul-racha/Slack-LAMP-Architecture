@@ -39,6 +39,16 @@
         return $channels;
     }
 
+    public function getProfile() {
+      $this->homeModelVar = new HomeModel();
+      $profile = array();
+      $membership = array();
+      $profile = $this->homeModelVar->getUserProfile($_SESSION['userid']);
+      $membership = $this->homeModelVar->getUserMembership($_SESSION['userid']);
+      $userData = array('profile'=>$profile, 'membership'=>$membership);
+      return $userData;
+    }
+
     public function viewMessages($channelName, $workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();
