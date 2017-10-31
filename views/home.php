@@ -8,6 +8,7 @@
   $channelName = NULL;
   $textArea = NULL;
   $newInviteUserResponse = array();
+  $workspaceUrl = "musicf17.slack.com";
 
   if (isset($_POST["channel"])) {
     global $channelName;
@@ -25,10 +26,10 @@
   }
 
   if (isset($_POST['NewChannelSubmit'])) {
+    global $workspaceUrl;
     $channelName = $_POST["ChannelName"];
     $purpose = $_POST['Purpose'];
     $channeltype = $_POST['Channeltype'];
-    $workspaceUrl = "musicf17.slack.com";
     $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
     unset($_POST['NewChannelSubmit']);
     // header("Location:home.php");
@@ -37,14 +38,15 @@
   if (isset($_POST['newInvite'] )) {
     global $newInviteUserResponse;
     global $channelName;
-    $workspaceUrl = "musicf17.slack.com";
+    global $workspaceUrl;
     $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
   }
 
   function displayChannels()
   {
     global $homeControlVar;
-    $channelList = $homeControlVar->viewChannels();
+    global $workspaceUrl;
+    $channelList = $homeControlVar->viewChannels($workspaceUrl);
     foreach ($channelList as $value) {
       echo '<form method="post" action = "home.php">
               <div class = "ChannelDisplay col-xs-12">
@@ -70,7 +72,8 @@
   function displayMessages() {
     global $homeControlVar;
     global $channelName;
-    $channelMessages = $homeControlVar->viewMessages($channelName);
+    global $workspaceUrl;
+    $channelMessages = $homeControlVar->viewMessages($channelName, $workspaceUrl);
     $i = 1;
     foreach ($channelMessages as $key => $value) {
       $CurrentTime = new DateTime($value["created_time"]);
@@ -209,9 +212,9 @@
                               <label><input type="radio" name="Channeltype" value="Public">Public</label>
                               <label><input type="radio" name="Channeltype" value="Private">Private</label>
 
-                            
+
                             <!-- <span class="error">* <?php echo $genderErr;?></span> -->
-                          
+
                             </div>
                             <input type="hidden" name="NewChannelSubmit">
                             <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
@@ -273,7 +276,7 @@
               <input id="SubmitButton" type="hidden" name="submit"/>
             </form>
           </div>
-      
+
       <!-- Invite memebers modal -->
         <div class="modal fade" id="inviteUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
           <div class="modal-dialog dialog" role="document">
