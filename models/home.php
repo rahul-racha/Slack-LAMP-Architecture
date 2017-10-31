@@ -247,7 +247,7 @@
       $info = array();
       $getUsers = "SELECT users, count
                    FROM reactions
-                   WHERE msg_id = '$msgId' AND emo_id = $emoId";
+                   WHERE msg_id = $msgId AND emo_id = $emoId";
       $result = mysqli_query($conn, $getUsers);
       if (mysqli_num_rows($result) == 1) {
         while ($row = $result->fetch_assoc()) {
@@ -307,6 +307,8 @@
               $users = ";".$_SESSION['userid'].";";
             }
         }
+          var_dump($users);
+          var_dump($count);
           $stmt = $conn->prepare("INSERT INTO reactions (msg_id, emo_id, users, count)
                                   VALUES (?,?,?,?)");
           $stmt->bind_param("ssss", $msgId, $emoId, $users, $count);

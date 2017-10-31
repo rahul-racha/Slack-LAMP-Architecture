@@ -7,9 +7,10 @@
   $homeControlVar = new HomeController();
   $channelName = NULL;
   $textArea = NULL;
+  $temp = NULL;
   $newInviteUserResponse = array();
   $workspaceUrl = "musicf17.slack.com";
-
+  $treadsArr = array();
   if (isset($_POST["channel"])) {
     global $channelName;
     $channelName = $_POST["channel"];
@@ -25,21 +26,32 @@
     insertMessage($textArea);
   }
 
+
   if (isset($_POST['NewChannelSubmit'])) {
     global $workspaceUrl;
     $channelName = $_POST["ChannelName"];
     $purpose = $_POST['Purpose'];
     $channeltype = $_POST['Channeltype'];
     $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
-    unset($_POST['NewChannelSubmit']);
-    // header("Location:home.php");
   }
 
-  if (isset($_POST['newInvite'] )) {
+  if (isset($_POST['NewChannelSubmit'])) {
     global $newInviteUserResponse;
     global $channelName;
     global $workspaceUrl;
+    $temp = array();
     $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
+    $temp = $newInviteUserResponse['success'];
+    echo "<script type='text/javascript'>alert('$temp[0]');</script>";
+  }
+
+  if(isset($_POST['treadIdSubmit'])){
+    global $treadsArr;
+    global $homeControlVar;
+    // echo $_POST['threadId'];
+    $treadsArr = $homeControlVar->getRepliesForThread($_POST['threadId']);
+    var_dump($treadsArr);
+    //threadReply($treadsArr);
   }
 
   function displayChannels()
@@ -79,23 +91,56 @@
       $CurrentTime = new DateTime($value["created_time"]);
       $strip = $CurrentTime->format('H:i @Y-m-d');
       $name = NULL;
+      $msgId = $value['msg_id'];
+      $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgId);
       if (count($channelMessages) != $i) {
-      $name = "<div class = 'EntireMessage col-xs-12'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value['message']."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."<a id = ".$value["msgId"]."><i class='fa fa-reply' aria-hidden='true'></i></a>"."</div>";
+        $name = "<div id= ".$msgId." class = 'EntireMessage '>
+                <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+                "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+                <ul class = 'MessageUL'>
+                  <li class = 'MessageLI'>".$value['message']."</li>
+                </ul>
+                <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp
+                <label>
+                <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
+                <a data-toggle='modal' data-target='#threadReply'>
+                  <form method='post' action=".$actionUrl.">
+                    <input type='hidden' name='threadId' value=". $msgId.">
+                    <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply'>
+                  </form>
+                </a>
+              </div>";
+
       } else {
-      $name = "<div id = 'bottom' class = 'EntireMessage col-xs-12'>"."<strong class = 'UserName'>".$value["first_name"]."&nbsp"."&nbsp".$value["last_name"]."</strong>"."&nbsp"."&nbsp"."&nbsp"."<span class = 'TimeStamp'>".$strip."</span>"."<ul class 		= 'MessageUL'>"."<li class = 'MessageLI'>".$value['message']."</li>"."</ul>"."<a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."&nbsp"."<a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a>"."&nbsp"."&nbsp"."<a id = ".$value["msgId"]."><i class='fa fa-reply' aria-hidden='true'></i></a>"."</div>";
+      $name = "<div id='bottom' class = 'EntireMessage '>
+              <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+              "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+              <ul class = 'MessageUL'>
+                <li class = 'MessageLI'>".$value['message']."</li>
+              </ul>
+              <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp
+              <label>
+              <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
+              <a data-toggle='modal' data-target='#threadReply'>
+                <form method='post'>
+                  <input type='hidden' name='threadId' value=". $msgId.">
+                  <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply'>
+                </form>
+              </a>
+            </div>";
     }
       echo $name;
       $i++;
     }
   }
-
   function insertMessage($textArea) {
     global $homeControlVar;
     global $channelName;
+    global $workspaceUrl;
     $threadId = NULL;
     $messageType = 'post';
     //global $textArea;
-    $homeControlVar->insertMessage($channelName,$textArea,$threadId,$messageType);
+    $homeControlVar->insertMessage($channelName,$textArea,$threadId,$messageType, $workspaceUrl);
     // if (isset($_SESSION["postFormVars"]))
     // {
     //   unset($_SESSION["postFormVars"]);
@@ -104,6 +149,43 @@
     //}
   }
 
+  function displayReplies() {
+    global $treadsArr;
+    if (!empty($treadsArr) && $treadsArr != NULL) {
+      var_dump($treadsArr);
+    }
+  }
+
+  function threadReply($treadsArr){
+    $thread = NULL;
+    $reply = NULL;
+    foreach ($treadsArr as $key => $value) {
+      $reply = $value["msg_id"];
+      $thread = "<div class = 'threadDiv' col-xs-2>
+                  <ul>
+                    <li>".$reply."
+                  </ul>
+                </div>";
+
+    }
+    echo $thread;
+  }
+  // "<div class='modal fade' id='threadReply' role='dialog'>
+  //             <div class='modal-dialog modal-lg'>
+  //               <div class='modal-content'>
+  //                 <div class='modal-header'>
+  //                   <button type='button' class='close' data-dismiss='modal'>&times;</button>
+  //                   <h4 class='modal-title'>Reply for the thread</h4>
+  //                 </div>
+  //                 <div class='modal-body'>
+  //                   ".$reply."
+  //                 </div>
+  //                 <div class='modal-footer'>
+  //                   <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
+  //                 </div>
+  //               </div>
+  //             </div>
+  //           </div>";
   if (isset($_GET['logout'])) {
     global $homeControlVar;
 
@@ -123,17 +205,19 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="home.js"></script>
+  <script type="text/javascript" src="js/home.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
 	<div class="container-fluid nopadding" style="padding-left: 0%;">
       <!-- left panel -->
+    <div class="row">
+
   		<div class="col-xs-2 nopadding sideBar" >
-        <div class="navbar navbar-inverse navbar-fixed-left">
-            <div class="col-xs-12">
-              <button type="button" class="btn btn-info btn-lg " data-toggle="modal" data-target="#ProfileUpdate">musicf17.slack.com</button>
+        <div class="navbar navbar-inverse navbar-fixed-left leftside">
+            <div class="col-xs-12 workspaceUrlDisplay">
+              <input type="submit" class="btn btn-info btn-lg workspaceUrlDisplay" data-toggle="modal" data-target="#ProfileUpdate" value="musicf17.slack.com">
             </div>
             <div class="ChannelDisplay col-xs-12">
               <h4>Channels
@@ -189,6 +273,7 @@
                 </div>
               </div>
             </div>
+            <!-- create new channel -->
             <div class="modal fade" id="NewChannel" role="dialog">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -211,10 +296,10 @@
                             <div class="radio">
                               <label><input type="radio" name="Channeltype" value="Public">Public</label>
                               <label><input type="radio" name="Channeltype" value="Private">Private</label>
-
-
-                            <!-- <span class="error">* <?php echo $genderErr;?></span> -->
-
+                            </div>
+                            <div class="form-group">
+                              <label for="invitingNewUsers">Invite members to this channel</label>
+                              <input type="text" class="form-control" name="newUserSearch[]">
                             </div>
                             <input type="hidden" name="NewChannelSubmit">
                             <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
@@ -255,17 +340,35 @@
   		</div>
       </div>
       <!-- right column -->
-      <div class="col-xs-10" >
-        <!-- <div class="row"> -->
+      <div class="col-xs-9 MessageHome" >
+        <div class="row">
           <div class="Channelview col-xs-12">
             <h4><strong><?php echo "#" . $channelName;?></strong></h4>
+            <!-- inviting new users after creating channel -->
             <div class="inviteUsers">
               <a href="#" data-toggle="modal" data-target = "#inviteUsers">
                 <i class="fa fa-user-o" aria-hidden="true"></i>
               </a>
             </div>
+            <!-- to invite members to channels -->
+            <div class="modal fade" id="inviteUsers" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>This is a small modal.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
-        <!-- </div> -->
           <div class="MessageDisplay col-xs-12" >
                 <?php displayMessages(); ?>
           </div>
@@ -276,30 +379,16 @@
               <input id="SubmitButton" type="hidden" name="submit"/>
             </form>
           </div>
-
-      <!-- Invite memebers modal -->
-        <div class="modal fade" id="inviteUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div class="modal-dialog dialog" role="document">
-            <div class="modal-content content">
-              <div class="modal-header header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-              </div>
-              <div class="modal-body body">
-                <h4>Invite Persons</h4>
-                <form class="navbar-form modalForm" method="POST" role="search">
-                  <div class="form-group">
-                    <input type="text" name = "newUserSearch[]" class="form-control" placeholder="Search">
-                  </div>
-                  <input type="hidden" name="newInvite">
-                   <input type="hidden" name="channel" value="<?php echo $_POST['channel']; ?>">
-                  <input type="submit" value="Invite" class="btn btn-default">
-                </form>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
 
+
+
+
+      </div>
+      <div class = 'threadDiv col-xs-1' style="display:none;">
+        <?php  displayReplies();// echo "OYE"; if (!empty($treadsArr)) { var_dump($treadsArr); } ?>
+      </div>
+    </div>
 	</div>
   <!-- message display height -->
     <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*22/100)+"px"); </script>
@@ -307,6 +396,7 @@
       $("input[id='my_file']").click();
     });</script>
     <!-- nav bar height -->
+    <script type="text/javascript">$(".leftside").css("height",$(window).height()+"px");</script>
     <script type="text/javascript">$(".sideBar").height($(window).height()-($(window).height()*0/100)+"px");</script>
 
 </body>

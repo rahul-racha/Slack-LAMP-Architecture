@@ -7,15 +7,25 @@
     min-width: auto !important;
     max-width: auto !important;
 }
+.modal-backdrop{
+  display: none !important;
+}
 .sideBar{
     height: 100hv;
     padding-left: 0% !important;
+}
+.workspaceUrlDisplay{
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
 }
 .SideBarButton {
     background-color: #4d394b !important;
     border: black !important;
     color: white;
-    /*padding: 4% 36% !important;*/
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
     text-align: left !important;
     text-decoration: none;
     display: inline-block;
@@ -24,7 +34,7 @@
     cursor: pointer;
 }
 .NewChannel{
-    color: white; 
+    color: white;
     font-size: 60%;
     float: right;
 
@@ -52,15 +62,13 @@
     cursor: pointer;
 }
 .EntireMessage{
-    margin-right: 2%;
-    /*background-color: #EEEFF5;*/
+    /*margin-right: 2%;*/
     box-shadow: 2px 2px 1px #888888;
 }
 .MessageHome{
-    position: fixed;
-    width: 80%;
-    margin-left: 20%;
-    height: 90%;
+    position: fixed !important;
+    height: 100%;
+    margin-left: 15%;
 }
 .Channelview{
     color: #4d394b;
@@ -76,12 +84,12 @@
 }
 .MessageDisplay{
     width: 100% !important;
+    overflow-x: hidden;
     /*margin-left: 4%;
     margin-bottom: 1% !important;
     margin-right: 5%;
     margin-top: 11%;*/
-/*    height: 80% !important;
-*/    overflow-y: scroll !important;
+    overflow-y: scroll !important;
 }
 .UserName{
     font-size: 120%;
@@ -99,8 +107,10 @@
     font-size: 150% !important;
 }
 .MessageEntry{
-    margin-bottom: 0%;
-    margin-left: 1%;
+    margin-bottom: 1%;
+    margin-left: -1%;
+    position: fixed !important;
+    bottom: 0 !important;
 }
 #textArea{
     width: 97%;
@@ -124,7 +134,7 @@ body{
 
 
 /*Creating a new channel modal*/
-.CreateChannel {
+/*.CreateChannel {
     background-color: #4d394b !important;
     border: none;
     color: white;
@@ -174,7 +184,7 @@ body{
 	color: #FFFFFF;
 	line-height: 25px;
 	/*position: absolute;*/
-	right: -12px;
+	/*right: -12px;
 	text-align: center;
 	top: -10px;
 	width: 24px;
@@ -185,15 +195,15 @@ body{
 	border-radius: 12px;
 	-moz-box-shadow: 1px 1px 3px #000;
 	-webkit-box-shadow: 1px 1px 3px #000;
-	box-shadow: 1px 1px 3px #000;
-}
+	box-shadow: 1px 1px 3px #000;*/
+/*}*/
 
-.close:hover { background: #00d9ff; }
+/*.close:hover { background: #00d9ff; }*/
 
 /*users invitation modal */
 /* Jacob Lett - https//BootstrapCreative.com - Reference / Refresh / Repetition */
 
-.header {
+/*.header {
   border-bottom: none;
 }
 
@@ -203,7 +213,7 @@ body{
   height: 100% !important;
   margin: 0 !important;
   padding: 0;
-}
+}*/
 
 /*.modal-backdrop {
     background-color:#fff;
@@ -216,7 +226,7 @@ body{
     padding: 0%;
 }
 */
-.content {
+/*.content {
   height: auto;
   min-height: 100%;
   border-radius: 0;
@@ -232,4 +242,4 @@ body{
   margin: 0 auto;
   float: none;
   width: 300px;
-}
+}*/

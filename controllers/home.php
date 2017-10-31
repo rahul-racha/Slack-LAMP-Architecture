@@ -27,6 +27,8 @@
   //   header("location:..home.php", true, 303);
   // }
 
+
+
   class HomeController {
     private $homeModelVar;
 
@@ -84,14 +86,14 @@
     }
 
     //function is used for inserting messages and replies
-    public function insertMessage($channelName, $message, $threadId, $messageType)
+    public function insertMessage($channelName, $message, $threadId, $messageType, $workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();
         //$message = $this->homeModelVar->validateInputs($message);
         $responseString = NULL;
         $type = $this->getMessageType($messageType);
 
-        $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $threadId, $type);
+        $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $threadId, $type, $workspaceUrl);
 
         if ($affectedRows == 0)
         {
