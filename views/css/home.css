@@ -1,0 +1,251 @@
+.navbar{
+    background-color: #4d394b !important;
+    height: 100% !important;
+
+    border: black !important;
+
+    min-width: auto !important;
+    max-width: auto !important;
+}
+.modal-backdrop{
+  display: none !important;
+}
+.like{
+  cursor: pointer;
+}
+.dislike{
+  cursor: pointer;
+}
+.sideBar{
+    height: 100hv;
+    padding-left: 0% !important;
+}
+.workspaceUrlDisplay{
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+}
+.SideBarButton {
+    background-color: #4d394b !important;
+    border: black !important;
+    color: white;
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: left !important;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px ;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.NewChannel{
+    color: white;
+    font-size: 60%;
+    float: right;
+
+}
+.ChannelDisplay{
+    color: white;
+    padding: 0% 10% !important;
+}
+
+
+.LogoutButton{
+    background-color: #4d394b;
+    border: none;
+    position: relative;
+    bottom: 0;
+    color: #D61C1C;
+    padding: 1% 8%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 25px;
+    margin: 130% 30%;
+    font-family: arial;
+    cursor: pointer;
+}
+.EntireMessage{
+    /*margin-right: 2%;*/
+    box-shadow: 2px 2px 1px #888888;
+}
+.MessageHome{
+    position: fixed !important;
+    height: 100%;
+    margin-left: 15%;
+}
+.Channelview{
+    color: #4d394b;
+   /* position: fixed;*/
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    margin: 0% 75% 1% 0%;
+    padding: 1% 99% 1% 1%;
+    font-size: 27px;
+}
+.inviteUsers{
+    font-size: 38% ;
+}
+.MessageDisplay{
+    width: 100% !important;
+    overflow-x: hidden;
+    /*margin-left: 4%;
+    margin-bottom: 1% !important;
+    margin-right: 5%;
+    margin-top: 11%;*/
+    overflow-y: scroll !important;
+}
+.UserName{
+    font-size: 120%;
+
+}
+.TimeStamp{
+    font-style:italic;
+    font-size: 80%;
+
+}
+.MessageUL{
+    list-style: none;
+}
+.fa{
+    font-size: 150% !important;
+}
+.MessageEntry{
+    margin-bottom: 1%;
+    margin-left: -1%;
+    position: fixed !important;
+    bottom: 0 !important;
+}
+#textArea{
+    width: 97%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 1%;
+    font-size: 100%;
+    border-radius: 1%;
+}
+/*#SubmitButton{
+    padding-right: 1%;
+    padding-left: 1%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}*/
+body{
+    height: 100%;
+    overflow: hidden;
+    background-image: url("../images/crushedPaper.jpg");
+}
+
+
+/*Creating a new channel modal*/
+/*.CreateChannel {
+    background-color: #4d394b !important;
+    border: none;
+    color: white;
+    padding: 4% 36%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.channelDialog {
+	position: fixed;
+	font-family: Arial, Helvetica, sans-serif;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0,0,0,0.8);
+	z-index: 99999;
+	opacity:0;
+	-webkit-transition: opacity 400ms ease-in;
+	-moz-transition: opacity 400ms ease-in;
+	transition: opacity 400ms ease-in;
+	pointer-events: none;
+}
+
+.channelDialog:target {
+	opacity:1;
+	pointer-events: auto;
+}
+
+.channelDialog > div {
+	width: 400px;
+	position: relative;
+	margin: 10% auto;
+	padding: 5px 20px 13px 20px;
+	border-radius: 10px;
+	background: #fff;
+	background: -moz-linear-gradient(#fff, #999);
+	background: -webkit-linear-gradient(#fff, #999);
+	background: -o-linear-gradient(#fff, #999);
+}
+
+.close {
+	background: #606061;
+	color: #FFFFFF;
+	line-height: 25px;
+	/*position: absolute;*/
+	/*right: -12px;
+	text-align: center;
+	top: -10px;
+	width: 24px;
+	text-decoration: none;
+	font-weight: bold;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	border-radius: 12px;
+	-moz-box-shadow: 1px 1px 3px #000;
+	-webkit-box-shadow: 1px 1px 3px #000;
+	box-shadow: 1px 1px 3px #000;*/
+/*}*/
+
+/*.close:hover { background: #00d9ff; }*/
+
+/*users invitation modal */
+/* Jacob Lett - https//BootstrapCreative.com - Reference / Refresh / Repetition */
+
+/*.header {
+  border-bottom: none;
+}
+
+.dialog {
+    overflow: hidden;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0;
+}*/
+
+/*.modal-backdrop {
+    background-color:#fff;
+    opacity:1!important;
+    border: 10px solid rgba(136, 136, 136, .4);
+}*/
+
+/*.modal-open .modal {
+    overflow-y: hidden !important;
+    padding: 0%;
+}
+*/
+/*.content {
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.body {
+  text-align: center;
+}
+
+.modalForm {
+  margin: 0 auto;
+  float: none;
+  width: 300px;
+}*/
