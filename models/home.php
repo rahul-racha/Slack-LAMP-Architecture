@@ -113,7 +113,7 @@
         {
           while ($row = $result->fetch_assoc())
           {
-            $msgId = $row['msg_id']; 
+            $msgId = $row['msg_id'];
           }
         } else {
           $msgId = 0;
@@ -129,20 +129,16 @@
           } else {
             $dependency = $threadId;
           }
-          // echo "string";
-          // var_dump($chId); 
-          // var_dump($_SESSION['userid']);
-          // var_dump($msgId);var_dump($message);var_dump($type);var_dump($dependency);
+
           $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message, type, dependency)
                                   VALUES (?,?,?,?,?,?)");
           $stmt->bind_param("ssssss", $chId, $_SESSION['userid'], $msgId, $message, $type, $dependency);
-          
           $stmt->execute();
+          //if ($stmt->affected_rows > 0) {}
           $affectedRows = $stmt->affected_rows;
           $stmt->close();
         }
-      }
-
+    }
       $dbConVar->closeConnectionObject($conn);
       return $affectedRows;
     }

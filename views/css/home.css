@@ -7,6 +7,9 @@
     min-width: auto !important;
     max-width: auto !important;
 }
+.modal-backdrop{
+  display: none !important;
+}
 .sideBar{
     height: 100hv;
     padding-left: 0% !important;
@@ -31,7 +34,7 @@
     cursor: pointer;
 }
 .NewChannel{
-    color: white; 
+    color: white;
     font-size: 60%;
     float: right;
 
@@ -59,7 +62,7 @@
     cursor: pointer;
 }
 .EntireMessage{
-    margin-right: 2%;
+    /*margin-right: 2%;*/
     box-shadow: 2px 2px 1px #888888;
 }
 .MessageHome{

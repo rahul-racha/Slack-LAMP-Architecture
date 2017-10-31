@@ -13,7 +13,7 @@ $(document).ready(function(){
 				dataType: 'text',
 				success: function(data){
 					console.log(data);
-					
+
 			       	// $('#response pre').html( JSON.stringify( data ) );
 		    	},
 		    	error: function(){
@@ -21,11 +21,4 @@ $(document).ready(function(){
 		    	}
 			});
 		});
-		// body...
-		// alert(e);
-		// $homeControlVar = new HomeController();
-		// $homeControlVar->getRepliesForThread(e);
-		// var data1 = {'msg_id':msg_id,'user_email':user_email,'emoji_id':emoji_id};
-
 });
-

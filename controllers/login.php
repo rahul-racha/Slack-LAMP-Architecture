@@ -40,13 +40,40 @@
         exit();
        }
 
+       public function checkValidation($userId, $email, $password, $firstName, $lastName) {
+         $isGoodValidation = NULL;
+         if (trim($userId) == '' || trim($email) == '' || trim($password) == '' ||
+            trim($firstName) == '' || trim($lastName) == '') {
+              $isGoodValidation = "false";
+         } else if (!(preg_match('/^(?:[A-Z\d][A-Z\d_-]{3,10}|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})$/i',
+                    $userId, $matches))) {
+              $isGoodValidation = "false";
+         } else if (!(preg_match('/^(?:[A-Z\d][A-Z\d_-]{3,10}|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})$/i',
+                    $email, $matches))) {
+                $isGoodValidation = "false";
+         } else if  (!(preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#\$%\^&\*]).{8,15}$/',
+                    $password, $matches))) {
+                $isGoodValidation = "false";
+         } else if  (!(preg_match('/^[a-zA-Z]+(([\',. -][a-zA-Z ])?[a-zA-Z]*)*$/',
+                    $firstName, $matches))) {
+                $isGoodValidation = "false";
+         } else if  (!(preg_match('/^[a-zA-Z]+(([\',. -][a-zA-Z ])?[a-zA-Z]*)*$/',
+                    $lastName, $matches))) {
+                $isGoodValidation = "false";
+         } else {
+           $isGoodValidation = "true";
+         }
+         return $isGoodValidation;
+       }
+
        public function registerNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl)
        {
          $profile = array();
          $result = array();
          $responseString = NULL;
 
-         $profile = $this->loginModelVar->checkUserExist($userId, $email);
+         if ($this->checkValidation($userId, $email, $password, $firstName, $lastName) == "true") {
+           $profile = $this->loginModelVar->checkUserExist($userId, $email);
          if ($profile['user_id'] == NULL && $profile['email'] == NULL)
          {
            $result = $this->loginModelVar->addNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl);
@@ -66,6 +93,9 @@
              $responseString = $user." and ".$mail." exist in the database";
            }
          }
+       } else {
+         $responseString = "Validation has failed";
+       }
          $_SESSION['registerResponse'] = $responseString;
          header("location:login.php", true, 303);
          return $responseString;

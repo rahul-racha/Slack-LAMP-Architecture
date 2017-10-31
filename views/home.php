@@ -31,27 +31,24 @@
     $channeltype = $_POST['Channeltype'];
     $workspaceUrl = "musicf17.slack.com";
     $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
-    // 
-    // header("Location:home.php");
   }
 
   if (isset($_POST['NewChannelSubmit'] )) {
     global $newInviteUserResponse;
     global $channelName;
     $workspaceUrl = "musicf17.slack.com";
+    $temp = array();
     $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
-    // unset($_POST['NewChannelSubmit']);
+    $temp = $newInviteUserResponse['success'];
+    echo "<script type='text/javascript'>alert('$temp[0]');</script>";
   }
 
-  if(isset($_POST['treadIdSubmit'])){
-    // $homeControlVar = new HomeController();
-    $treadsArr = array();
-    echo $_POST['threadId'];
-    // $i = 4;
-    $treadsArr = $homeControlVar->getRepliesForThread($_POST['threadId']);//$_POST['threadId']
-    var_dump($treadsArr);
-
-  }
+  // if(isset($_POST['treadIdSubmit'])){
+  //   $treadsArr = array();
+  //   echo $_POST['threadId'];
+  //   $treadsArr = $homeControlVar->getRepliesForThread($_POST['threadId']);//$_POST['threadId']
+  //   var_dump($treadsArr);
+  // }
 
   function displayChannels()
   {
@@ -96,9 +93,9 @@
       //           <ul class = 'MessageUL'>
       //             <li class = 'MessageLI'>".$value['message']."</li>
       //           </ul>
-      //           <label id='reactions' onclick=reactions(".$msgId.",'like','true')><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp 
+      //           <label id='reactions' onclick=reactions(".$msgId.",'like','true')><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp
       //           <label>
-      //           <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp 
+      //           <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
       //           <form method='post'>
       //             <input type='hidden'
       //              name='threadId' value=". $msgId.">
@@ -108,22 +105,23 @@
 
 
 
-        $name = "<div class = 'EntireMessage col-xs-12'>
+        $name = "<div class = 'EntireMessage '>
                 <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
                 "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
                 <ul class = 'MessageUL'>
                   <li class = 'MessageLI'>".$value['message']."</li>
                 </ul>
-                <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp 
+                <label class='like' name='like' id=".$msgId."><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></label> &nbsp &nbsp
                 <label>
-                <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp 
-                <form method='post'>
-                  <input type='hidden'
-                   name='threadId' value=". $msgId.">
-                  <input type='submit' name='treadIdSubmit' value='reply'>
-                </form>
+                <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
+                <a data-toggle='modal' data-target='#threadReply'>
+                  <form method='post'>
+                    <input type='hidden' name='threadId' value=". $msgId.">
+                    <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply'>
+                  </form>
+                </a>
               </div>";
-              
+
       } else {
       $name = "<div id='bottom' class = 'EntireMessage col-xs-12'>
                 <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
@@ -131,8 +129,8 @@
                 <ul class = 'MessageUL'>
                   <li class = 'MessageLI'>".$value['message']."</li>
                 </ul>
-                <a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a> &nbsp &nbsp 
-                <a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a> &nbsp &nbsp 
+                <a href = '#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i></a> &nbsp &nbsp
+                <a href = '#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i></a> &nbsp &nbsp
                 <form method='post'>
                   <input type='hidden' name='threadId' value=". $msgId.">
                   <input type='submit' name='treadIdSubmit' value='reply'>
@@ -185,7 +183,7 @@
 	<div class="container-fluid nopadding" style="padding-left: 0%;">
       <!-- left panel -->
   		<div class="col-xs-2 nopadding sideBar" >
-        <div class="navbar navbar-inverse navbar-fixed-left">
+        <div class="navbar navbar-inverse navbar-fixed-left leftside">
             <div class="col-xs-12 workspaceUrlDisplay">
               <input type="submit" class="btn btn-info btn-lg workspaceUrlDisplay" data-toggle="modal" data-target="#ProfileUpdate" value="musicf17.slack.com">
             </div>
@@ -311,16 +309,51 @@
       </div>
       <!-- right column -->
       <div class="col-xs-10 MessageHome" >
-        <!-- <div class="row"> -->
+        <div class="row">
           <div class="Channelview col-xs-12">
             <h4><strong><?php echo "#" . $channelName;?></strong></h4>
-            <!-- <div class="inviteUsers">
+            <!-- inviting new users after creating channel -->
+            <div class="inviteUsers">
               <a href="#" data-toggle="modal" data-target = "#inviteUsers">
                 <i class="fa fa-user-o" aria-hidden="true"></i>
               </a>
-            </div> -->
+            </div>
+            <!-- to invite members to channels -->
+            <div class="modal fade" id="inviteUsers" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>This is a small modal.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- To reply for a thread -->
+            <div class="modal fade" id="threadReply" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>This is a small modal.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        <!-- </div> -->
+        </div>
           <div class="MessageDisplay col-xs-12" >
                 <?php displayMessages(); ?>
           </div>
@@ -331,7 +364,8 @@
               <input id="SubmitButton" type="hidden" name="submit"/>
             </form>
           </div>
-          
+
+
       <!-- Invite memebers modal -->
         <!-- <div class="modal fade" id="inviteUsers" role="dialog">
           <div class="modal-dialog modal-sm">
@@ -354,7 +388,6 @@
           </div>
         </div> -->
       </div>
-
 	</div>
   <!-- message display height -->
     <script type="text/javascript"> $(".MessageDisplay").height($(window).height()-($(window).height()*22/100)+"px"); </script>
@@ -362,6 +395,7 @@
       $("input[id='my_file']").click();
     });</script>
     <!-- nav bar height -->
+    <script type="text/javascript">$(".leftside").css("height",$(window).height()+"px");</script>
     <script type="text/javascript">$(".sideBar").height($(window).height()-($(window).height()*0/100)+"px");</script>
 
 </body>

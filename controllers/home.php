@@ -196,7 +196,6 @@
         $emoidString = "emo id ".$emoId;
         $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
         if ($info != NULL && $info['users'] != NULL) {
-          $userString = " users: ".$info['users'];
           if ($this->isUserExistsForReaction($info['users']) == "false") {
             if ($isInsert == "true") {
               $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
