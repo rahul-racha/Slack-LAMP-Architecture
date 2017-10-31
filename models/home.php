@@ -22,14 +22,14 @@
       return $data;
     }
 
-    public function retrieveChannels()
+    public function retrieveChannels($workspaceUrl)
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->channels = array();
       $retChannels = "SELECT channel_name
                       FROM workspace_channels
-                      WHERE channel_id IN (
+                      WHERE url = '$workspaceUrl' AND channel_id IN (
                       SELECT DISTINCT channel_id
                       FROM inside_channel
                       WHERE user_id = '".$_SESSION['userid']."')";
@@ -46,18 +46,18 @@
       return $this->channels;
     }
 
-    public function retrieveMessages($channelName)
+    public function retrieveMessages($channelName, $workspaceUrl)
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->messages = array();
-      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, message, msg_id, created_time
+      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, message, msg_id, created_time, type
                       FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
-                      WHERE channel_id
+                      WHERE (type = 1 OR type = 2) AND channel_id
                       IN (
                       SELECT channel_id
                       FROM workspace_channels
-                      WHERE channel_name = '$channelName')
+                      WHERE channel_name = '$channelName' AND url = '$workspaceUrl')
                       ORDER BY created_time ASC";
       $result = mysqli_query($conn, $retMessages);
       if (mysqli_num_rows($result) > 0)
@@ -75,13 +75,13 @@
       return $this->messages;
     }
 
-    public function getChannelId($channelName) {
+    public function getChannelId($channelName, $workspaceUrl) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $chId = NULL;
       $getChannelId = "SELECT channel_id
                        FROM workspace_channels
-                       WHERE channel_name = '$channelName'";
+                       WHERE channel_name = '$channelName' AND url = '$workspaceUrl'";
       $result = mysqli_query($conn, $getChannelId);
       if (mysqli_num_rows($result) > 0)
       {
@@ -95,13 +95,13 @@
       $dbConVar->closeConnectionObject($conn);
     }
 
-    public function insertMessage($channelName, $message, $threadId, $type)
+    public function insertMessage($channelName, $message, $threadId, $type, $workspaceUrl)
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $affectedRows = NULL;
-      $chId = $this->getChannelId($channelName);
-      if ($chId != NULL)
+      $chId = $this->getChannelId($channelName, $workspaceUrl);
+      if ($chId != NULL && $chId > 0)
       {
         $msgId = NULL;
         $getMsgId = "SELECT msg_id
@@ -159,20 +159,9 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $channelId = NULL;
-      $affectedRows = NULL;
-      $getChannelId = "SELECT channel_id
-                       FROM workspace_channels
-                       WHERE channel_name = '$channelName' AND url = '$workspaceUrl'";
-      $result = mysqli_query($conn, $getChannelId);
-      if (mysqli_num_rows($result) > 0)
-      {
-        while ($row = $result->fetch_assoc())
-        {
-          $channelId = $row['channel_id'];
-        }
-      }
-      mysqli_free_result($result);
-      if ($channelId != NULL) {
+      $affectedRows = 0;
+      $channelId = getChannelId($channelName, $workspaceUrl);
+      if ($channelId != NULL && $channelId > 0) {
         $stmt = $conn->prepare("INSERT INTO inside_channel (channel_id, user_id)
                                 VALUES (?,?)");
         $stmt->bind_param("ss", $channelId, $userId);
@@ -184,19 +173,38 @@
       return $affectedRows;
     }
 
+    public function checkChannelExists($channelName, $workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $isChannelExists = "SELECT channel_name
+                          FROM workspace_channels
+                          WHERE channel_name = '$channelName' AND url = '$workspaceUrl'";
+      $result = mysqli_query($conn, $isChannelExists);
+      $affectedRows = $conn->affected_rows;
+      if ($result) {
+        mysqli_free_result($result);
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $affectedRows;
+    }
+
     public function createChannel($channelName, $purpose, $type, $workspaceUrl) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $isUserAdded = 0;
       $channelId = NULL;
-      $stmt = $conn->prepare("INSERT INTO workspace_channels (channel_id, channel_name, purpose, url, user_id, type)
-                              VALUES (?,?,?,?,?,?)");
-      $stmt->bind_param("ssssss", $channelId, $channelName, $purpose, $workspaceUrl, $_SESSION['userid'], $type);
-      $stmt->execute();
-      $affectedRows = $stmt->affected_rows;
-      $stmt->close();
-      if ($affectedRows == 1) {
-        $isUserAdded = $this->addUserToChannel($_SESSION['userid'], $channelName, $workspaceUrl);
+      $affectedRows = 0;
+      $channelExists = $this->checkChannelExists($channelName, $workspaceUrl);
+      if ($channelExists == 0) {
+        $stmt = $conn->prepare("INSERT INTO workspace_channels (channel_id, channel_name, purpose, url, user_id, type)
+                                VALUES (?,?,?,?,?,?)");
+        $stmt->bind_param("ssssss", $channelId, $channelName, $purpose, $workspaceUrl, $_SESSION['userid'], $type);
+        $stmt->execute();
+        $affectedRows = $stmt->affected_rows;
+        $stmt->close();
+        if ($affectedRows == 1) {
+          $isUserAdded = $this->addUserToChannel($_SESSION['userid'], $channelName, $workspaceUrl);
+        }
       }
       $dbConVar->closeConnectionObject($conn);
       $result = array("channelStatus" => $affectedRows, "userStatus" => $isUserAdded);
@@ -280,8 +288,8 @@
         }
       }
       $affectedRows = NULL;
-      if ($emoId != NULL && $count != NULL) {
-        if($users != NULL) {
+      if ($emoId > 0 && $count >= 0) {
+        if($users != NULL && !empty($users)) {
             if ($isInsert == "true") {
               $users = $users.$_SESSION['userid'].";";
             } else {

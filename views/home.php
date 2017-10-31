@@ -9,6 +9,7 @@
   $textArea = NULL;
   $temp = NULL;
   $newInviteUserResponse = array();
+  $workspaceUrl = "musicf17.slack.com";
 
   if (isset($_POST["channel"])) {
     global $channelName;
@@ -26,17 +27,17 @@
   }
 
   if (isset($_POST['NewChannelSubmit'])) {
+    global $workspaceUrl;
     $channelName = $_POST["ChannelName"];
     $purpose = $_POST['Purpose'];
     $channeltype = $_POST['Channeltype'];
-    $workspaceUrl = "musicf17.slack.com";
     $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
   }
 
   if (isset($_POST['NewChannelSubmit'] )) {
     global $newInviteUserResponse;
     global $channelName;
-    $workspaceUrl = "musicf17.slack.com";
+    global $workspaceUrl;
     $temp = array();
     $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
     $temp = $newInviteUserResponse['success'];
@@ -53,7 +54,8 @@
   function displayChannels()
   {
     global $homeControlVar;
-    $channelList = $homeControlVar->viewChannels();
+    global $workspaceUrl;
+    $channelList = $homeControlVar->viewChannels($workspaceUrl);
     foreach ($channelList as $value) {
       echo '<form method="post" action = "home.php">
               <div class = "ChannelDisplay col-xs-12">
@@ -79,7 +81,8 @@
   function displayMessages() {
     global $homeControlVar;
     global $channelName;
-    $channelMessages = $homeControlVar->viewMessages($channelName);
+    global $workspaceUrl;
+    $channelMessages = $homeControlVar->viewMessages($channelName, $workspaceUrl);
     $i = 1;
     foreach ($channelMessages as $key => $value) {
       $CurrentTime = new DateTime($value["created_time"]);

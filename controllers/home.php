@@ -32,20 +32,20 @@
   class HomeController {
     private $homeModelVar;
 
-    public function viewChannels()
+    public function viewChannels($workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();
         $channels = array();
-        $channels = $this->homeModelVar->retrieveChannels();
+        $channels = $this->homeModelVar->retrieveChannels($workspaceUrl);
         // echo $channels;
         return $channels;
     }
 
-    public function viewMessages($channelName)
+    public function viewMessages($channelName, $workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();
         $messages = array();
-        $messages = $this->homeModelVar->retrieveMessages($channelName);
+        $messages = $this->homeModelVar->retrieveMessages($channelName, $workspaceUrl);
         return $messages;
     }
 
@@ -175,6 +175,8 @@
       return $info;
     }
 
+    //check if user exists in a reaction. If exists then delete from dislike when like is clicked
+    //using handleReactionForMsg
     public function isUserExistsForReaction($users) {
       $isExists = NULL;
       $pos = strpos($users, ";".$_SESSION['userid'].";");
@@ -186,36 +188,51 @@
       return $isExists;
     }
 
-    public function handleReactionForMsg($msgId, $emoName, $isInsert) {
+    //Use this function to get the count, users available for a reaction in a msg
+    public function getReactionInfoForMsg($msgId, $emoName) {
       $this->homeModelVar = new HomeModel();
       $responseString = NULL;
       $affectedRows = NULL;
       $info = array();
       $emoId = $this->homeModelVar->getEmoId($emoName);
-      if ($emoId != NULL) {
-        $emoidString = "emo id ".$emoId;
+      if ($emoId > 0) {
+        $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
+      }
+      return $info;
+    }
+
+    public function handleReactionForMsg($msgId, $emoName) {
+      $this->homeModelVar = new HomeModel();
+      $responseString = NULL;
+      $affectedRows = NULL;
+      $info = array();
+      $emoId = $this->homeModelVar->getEmoId($emoName);
+      if ($emoId > 0) {
         $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
         if ($info != NULL && $info['users'] != NULL) {
           if ($this->isUserExistsForReaction($info['users']) == "false") {
-            if ($isInsert == "true") {
+            //if ($isInsert == "true") {
+              $isInsert = "true";
               $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
-            }
+            //}
           } else {
-            if ($isInsert == "false") {
+            //if ($isInsert == "false") {
+              $isInsert = "false";
               $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
-            }
+            //}
           }
         } else {
-          if ($isInsert == "true") {
+          //if ($isInsert == "true") {
+            $isInsert = "true";
             $info['count'] = 0;
             $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
-          }
+          //}
         }
         if ($affectedRows == 1) {
           $responseString = "success";
-        } else if ($affectedRows == NULL) {
+        } /*else if ($affectedRows == NULL) {
           $responseString = NULL;
-        } else {
+        }*/ else {
           $responseString = "failed";
         }
       } else {
