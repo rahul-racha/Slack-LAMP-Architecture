@@ -10,6 +10,12 @@
 .modal-backdrop{
   display: none !important;
 }
+.like{
+  cursor: pointer;
+}
+.dislike{
+  cursor: pointer;
+}
 .sideBar{
     height: 100hv;
     padding-left: 0% !important;

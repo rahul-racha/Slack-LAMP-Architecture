@@ -285,7 +285,10 @@
     public function handleUserReaction($msgId, $emoId, $info, $isInsert) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
+      $users = NULL;
+      if ($info['users'] != NULL && !empty($info['users'])) {
       $users = $info['users'];
+      }
       $count = NULL;
       if ($isInsert == "true") {
         $count = $info['count'] + 1;
@@ -307,8 +310,6 @@
               $users = ";".$_SESSION['userid'].";";
             }
         }
-          var_dump($users);
-          var_dump($count);
           $stmt = $conn->prepare("INSERT INTO reactions (msg_id, emo_id, users, count)
                                   VALUES (?,?,?,?)");
           $stmt->bind_param("ssss", $msgId, $emoId, $users, $count);
