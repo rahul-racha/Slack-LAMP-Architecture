@@ -27,8 +27,6 @@
   //   header("location:..home.php", true, 303);
   // }
 
-
-
   class HomeController {
     private $homeModelVar;
 
@@ -111,6 +109,7 @@
     public function createNewChannel($channelName, $purpose, $type, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $responseString = NULL;
+      $result = false;
       $status = array();
       $status = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
       switch ($status['channelStatus']) {
@@ -119,6 +118,7 @@
           break;
         case 1:
           $responseString = "Channel ".$channelName." is created";
+          $result = true;
           break;
         default:
           $responseString = 'Query returned an error';
@@ -128,12 +128,14 @@
       switch ($status['userStatus']) {
         case 0:
           $responseString = $responseString." and ".$_SESSION['userid']." is not added to channel";
+          $result = false;
           break;
         case 1:
           $responseString = $responseString." and ".$_SESSION['userid']." is added to channel";
           break;
         default:
-          //$responseString = 'Query returned an error';
+          $responseString = 'Query returned an error';
+          $result = false;
           break;
       }
       return $responseString;

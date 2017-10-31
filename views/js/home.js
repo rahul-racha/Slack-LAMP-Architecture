@@ -22,14 +22,15 @@ $(document).ready(function(){
 			});
 		});
 
-		$(".treadIdSubmit").submit(function(event){
-			event.preventDefault();
-			$(this)
-			$(".MessageHome").removeClass("col-xs-10");
-			$(".MessageHome").addClass("col-xs-8");
+		//$(".treadIdSubmit").on("click",function(event){
+			//event.preventDefault();
+			// $(this)
+			// $(".MessageHome").removeClass("col-xs-10");
+			// $(".MessageHome").addClass("col-xs-8");
 
 			// $(".threadDiv").show("slow");
-			$(".threadDiv").show();
+
+			//$(".threadDiv").show();
 
 
 				// .closest('[class^="MessageHome"]')
@@ -39,5 +40,5 @@ $(document).ready(function(){
 				// .siblings('[class^="threadExtension"]')
 		    // .removeClass('col-xs-0')
 		    // .addClass('col-md-2');
-		});
+		//});
 });

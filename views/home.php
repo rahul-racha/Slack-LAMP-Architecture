@@ -10,10 +10,12 @@
   $temp = NULL;
   $newInviteUserResponse = array();
   $workspaceUrl = "musicf17.slack.com";
-  $treadsArr = array();
+  $threadsArr = array();
+
   if (isset($_POST["channel"])) {
     global $channelName;
     $channelName = $_POST["channel"];
+    echo "HERe";
   } else {
     global $channelName;
     $channelName = 'general';
@@ -28,32 +30,41 @@
 
 
   if (isset($_POST['NewChannelSubmit'])) {
-    global $workspaceUrl;
     $channelName = $_POST["ChannelName"];
     $purpose = $_POST['Purpose'];
     $channeltype = $_POST['Channeltype'];
-    $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
+    createChannel($channelName, $purpose, $channeltype);
   }
-
-  if (isset($_POST['NewChannelSubmit'])) {
+  //
+  //if(isset($_POST['threadIdSubmit'])) {
+  if(isset($_POST['threadId'])) {
+    global $threadsArr;
+    global $homeControlVar;
+    echo $_POST['threadId'];
+    $threadsArr = $homeControlVar->getRepliesForThread($_POST['threadId']);
+    var_dump($threadsArr);
+    //threadReply($treadsArr);
+  }
+  //
+  function createChannel($channelName, $purpose, $channeltype) {
+    global $homeControlVar;
     global $newInviteUserResponse;
     global $channelName;
     global $workspaceUrl;
     $temp = array();
+    $newChannelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
+    if ($newChannelResponse == true && $_POST["newUserSearch"] != NULL && !empty($_POST["newUserSearch"])) {
     $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($_POST["newUserSearch"], $channelName, $workspaceUrl);
+    if ($newInviteUserResponse['success'] != NULL && !empty($newInviteUserResponse['success'])) {
     $temp = $newInviteUserResponse['success'];
-    echo "<script type='text/javascript'>alert('$temp[0]');</script>";
+    //echo "<script type='text/javascript'>alert('$temp[0]');</script>";
+    } else {
+    $temp = $newInviteUserResponse['failed'];
+    //echo "<script type='text/javascript'>alert('$temp[0]');</script>";
+    }
+    }
   }
-
-  if(isset($_POST['treadIdSubmit'])){
-    global $treadsArr;
-    global $homeControlVar;
-    // echo $_POST['threadId'];
-    $treadsArr = $homeControlVar->getRepliesForThread($_POST['threadId']);
-    var_dump($treadsArr);
-    //threadReply($treadsArr);
-  }
-
+  //
   function displayChannels()
   {
     global $homeControlVar;
@@ -92,7 +103,8 @@
       $strip = $CurrentTime->format('H:i @Y-m-d');
       $name = NULL;
       $msgId = $value['msg_id'];
-      $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgId);
+      $actionUrl = htmlspecialchars($_SERVER['PHP_SELF']);//.'#'.$msgId);
+      echo $actionUrl;
       if (count($channelMessages) != $i) {
         $name = "<div id= ".$msgId." class = 'EntireMessage '>
                 <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
@@ -105,14 +117,15 @@
                 <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
                 <a data-toggle='modal' data-target='#threadReply'>
                   <form method='post' action=".$actionUrl.">
-                    <input type='hidden' name='threadId' value=". $msgId.">
-                    <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply'>
+                    <input type='hidden' name='threadId' value=".$msgId.">
+                    <input type='hidden' name='channel' value= ".$_POST['channel'].">
+                    <input type='submit' class='threadIdSubmit' name='threadIdSubmit' value='reply'>
                   </form>
                 </a>
               </div>";
 
       } else {
-      $name = "<div id='bottom' class = 'EntireMessage '>
+      $name = "<div id=".$msgId." class = 'EntireMessage bottomMsg'>
               <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
               "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
               <ul class = 'MessageUL'>
@@ -122,9 +135,10 @@
               <label>
               <i class='fa fa-thumbs-o-down' aria-hidden='true'></i></label> &nbsp &nbsp
               <a data-toggle='modal' data-target='#threadReply'>
-                <form method='post'>
-                  <input type='hidden' name='threadId' value=". $msgId.">
-                  <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply'>
+                <form method='post' action=".$actionUrl.">
+                  <input type='hidden' name='threadId' value=".$msgId.">
+                  <input type='hidden' name='channel' value= ".$_POST['channel'].">
+                  <input type='submit' class='threadIdSubmit' name='threadIdSubmit' value='reply'>
                 </form>
               </a>
             </div>";
@@ -133,6 +147,7 @@
       $i++;
     }
   }
+
   function insertMessage($textArea) {
     global $homeControlVar;
     global $channelName;
@@ -148,28 +163,32 @@
     unset($_POST["textarea"]);
     //}
   }
-
+  //
   function displayReplies() {
-    global $treadsArr;
-    if (!empty($treadsArr) && $treadsArr != NULL) {
-      var_dump($treadsArr);
+    global $threadsArr;
+    if (!empty($threadsArr) && $threadsArr != NULL) {
+      var_dump($threadsArr);
+    } else {
+      echo "<p>OYEEEEE</p>";
     }
   }
+  //
+  // function threadReply($treadsArr){
+  //   $thread = NULL;
+  //   $reply = NULL;
+  //   foreach ($treadsArr as $key => $value) {
+  //     $reply = $value["msg_id"];
+  //     $thread = "<div class = 'threadDiv' col-xs-2>
+  //                 <ul>
+  //                   <li>".$reply."
+  //                 </ul>
+  //               </div>";
+  //
+  //   }
+  //   echo $thread;
+  // }
 
-  function threadReply($treadsArr){
-    $thread = NULL;
-    $reply = NULL;
-    foreach ($treadsArr as $key => $value) {
-      $reply = $value["msg_id"];
-      $thread = "<div class = 'threadDiv' col-xs-2>
-                  <ul>
-                    <li>".$reply."
-                  </ul>
-                </div>";
 
-    }
-    echo $thread;
-  }
   // "<div class='modal fade' id='threadReply' role='dialog'>
   //             <div class='modal-dialog modal-lg'>
   //               <div class='modal-content'>
@@ -226,7 +245,8 @@
                 </a>
               </h4>
             </div>
-              <?php displayChannels(); ?>
+              <?php displayChannels();
+               displayReplies();?>
             <div class="modal fade" id="ProfileUpdate" role="dialog">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -329,13 +349,13 @@
       		        </form>
                 </div>
               </div>
-              <form method="post" action="<?php echo htmlspecialchars('channel.php'); ?>">
+              <form method="post" action="<?php //echo htmlspecialchars('channel.php'); ?>">
                 <input type="submit" class="CreateChannel" value="(+) channel">
               </form>
             </div> -->
 
             <!-- <div>
-              <a href="<?php echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="LogoutButton">Logout</a>
+              <a href="<?php //echo htmlspecialchars('prgHelper.php'/*$_SERVER['PHP_SELF'].'?logout=true'*/); ?>" class="LogoutButton">Logout</a>
             </div> -->
   		</div>
       </div>
@@ -373,7 +393,7 @@
                 <?php displayMessages(); ?>
           </div>
           <div class="MessageEntry col-xs-12">
-            <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'#bottom'); ?>">
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'].'.bottomMsg'); ?>">
               <input id="textArea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
               <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
               <input id="SubmitButton" type="hidden" name="submit"/>
@@ -385,8 +405,8 @@
 
 
       </div>
-      <div class = 'threadDiv col-xs-1' style="display:none;">
-        <?php  displayReplies();// echo "OYE"; if (!empty($treadsArr)) { var_dump($treadsArr); } ?>
+      <div class = 'threadDiv col-xs-1'>
+        <?php  displayReplies(); ?>
       </div>
     </div>
 	</div>

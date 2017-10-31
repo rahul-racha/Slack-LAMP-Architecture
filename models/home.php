@@ -167,7 +167,7 @@
       $conn = $dbConVar->createConnectionObject();
       $channelId = NULL;
       $affectedRows = 0;
-      $channelId = getChannelId($channelName, $workspaceUrl);
+      $channelId = $this->getChannelId($channelName, $workspaceUrl);
       if ($channelId != NULL && $channelId > 0) {
         $stmt = $conn->prepare("INSERT INTO inside_channel (channel_id, user_id)
                                 VALUES (?,?)");
