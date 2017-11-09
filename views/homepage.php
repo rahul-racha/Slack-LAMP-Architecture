@@ -8,6 +8,7 @@
   $homeControlVar = new HomeController();
   $channelName = NULL;
   $workspaceUrl = "musicf17.slack.com";
+	$msgId = NULL;
 
 
   if (isset($_POST["channel"])) {
@@ -31,12 +32,10 @@
       $_POST["channel"] = $channelList[0];
     }
     foreach ($channelList as $value) {
-      echo '<form method="post" action="home.php">
-              <div class = "ChannelDisplay col-xs-12">
-                <input type="hidden" name="channel" value="'.$value.'" />
-                <input type="submit" class="SideBarButton" value="'.$value.'" />
-              </div>
-            </form>';
+      echo '<form method="post" action = "home.php">
+							<input type="hidden" name="channel" value="'.$value.'" />
+							<input type="submit" class="client_channel_display pull-left" value="'.$value.'" />
+						</form>';
     }
   }
 
@@ -72,18 +71,19 @@
                   <label class='dislike' name='dislike' id=".$msgId.">
                   <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
                   </label> &nbsp &nbsp
-                  <span id = 'dislikeResponse".$msgId."'>     </span>
+                  <span id = 'dislikeResponse".$msgId."'>     </span>".
 
-                    <form method='post' class = 'replyForm' action=".$actionUrl." >
-                      <input type='hidden' name='threadId' value=". $msgId." />
-                      <input type='submit' class='treadIdSubmit' name='treadIdSubmit' value='reply' />
-                    </form>
+                    // <form method='post' class = 'replyForm' action=".$actionUrl." >
+										"<input type='hidden' name='threadId' value=".$msgId.">
+										<input type='hidden' name='channel' value= ".$_POST['channel'].">
+										<input type='submit'id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>".
+                    // </form>
 
-                </div>";
+                "</div>";
 
       }  else {
-      $name = "<div id=".$msgIdRef." class = 'EntireMessage'>
-              <p id='bottomMsg'></p>
+      $name = "<div id='bottom' class = 'EntireMessage'>
+
               <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
               "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
               <ul class = 'MessageUL'>
@@ -97,16 +97,16 @@
               <label class='dislike' name='dislike' id=".$msgId.">
               <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
               </label> &nbsp &nbsp
-              <span id = 'dislikeResponse".$msgId."'>     </span>
-
-                <form class = 'replyForm' method='post' action=".$actionUrl.">
-                  <input type='hidden' name='threadId' value=".$msgId.">
+              <span id = 'dislikeResponse".$msgId."'>     </span>".
+                // <form class = 'replyForm' method='post' action=".$actionUrl.">
+                  "<input type='hidden' name='threadId' value=".$msgId.">
                   <input type='hidden' name='channel' value= ".$_POST['channel'].">
-                  <input type='submit' class='threadIdSubmit' name='threadIdSubmit' value='reply'>
-                </form>
+                  <input type='submit' class='threadIdSubmit' name='threadIdSubmit' value='reply'>".
+                // </form>
 
-            </div>";
+            "</div>";
     }
+		// <p id='bottomMsg'></p>
       echo $name;
       $i++;
     }
@@ -118,20 +118,14 @@
     $info = $homeControlVar->getReactionInfoForMsg($msgId, $emoName);
     return $info['count'];
   }
-  //
-  // function threadReply($treadsArr){
-  //   $thread = NULL;
-  //   $reply = NULL;
-  //   foreach ($treadsArr as $key => $value) {
-  //     $reply = $value["msg_id"];
-  //     $thread = "<div class = 'threadDiv' col-xs-2>
-  //                 <ul>
-  //                   <li>".$reply."
-  //                 </ul>
-  //               </div>";
-  //
-  //   }
-  //   echo $thread;
-  // }
+
+	if (isset($_POST["thread_id"])){
+		global $homeControlVar;
+		$msgId=$_POST["thread_id"];
+		// $replyList = array();
+		$replyList = $homeControlVar->getRepliesForThread($msgId);
+		echo json_encode($replyList);
+		// var_dump($replyList);
+	}
 
   ?>

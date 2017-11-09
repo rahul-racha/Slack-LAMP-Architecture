@@ -65,6 +65,7 @@ html, body{
   overflow-y: scroll;
   margin-left: 2% !important;
   width: 100%;
+  height: 85%;
   max-height: 100%;
 }
 .MessageUL{
@@ -78,5 +79,26 @@ html, body{
   width: 80%;
 }
 .client_message_entry_textarea{
+  width: 100%;
+}
+.client_thread_display_main{
+  height: 100%;
+}
+.client_thread_header{
+  background-color: whitesmoke;
+  padding: 2% !important;
+}
+.close_thread_dispaly_area{
+  float: right;
+  margin-right: 5%;
+  cursor: pointer;
+  color: black;
+  /*border-left: 1px solid #ccc;*/
+}
+.client_thread_reply_entry_area{
+  position: fixed;
+  bottom: 0% !important;
+  margin-bottom: 2%;
+  margin-left: 2%;
   width: 100%;
 }

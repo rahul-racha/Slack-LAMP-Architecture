@@ -67,22 +67,30 @@ $(document).ready(function(){
 
 		});
 
-		// $(".treadIdSubmit").submit(function(event){
-		// 	event.preventDefault();
-		// 	$(this)
-		// 	$(".MessageHome").removeClass("col-xs-10");
-		// 	$(".MessageHome").addClass("col-xs-8");
-		//
-		// 	// $(".threadDiv").show("slow");
-		// 	$(".threadDiv").show();
+		$(".threadIdSubmit").on("click",function(e){
+			$(".client_main_continer").removeClass("col-xs-10").addClass("col-xs-7");
+			$(".client_thread_display_main").show();
+			var thread_id = parseInt(e.currentTarget.id);
+			$.ajax({
+				method: 'post',
+				url: './homepage.php',
+				data: {'thread_id':thread_id},
+				dataType: 'json',
+				success: function(data){
+					var str="";
+					data.forEach(function(e){
+						console.log(e);
+						str+="<div class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
+					});
+					$(".client_thread_list").html(str);
+				},
+			})
+		});
+
+		$(".close_thread_dispaly_area").on("click",function(e){
+			$(".client_thread_display_main").hide();
+			$(".client_main_continer").removeClass("col-xs-7").addClass("col-xs-10")
+		});
 
 
-				// .closest('[class^="MessageHome"]')
-				// .removeClass('col-xs-10')
-				// .addClass('col-md-8')
-				//
-				// .siblings('[class^="threadExtension"]')
-		    // .removeClass('col-xs-0')
-		    // .addClass('col-md-2');
-		// });
 });
