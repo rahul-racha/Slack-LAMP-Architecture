@@ -1,0 +1,82 @@
+html, body{
+    height: 100% !important;
+    overflow: hidden;
+    /*background-image: url("../images/crushedPaper.jpg");*/
+}
+.container-fluid{
+  padding-right: 0% !important;
+  padding-left: 0% !important;
+  height: 100%;
+}
+.client_main_row{
+  margin: auto !important;
+  height: 100% !important;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+.change_row_prop{
+  margin-left: 0% !important;
+  margin-right: 0% !important;
+}
+.client_navbar{
+  padding: 0% !important;
+  background-color: #4d394b !important;
+  height: 100%;
+}
+.client_user_profile_button{
+  width: 100% !important;
+  font-size: 100% !important;
+  background-color: #4d394b !important;
+}
+
+.client_main_continer{
+  padding: 0% !important;
+  height: 100% !important;
+}
+.btn-info{
+  background-color: #4d394b !important;
+  border-color: #4d394b !important;
+}
+.client_new_chanenl{
+  float: right;
+  margin-right: 5%;
+}
+.client_message_header{
+  background-color: #E4E1E0;
+}
+.client_channel_display{
+  background-color: #4d394b !important;
+  color: #fff;
+  width: 100% !important;
+  border: none;
+  margin-left: 0% !important;
+  margin-right: 0% !important;
+}
+.client_channel_title_view{
+  margin-left: 2% !important;
+}
+.client_invite_users{
+  font-size: 80% !important;
+}
+.client_invite_users_link{
+  margin-left: 2% !important;
+}
+.client_message_display{
+  overflow-y: scroll;
+  margin-left: 2% !important;
+  width: 100%;
+  max-height: 100%;
+}
+.MessageUL{
+  list-style: none;
+}
+.client_message_entry{
+  position: fixed;
+  bottom: 0% !important;
+  margin-bottom: 2% !important;
+  margin-left: 2% !important;
+  width: 80%;
+}
+.client_message_entry_textarea{
+  width: 100%;
+}
