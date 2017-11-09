@@ -30,6 +30,12 @@
   class HomeController {
     private $homeModelVar;
 
+    public function redirectToHome()
+    {
+      $url = $_SESSION['basePath']."views/home.php#bottomMsg";
+      header("location:".$url);
+    }
+
     public function viewChannels($workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();
@@ -96,56 +102,68 @@
     //function is used for inserting messages and replies
     public function insertMessage($channelName, $message, $threadId, $messageType, $workspaceUrl)
     {
-        $this->homeModelVar = new HomeModel();
-        //$message = $this->homeModelVar->validateInputs($message);
         $responseString = NULL;
+        $this->homeModelVar = new HomeModel();
         $type = $this->getMessageType($messageType);
-
         $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $threadId, $type, $workspaceUrl);
-
-        if ($affectedRows == 0)
+        if ($affectedRows == 1) {
+          $responseString = 'Message is inserted';
+        } else if ($affectedRows == 0)
         {
             $responseString = 'Message not inserted';
-            echo $responseString;
         } else if ($affectedRows < 0)
         {
           $responseString = 'Query returned an error';
-          echo $responseString;
         }
         return $responseString;
     }
 
+    // public function createNewChannelByPrg($channelName, $purpose, $type, $workspaceUrl)
+    // {
+
+      //$status = array();
+
+      // switch ($status['channelStatus']) {
+      //   case 0:
+      //     $responseString['channel'] = "Channel ".$channelName." not created";
+      //     break;
+      //   case 1:
+      //     $responseString['channel'] = "Channel ".$channelName." is created";
+      //     break;
+      //   default:
+      //     $responseString['channel'] = 'Channel not created. SQL error';
+      //     break;
+      // }
+      //
+      // switch ($status['userStatus']) {
+      //   case 0:
+      //     $responseString['user'] = $_SESSION['userid']." is not added to channel";
+      //     break;
+      //   case 1:
+      //     $responseString['user'] = $_SESSION['userid']." is added to channel";
+      //     break;
+      //   default:
+      //     $responseString['user'] = $_SESSION['userid']." not added to ".$channelName.". SQL error";
+      //     break;
+      // }
+
+    //   return $responseString;
+    // }
+
     //create new channel for a workspace
     public function createNewChannel($channelName, $purpose, $type, $workspaceUrl) {
-      $this->homeModelVar = new HomeModel();
       $responseString = NULL;
-      $result = false;
-      $status = array();
-      $status = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
-      switch ($status['channelStatus']) {
+      $this->homeModelVar = new HomeModel();
+      $affectedRows = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
+      switch ($affectedRows) {
         case 0:
-          $responseString = "Channel ".$channelName." not created";
+          $responseString = "false";//"Channel ".$channelName." not created";
           break;
         case 1:
-          $responseString = "Channel ".$channelName." is created";
-          $result = true;
+          $responseString = "true";//"Channel ".$channelName." is created";
           break;
         default:
-          $responseString = 'Query returned an error';
-          break;
-      }
-
-      switch ($status['userStatus']) {
-        case 0:
-          $responseString = $responseString." and ".$_SESSION['userid']." is not added to channel";
-          $result = false;
-          break;
-        case 1:
-          $responseString = $responseString." and ".$_SESSION['userid']." is added to channel";
-          break;
-        default:
-          $responseString = 'Query returned an error';
-          $result = false;
+          $responseString = "false";//"Channel not created. SQL error";
           break;
       }
       return $responseString;
@@ -153,14 +171,14 @@
 
     //add list of users to a channel
     public function inviteUsersToChannel($users, $channelName, $workspaceUrl) {
-      $this->homeModelVar = new HomeModel();
       $invitationResults = array('success' => array(), 'failed' => array());
-      foreach ($users as $userId) {
-        $successFeeds = $this->homeModelVar->addUserToChannel($userId, $channelName, $workspaceUrl);
+      $this->homeModelVar = new HomeModel();
+      foreach ($users as $userID) {
+        $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
         if ($successFeeds < 1) {
-          array_push($invitationResults['failed'], $userId." ".$channelName);
+          array_push($invitationResults['failed'], $userId);
         } else {
-          array_push($invitationResults['success'], $userId." ".$channelName);
+          array_push($invitationResults['success'], $userId);
         }
       }
       return $invitationResults;

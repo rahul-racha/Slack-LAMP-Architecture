@@ -1,24 +1,8 @@
 <?php
 	session_start();
 	$_SESSION['basePath'] = '../';
-	session_write_close();
+	//session_write_close();
   	require_once $_SESSION['basePath'].'controllers/login.php';
-
-	$loginControlVar = new LoginController();
-	$message = NULL;
-	if (isset($_POST["registration"]) && $_POST["registration"] == "yes") {
-		global $message;
-	    $firstName = $_POST["firstName"];
-	    $lastName = $_POST["lastName"];
-	    $email = $_POST["email"];
-	    $userId = $_POST["userId"];
-	    $password = $_POST["password"];
-	    $workspaceUrl = "musicf17.slack.com";
-	    $message = $loginControlVar->registerNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl);
-		unset($_POST);
-		echo $message;
-		// header("location:login.php", true, 303);
-	}
 ?>
 
 <!DOCTYPE html>

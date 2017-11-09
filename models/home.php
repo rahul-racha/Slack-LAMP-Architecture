@@ -250,13 +250,14 @@
         $stmt->execute();
         $affectedRows = $stmt->affected_rows;
         $stmt->close();
-        if ($affectedRows == 1) {
-          $isUserAdded = $this->addUserToChannel($_SESSION['userid'], $channelName, $workspaceUrl);
-        }
+        // if ($affectedRows == 1) {
+        //   $isUserAdded = $this->addUserToChannel($_SESSION['userid'], $channelName, $workspaceUrl);
+        // }
       }
       $dbConVar->closeConnectionObject($conn);
-      $result = array("channelStatus" => $affectedRows, "userStatus" => $isUserAdded);
-      return $result;
+      //$result = array("channelStatus" => $affectedRows, "userStatus" => $isUserAdded);
+      //return $result;
+      return $affectedRows;
     }
 
     public function retrieveReplies($threadId) {

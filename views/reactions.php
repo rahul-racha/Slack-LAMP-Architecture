@@ -1,7 +1,7 @@
 <?php
 session_start();
   $_SESSION['basePath'] = '../';
-  session_write_close();
+  //session_write_close();
 
 require_once $_SESSION['basePath'].'controllers/home.php';
 $homeControlVar = new HomeController();
