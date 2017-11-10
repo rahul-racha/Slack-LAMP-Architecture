@@ -57,7 +57,7 @@
       //$dislikeCount = getReactionCount($msgId, $dislikeEmo);
       $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgIdRef);
       if (count($channelMessages) != $i) {
-        $name = "<div id= ".$msgIdRef." class = 'EntireMessage'>
+        $name = "<div class = 'EntireMessage'>
                   <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
                   "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
                   <ul class = 'MessageUL'>
@@ -73,11 +73,9 @@
                   </label> &nbsp &nbsp
                   <span id = 'dislikeResponse".$msgId."'>     </span>".
 
-                    // <form method='post' class = 'replyForm' action=".$actionUrl." >
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' name='channel' value= ".$_POST['channel'].">
 										<input type='submit'id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>".
-                    // </form>
 
                 "</div>";
 
@@ -127,5 +125,6 @@
 		echo json_encode($replyList);
 		// var_dump($replyList);
 	}
+
 
   ?>

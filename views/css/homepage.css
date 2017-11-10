@@ -83,6 +83,7 @@ html, body{
 }
 .client_thread_display_main{
   height: 100%;
+  display: none;
 }
 .client_thread_header{
   background-color: whitesmoke;
@@ -101,4 +102,5 @@ html, body{
   margin-bottom: 2%;
   margin-left: 2%;
   width: 100%;
+  overflow-y: scroll;
 }

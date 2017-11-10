@@ -32,7 +32,7 @@
 
     public function redirectToHome()
     {
-      $url = $_SESSION['basePath']."views/home.php#bottomMsg";
+      $url = $_SESSION['basePath']."views/home.php#bottom";
       header("location:".$url);
     }
 

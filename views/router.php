@@ -112,6 +112,23 @@
     $threadsArr = $homeControlVar->getRepliesForThread($_POST['threadId']);
   }
 
+  if(isset($_POST['thread_insertion'])){
+    // global $thread_message;
+    global $homeControlVar;
+    global $channelName;
+    global $workspaceUrl;
+    $thread_message = $_POST['thread_insertion']['reply_message'];
+    $thread_id = $_POST['thread_insertion']['thread_id'];
+    $channelName = $_POST['thread_insertion']['channel_name'];
+    $messageType = 'reply';
+    $message = $homeControlVar->insertMessage($channelName,$thread_message,$thread_id,$messageType, $workspaceUrl);
+    echo $message;
+    // $homeControlVar->redirectToHome();
+    // echo $messageType,$thread_id,$thread_message;
+    //  echo $messageType."".$thread_message."".$thread_id."".$channelName;
+
+  }
+
   function displayReplies() {
     global $threadsArr;
     if (!empty($threadsArr) && $threadsArr != NULL) {
