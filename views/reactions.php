@@ -19,7 +19,7 @@ if (isset($_POST['msgId']) && isset($_POST['emoName'])) {
     $reactionHandling = $homeControlVar->handleReactionForMsg($msgId, $emoName);
     $reactionResponse = $homeControlVar->getReactionInfoForMsg($msgId, $emoName);
     // var_dump($reactionResponse);
-    echo $reactionResponse["count"];
+    echo $reactionResponse['count'];
 
   }
   if (isset($_POST['msgId']) && $_POST['emoName']) {

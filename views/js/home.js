@@ -82,7 +82,14 @@ $(document).ready(function(){
 					var str="";
 					data.forEach(function(e){
 						console.log(e);
-						str+="<div class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
+						var lastElement = data.length;
+						console.log(lastElement);
+						if(lastElement != data.length){
+							str+="<div class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
+						}
+						else{
+							str+="<div id='bottom_reply' class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
+						}
 					});
 					str+="<div class='row client_thread_reply_entry_area'><div class = 'col-xs-12'><input type='text' class='client_reply_message'><input type='submit' id="+thread_id+" class='client_reply_message_submit'></div></div>";
 					$(".client_thread_list").html(str);
@@ -90,7 +97,7 @@ $(document).ready(function(){
 			});
 		});
 
-		$(".close_thread_dispaly_area").on("click",function(e){
+		$(".close_thread_dispaly").on("click",function(e){
 			$(".client_thread_display_main").removeClass("col-xs-3");
 			$(".client_thread_display_main").hide();
 			$(".client_main_continer").removeClass("col-xs-7").addClass("col-xs-10")
@@ -120,7 +127,7 @@ $(document).ready(function(){
 								console.log(e);
 								str+="<div class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
 							});
-							str+="<div class='row'><div class = 'col-xs-12'><input type='text' class='client_reply_message'><input type='submit' id="+thread_id+" class='client_reply_message_submit'></div></div>";
+							str+="<div class='row client_thread_reply_entry_area'><div class = 'col-xs-12'><input type='text' class='client_reply_message'><input type='submit' id="+thread_id+" class='client_reply_message_submit'></div></div>";
 							$(".client_thread_list").html(str);
 						},
 					});

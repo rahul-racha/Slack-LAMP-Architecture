@@ -44,6 +44,14 @@ html, body{
 .client_message_header{
   background-color: #E4E1E0;
 }
+.client_channel_header{
+  background-color: #4d394b !important;
+  color: #fff;
+  width: 100% !important;
+  border: none;
+  margin-left: 0% !important;
+  margin-right: 0% !important;
+}
 .client_channel_display{
   background-color: #4d394b !important;
   color: #fff;
@@ -89,18 +97,22 @@ html, body{
   background-color: whitesmoke;
   padding: 2% !important;
 }
-.close_thread_dispaly_area{
+.close_thread_dispaly{
   float: right;
   margin-right: 5%;
   cursor: pointer;
   color: black;
   /*border-left: 1px solid #ccc;*/
 }
+.client_thread_message_display_area{
+  overflow-y: scroll;
+  max-height: 86%;
+}
+
 .client_thread_reply_entry_area{
-  position: fixed;
-  bottom: 0% !important;
+  /*position: fixed;*/
+  /*bottom: 0% !important;*/
   margin-bottom: 2%;
   margin-left: 2%;
   width: 100%;
-  overflow-y: scroll;
 }

@@ -29,7 +29,7 @@
         <div class="client_user_profile_button row change_row_prop">
           <input type="submit" class="btn btn-info " data-toggle="modal" data-target="#client_profile_page" value="musicf17.slack.com">
         </div>
-        <div class="client_channel_display row">
+        <div class="client_channel_header row">
           <h4>Channels
             <a href="#" class="client_new_chanenl" data-toggle="modal" data-target="#NewChannel">
               <i class="fa fa-plus" aria-hidden="true"></i>
@@ -68,12 +68,12 @@
       <div class="client_thread_display_main" >
         <div class="well client_thread_header">
           <h4 class="client_thread_title">Thread
-          <a class="close_thread_dispaly_area">x</a>
+          <a class="close_thread_dispaly">x</a>
           </h4>
         </div>
         <div class="client_thread_message_display_area">
           <div class="client_thread_list">
-
+            <!-- reply messages display -->
           </div>
         </div>
       </div>
