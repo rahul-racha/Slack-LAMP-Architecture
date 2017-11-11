@@ -4,7 +4,6 @@
   //session_write_close();
   //require_once $_SESSION['basePath'].'controllers/home.php';
   require 'homepage.php';
-  require 'reactions.php';
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +28,7 @@
         <div class="client_user_profile_button row change_row_prop">
           <input type="submit" class="btn btn-info " data-toggle="modal" data-target="#client_profile_page" value="musicf17.slack.com">
         </div>
-        <div class="client_channel_display row">
+        <div class="client_channel_header row">
           <h4>Channels
             <a href="#" class="client_new_chanenl" data-toggle="modal" data-target="#NewChannel">
               <i class="fa fa-plus" aria-hidden="true"></i>
@@ -62,29 +61,23 @@
               <input id="textArea" class="client_message_entry_textarea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
               <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
               <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
+              <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
               <input id="SubmitButton" type="hidden" name="submit"/>
             </form>
           </div>
       </div>
-      <div class="client_thread_display_main col-xs-3 row">
-        <div class="well client_thread_header col-xs-12">
+      <div class="client_thread_display_main" >
+        <div class="well client_thread_header">
           <h4 class="client_thread_title">Thread
-          <a class="close_thread_dispaly_area">x</a>
+          <a class="close_thread_display">x</a>
           </h4>
         </div>
-        <div class="client_thread_message_display_area col-xs-12">
+        <div class="client_thread_message_display_area">
           <div class="client_thread_list">
-
+            <!-- reply messages display -->
           </div>
         </div>
-        <div class="client_thread_reply_entry_area col-xs-12">
-          <input class="client_thread_reply_input" type="text">
-          <input type="hidden">
-        </div>
       </div>
-			<!-- <div class="col-xs-2 client_thread_main_contianer" style="display:none;">
-				I am here
-			</div> -->
     </div>
     <!-- <form method="post" action="<?php //echo htmlspecialchars("router.php"); ?>">
       <input type="submit" name="logout" value="logout">
