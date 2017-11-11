@@ -8,6 +8,7 @@
   $textArea = NULL;
   $threadsArr = array();
   $channelResponse = NULL;
+  $channelHeading = NULL;
   $channelCreator = array();
   $newInviteUserResponse = array();
   $workspaceUrl = "musicf17.slack.com";
@@ -34,6 +35,11 @@
     $channelName = $_POST["channel"];
   }
 
+  if (isset($_POST["channelHeading"])) {
+		global $channelHeading;
+		$channelHeading = $_POST["channelHeading"];
+	}
+
   if (isset($_POST["textarea"])) {
     global $textArea;
     $textArea = $_POST["textarea"];
@@ -50,6 +56,7 @@
   if (isset($_POST['inviteUsersExistingChannel']) && $_POST['inviteUsersExistingChannel'] == 'inviteUser') {
     global $newInviteUserResponse;
     global $channelName;
+    global $channelHeading;
     global $workspaceUrl;
     global $homeControlVar;
     $temp = array();
@@ -68,6 +75,7 @@
         }
     }
     $_SESSION['channel'] = $channelName;
+    $_SESSION['channelHeading'] = $channelHeading;
     unset($_POST['inviteUsersExistingChannel']);
     unset($_POST["channel"]);
     unset($_POST['addUserExistingChannel']);
@@ -77,11 +85,14 @@
   function insertMessage($textArea) {
     global $homeControlVar;
     global $channelName;
+    global $channelHeading;
     global $workspaceUrl;
     $threadId = NULL;
     $messageType = 'post';
     unset($_POST["textarea"]);
     $message = $homeControlVar->insertMessage($channelName,$textArea,$threadId,$messageType, $workspaceUrl);
+    $_SESSION['channel'] = $channelName;
+    $_SESSION['channelHeading'] = $channelHeading;
     $homeControlVar->redirectToHome();
   }
 
@@ -91,12 +102,22 @@
     global $homeControlVar;
     global $channelResponse;
     global $channelCreator;
+    global $channelHeading;
+
     $channelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
+    if ($channelResponse == "true") {
     $users = array();
     $users = $invitedUsers;
     array_push($users, $_SESSION['userid']);
     $channelCreator = $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl);
     $_SESSION['channel'] = $channelName;
+    if ($channeltype == "Public") {
+      $channelHeading = "#"." ".$channelName;
+    } else {
+      $channelHeading = "∆"." ".$channelName;
+    }
+    $_SESSION['channelHeading'] = $channelHeading;
+    }
     unset($_POST['newChannel']);
     unset($_POST["channel"]);
     unset($_POST['purpose']);

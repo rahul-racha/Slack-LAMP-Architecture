@@ -74,8 +74,10 @@
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
-      $this->channels = array();
-      $retChannels = "SELECT channel_name
+      $this->channels = array();//('apple','baana'); //array(array("channel"=> NULL, "type"=>NULL));
+      $channelType = array();//('Public','Private');
+      $combinedArray = array();
+      $retChannels = "SELECT channel_name, type
                       FROM workspace_channels
                       WHERE url = '$workspaceUrl' AND channel_id IN (
                       SELECT DISTINCT channel_id
@@ -86,12 +88,17 @@
       {
         while ($row = $result->fetch_assoc())
         {
-            array_push($this->channels, $this->validateInputs($row['channel_name']));
+            //array_push($this->channels, $this->validateInputs($row['channel_name']));
+            //array_push($this->channelType, $this->validateInputs($row['type']));
+            $temp = array("channel"=>$this->validateInputs($row['channel_name']), "type"=>$this->validateInputs($row['type']));
+            array_push($combinedArray, $temp);
         }
+
       }
+      //$combinedArray = array_combine($this->channels, $channelType);
       mysqli_free_result($result);
       $dbConVar->closeConnectionObject($conn);
-      return $this->channels;
+      return $combinedArray;
     }
 
     public function retrieveMessages($channelName, $workspaceUrl)
