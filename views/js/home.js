@@ -145,4 +145,36 @@ $(document).ready(function(){
 			});
 		});
 
+
+
+		$("#profile-pic").click(function() {
+			$("input[id='profile-browse']").trigger("click");
+		});
+
+		$( "#editForm" ).submit(function(event) {
+  		event.preventDefault();
+		});
+
+
+
+	// function readURL(input) {
+	//
+  // 	if (input.files && input.files[0]) {
+  //   	var reader = new FileReader();
+	//
+  //   	reader.onload = function(e) {
+  //     	$('#').attr('src', e.target.result);
+  //   	}
+	//
+  //   	reader.readAsDataURL(input.files[0]);
+  // 	}
+	// }
+		//$("#profilePic").change(function(){
+        //readURL(this);
+    //});
 });
+
+var  loadFile  = function (event) {
+ var output = document.getElementById('profile-pic');
+ output.src = URL.createObjectURL(event.target.files[0]);
+}

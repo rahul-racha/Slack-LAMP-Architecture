@@ -93,9 +93,11 @@
           <h4 class="modal-title">Edit Your Profile</h4>
         </div>
         <div class="modal-body">
+          <form id="editForm" method="post" action="profile.php" enctype="multipart/form-data">
           <div class="row">
+
             <div class="col-xs-8">
-                <form action="/action_page.php">
+
                   <div class="form-group">
                     <label for="FirstName">First Name</label>
                     <input type="text" class="form-control" placeholder="First Name" name="FirstName" autocomplete="off">
@@ -112,18 +114,25 @@
                     <label for="PhoneNumber">Phone number</label>
                     <input type="text" class="form-control" placeholder="(123) 456-7891" name="PhoneNumber" autocomplete="off">
                   </div>
-                  <div class="checkbox">
-                    <label><input type="checkbox" name="remember"> Remember me</label>
-                  </div>
-                  <button type="submit" class="btn btn-default">Submit</button>
-                </form>
+
+
             </div>
             <div class="col-xs-4">
               <!-- avatar details goes here -->
-              <input type="image" src="https://www.fancyhands.com/images/default-avatar-250x250.png" width="30px"/>
-              <input type="file" id="my_file" style="display: none;" />
+              <input type="image" id="profile-pic" src="images/users/default-avatar-250x250.png" width="170px">
+              <input type="file" id="profile-browse" onchange="loadFile(event)" multiple accept='image/*' style="display:none;">
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="checkbox">
+                <label><input type="checkbox" name="remember"> Remember me</label>
+              </div>
+              <button type="submit" value="upload" class="btn btn-default">Submit</button>
             </div>
           </div>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
