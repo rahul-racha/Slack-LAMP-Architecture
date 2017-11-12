@@ -45,12 +45,12 @@
         return $channels;
     }
 
-    public function getProfile() {
+    public function getProfile($user_id) {
       $this->homeModelVar = new HomeModel();
       $profile = array();
       $membership = array();
-      $profile = $this->homeModelVar->getUserProfile($_SESSION['userid']);
-      $membership = $this->homeModelVar->getUserMembership($_SESSION['userid']);
+      $profile = $this->homeModelVar->getUserProfile($user_id);
+      $membership = $this->homeModelVar->getUserMembership($user_id);
       $userData = array('profile'=>$profile, 'membership'=>$membership);
       return $userData;
     }

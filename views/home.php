@@ -25,9 +25,10 @@
     <div class="row client_main_row">
       <div class="col-xs-2 client_navbar row change_row_prop">
       <!-- side nav bar -->
-        <div class="client_user_profile_button row change_row_prop">
-          <input type="submit" class="btn btn-info " data-toggle="modal" data-target="#client_profile_page" value="musicf17.slack.com">
-        </div>
+
+        <a href='<?php echo "profile_page.php?userid=".$_SESSION['userid']; ?>'>musicf17.slack.com</a>
+
+        <!-- </div> -->
         <div class="client_channel_header row">
           <h4>Channels
             <a href="#" class="client_new_chanenl" data-toggle="modal" data-target="#NewChannel">
@@ -76,6 +77,16 @@
           <div class="client_thread_list">
             <!-- reply messages display -->
           </div>
+        </div>
+      </div>
+      <div class="client_user_profile_display_main">
+        <div class="well client_thread_header">
+          <h4> Profile Page
+            <a class="close_thread_display">x</a>
+          </h4>
+        </div>
+        <div class="client_user_profile_display">
+          <!-- profile page -->
         </div>
       </div>
     </div>
