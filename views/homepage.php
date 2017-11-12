@@ -58,7 +58,7 @@
       $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgIdRef);
       if (count($channelMessages) != $i) {
         $name = "<div class = 'EntireMessage'>
-                  <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+									<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
                   "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
                   <ul class = 'MessageUL'>
                     <li class = 'MessageLI'>".$value['message']."</li>

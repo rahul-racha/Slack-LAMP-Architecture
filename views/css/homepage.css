@@ -76,6 +76,10 @@ html, body{
   height: 85%;
   max-height: 100%;
 }
+/*.display_along_user{
+  height: 30px;
+  width: 30px;
+}*/
 .MessageUL{
   list-style: none;
 }

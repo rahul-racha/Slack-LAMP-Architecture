@@ -123,8 +123,8 @@
 				<div align="center" class="form">
 					<form action="<?php echo htmlspecialchars('../index.php'); ?>" method="post">
 						<div>
-							<input type="text" name="userid" placeholder="userid"><br>
-							<input type="password" name="password" placeholder="password"><br>
+							<input type="text" name="userid" placeholder="userid" autocomplete="off" /><br>
+							<input type="password" name="password" placeholder="password" autocomplete="off" /><br>
 							<input type="submit" name="submit" value="Sign in"></input>
 						</div>
 					</form>
