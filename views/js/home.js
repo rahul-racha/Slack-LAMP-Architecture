@@ -3,8 +3,6 @@ $(document).ready(function(){
 		$(".like").on("click",function(e){
 			var emoName = e.currentTarget.className;
 			var msgId = parseInt(e.currentTarget.id);
-			console.log(emoName);
-			console.log(msgId);
 			$.ajax({
 				method: 'post',
 				url: './router.php',
@@ -12,7 +10,6 @@ $(document).ready(function(){
 				dataType: 'text',
 				success: function(data){
 					data = $.parseJSON(data)
-					console.log(data);
 					$("#likeResponse" + msgId).html(data['emoResp']['count']);
 					var disCount = data['dislikeCount'];
 					if (disCount != null) {
@@ -41,7 +38,6 @@ $(document).ready(function(){
 
 		$(".dislike").on("click",function(e){
 			var emoName = e.currentTarget.className;
-			console.log(emoName);
 			var msgId = parseInt(e.currentTarget.id);
 			$.ajax({
 				method: 'post',
@@ -50,7 +46,6 @@ $(document).ready(function(){
 				dataType: 'text',
 				success: function(data){
 					 data = $.parseJSON(data)
-					 console.log(data);
 						$("#dislikeResponse" + msgId).html(data['emoResp']['count']);
 						var likeCount = data['likeCount'];
 						if (likeCount != null) {
@@ -91,7 +86,7 @@ $(document).ready(function(){
 				success: function(data){
 					var str="";
 					data.forEach(function(e){
-						console.log(e);
+						// console.log(e);
 						// var lastElement = data.length;
 						// console.log(lastElement);
 						// if(lastElement != data.length){
@@ -125,7 +120,7 @@ $(document).ready(function(){
 				data: {'thread_insertion':{'channel_name': channel, 'thread_id':thread_id,'reply_message':reply_message}},
 				dataType: 'text',
 				success: function(data){
-					console.log(data);
+					// console.log(data);
 					$.ajax({
 						method: 'post',
 						url: './homepage.php',
@@ -134,7 +129,7 @@ $(document).ready(function(){
 						success: function(data){
 							var str="";
 							data.forEach(function(e){
-								console.log(e);
+								// console.log(e);
 								str+="<div class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
 							});
 							str+="<div class='row client_thread_reply_entry_area'><div class = 'col-xs-12'><input type='text' class='client_reply_message'><input type='submit' id="+thread_id+" class='client_reply_message_submit'></div></div>";

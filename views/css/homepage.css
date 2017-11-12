@@ -101,7 +101,7 @@ html, body{
   background-color: whitesmoke;
   padding: 2% !important;
 }
-.close_thread_dispaly{
+.close_thread_display{
   float: right;
   margin-right: 5%;
   cursor: pointer;
@@ -119,4 +119,9 @@ html, body{
   margin-bottom: 2%;
   margin-left: 2%;
   width: 100%;
+}
+
+.client_user_profile_display_main{
+  height: 100%;
+  display: none;
 }
