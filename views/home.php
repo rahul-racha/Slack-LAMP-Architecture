@@ -4,7 +4,6 @@
   //session_write_close();
   //require_once $_SESSION['basePath'].'controllers/home.php';
   require 'homepage.php';
-  require 'reactions.php';
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +43,7 @@
         <div class="client_message_header row change_row_prop">
           <!-- header -->
           <div class="client_channel_title row change_row_prop">
-            <h5 class="client_channel_title_view"><strong><?php echo "#" . $channelName;?></strong></h5>
+            <h5 class="client_channel_title_view"><strong><?php echo $channelHeading;?></strong></h5>
             <!-- inviting new users after creating channel -->
           </div>
           <div class="client_invite_users row change_row_prop">
@@ -60,6 +59,8 @@
         	<div class="client_message_entry col-xs-12">
 						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
               <input id="textArea" class="client_message_entry_textarea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
+              <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+              <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
               <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
               <input id="SubmitButton" type="hidden" name="submit"/>
             </form>
@@ -68,7 +69,7 @@
       <div class="client_thread_display_main" >
         <div class="well client_thread_header">
           <h4 class="client_thread_title">Thread
-          <a class="close_thread_dispaly">x</a>
+          <a class="close_thread_display">x</a>
           </h4>
         </div>
         <div class="client_thread_message_display_area">
@@ -185,6 +186,7 @@
               <input type="text" class="form-control" name="addUserExistingChannel[]">
             </div>
               <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
+              <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
               <input type="hidden" name="inviteUsersExistingChannel" value = "inviteUser">
               <input type="submit" value="Invite" class="btn btn-primary btn-sm">
           </form>

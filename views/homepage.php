@@ -7,6 +7,7 @@
 
   $homeControlVar = new HomeController();
   $channelName = NULL;
+	$channelHeading = NULL;
   $workspaceUrl = "musicf17.slack.com";
 	$msgId = NULL;
 
@@ -21,22 +22,60 @@
     unset($_SESSION['channel']);
   }
 
+	if (isset($_POST["channelHeading"])) {
+		global $channelHeading;
+		$channelHeading = $_POST["channelHeading"];
+	} else if (isset($_SESSION['channelHeading'])) {
+    global $channelHeading;
+    $_POST["channelHeading"] = $_SESSION['channelHeading'];
+    $channelHeading = $_POST["channelHeading"];
+    unset($_SESSION['channelHeading']);
+	}
+
   function displayChannels()
   {
     global $homeControlVar;
     global $workspaceUrl;
     global $channelName;
+		global $channelHeading;
     $channelList = $homeControlVar->viewChannels($workspaceUrl);
     if (!isset($_SESSION['channel']) && !isset($_POST["channel"])) {
-      $channelName = $channelList[0];
-      $_POST["channel"] = $channelList[0];
+			$symbol = NULL;
+      $channelName = $channelList[0]['channel'];
+      $_POST["channel"] = $channelList[0]['channel'];
+			if ($channelList[0]['type'] == "Public") {
+				$symbol = "#";
+			} else {
+				$symbol = "∆";
+			}
+			$channelHeading = $symbol." ".$channelName;
     }
-    foreach ($channelList as $value) {
-      echo '<form method="post" action = "home.php">
-							<input type="hidden" name="channel" value="'.$value.'" />
-							<input type="submit" class="client_channel_display pull-left" value="'.$value.'" />
-						</form>';
-    }
+
+     foreach ($channelList as $index) {
+			$chName = NULL;
+			$type = NULL;
+			$sym = NULL;
+		 	foreach ($index as $key => $value) {
+				if ($key == "channel") {
+					$chName = $value;
+				} else if ($key == "type") {
+					$type = $value;
+				}
+				if ($type == "Public") {
+					$sym = "#";
+				} else {
+					$sym = "∆";
+				}
+				if ($type != NULL && $chName != NULL) {
+					$finalName = $sym." ".$chName;
+      		echo '<form method="post" action = "home.php#bottom">
+							<input type="hidden" name="channel" value="'.$chName.'" >
+							<input type="hidden" name="channelHeading" value="'.$finalName.'" >
+							<input type="submit" class="client_channel_display pull-left" value="'.$finalName.'" >
+							</form>';
+						}
+     			}
+			}
   }
 
   function displayMessages() {
@@ -53,8 +92,8 @@
       $msgIdRef = $msgId."action";
       $likeEmo = "like";
       $dislikeEmo = "dislike";
-      //$likeCount = getReactionCount($msgId, $likeEmo);
-      //$dislikeCount = getReactionCount($msgId, $dislikeEmo);
+      $likeCount = getReactionCount($msgId, $likeEmo);
+      $dislikeCount = getReactionCount($msgId, $dislikeEmo);
       $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgIdRef);
       if (count($channelMessages) != $i) {
         $name = "<div class = 'EntireMessage'>
@@ -67,11 +106,11 @@
                   <label class='like' name='like' id=".$msgId.">
                   <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
                    </label>&nbsp &nbsp
-                  <span id = 'likeResponse".$msgId."'>        </span>
+                  <span id = 'likeResponse".$msgId."'>   $likeCount     </span>
                   <label class='dislike' name='dislike' id=".$msgId.">
                   <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
                   </label> &nbsp &nbsp
-                  <span id = 'dislikeResponse".$msgId."'>     </span>".
+                  <span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' name='channel' value= ".$_POST['channel'].">
@@ -91,11 +130,11 @@
               <label class='like' name='like' id=".$msgId.">
               <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
                </label>&nbsp &nbsp
-              <span id = 'likeResponse".$msgId."'>        </span>
+              <span id = 'likeResponse".$msgId."'>   $likeCount     </span>
               <label class='dislike' name='dislike' id=".$msgId.">
               <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
               </label> &nbsp &nbsp
-              <span id = 'dislikeResponse".$msgId."'>     </span>".
+              <span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
                 // <form class = 'replyForm' method='post' action=".$actionUrl.">
                   "<input type='hidden' name='threadId' value=".$msgId.">
                   <input type='hidden' name='channel' value= ".$_POST['channel'].">
@@ -120,10 +159,8 @@
 	if (isset($_POST["thread_id"])){
 		global $homeControlVar;
 		$msgId=$_POST["thread_id"];
-		// $replyList = array();
 		$replyList = $homeControlVar->getRepliesForThread($msgId);
 		echo json_encode($replyList);
-		// var_dump($replyList);
 	}
 
 

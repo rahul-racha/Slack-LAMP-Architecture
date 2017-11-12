@@ -211,9 +211,9 @@
       $isExists = NULL;
       $pos = strpos($users, ";".$_SESSION['userid'].";");
       if ($pos === false) {
-        $isExists = false;
+        $isExists = "false";
       } else {
-        $isExists = true;
+        $isExists = "true";
       }
       return $isExists;
     }
@@ -233,40 +233,59 @@
 
     public function handleReactionForMsg($msgId, $emoName) {
       $this->homeModelVar = new HomeModel();
-      $responseString = NULL;
+      $responseString = array('result'=>NULL,'message'=>NULL);
       $affectedRows = NULL;
       $info = array();
       $emoId = $this->homeModelVar->getEmoId($emoName);
       if ($emoId > 0) {
         $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
-        if ($info != NULL && $info['users'] != NULL) {
+        //$responseString['message'] = $this->isUserExistsForReaction($info['users']);//$info['users'];
+        //return $responseString;
+        if ($info != NULL && $info['users'] != NULL && !empty($info['users'])) {
           if ($this->isUserExistsForReaction($info['users']) == "false") {
             //if ($isInsert == "true") {
               $isInsert = "true";
-              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
+              $isUpdate = "true";
+              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
             //}
           } else {
             //if ($isInsert == "false") {
               $isInsert = "false";
-              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
+              $isUpdate = "true";
+              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
             //}
           }
         } else {
           //if ($isInsert == "true") {
+          $isUpdate = NULL;
+          if ($info == NULL) {
+            $isUpdate = "false";
+          } else {
+            $isUpdate = "true";
+          }
             $isInsert = "true";
             $info['count'] = 0;
-            $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
+            $info['users'] = NULL;
+            $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
           //}
         }
         if ($affectedRows == 1) {
-          $responseString = "success";
+          $responseString['result'] = "true";
+          $responseString['message'] = "success";
         } /*else if ($affectedRows == NULL) {
           $responseString = NULL;
-        }*/ else {
-          $responseString = "failed";
+        }*/
+        else if ($affectedRows == NULL) {
+          $responseString['result'] = "false";
+          $responseString['message'] = "failedEPIC";
+        }
+        else {
+          $responseString['result'] = "false";
+          $responseString['message'] = "failed";
         }
       } else {
-        $responseString = $emoName." is not found in database";
+        $responseString['result'] = "false";
+        $responseString['message'] = $emoName." is not found in database";
       }
       return $responseString;
     }

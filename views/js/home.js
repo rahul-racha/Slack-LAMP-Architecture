@@ -1,31 +1,37 @@
 
 $(document).ready(function(){
 		$(".like").on("click",function(e){
-			// console.log("adass");
 			var emoName = e.currentTarget.className;
 			var msgId = parseInt(e.currentTarget.id);
-			var reactionsArr = {'msgId':msgId,'emoName':emoName};
+			console.log(emoName);
+			console.log(msgId);
 			$.ajax({
 				method: 'post',
-				url: './reactions.php',
-				data: {'msgId':msgId, 'emoName':emoName},
-				// success: success,
+				url: './router.php',
+				data: {'insertReaction': {'msgId':msgId, 'emoName':emoName}},
 				dataType: 'text',
 				success: function(data){
-					// console.log(data);
+					data = $.parseJSON(data)
+					console.log(data);
+					$("#likeResponse" + msgId).html(data['emoResp']['count']);
+					var disCount = data['dislikeCount'];
+					if (disCount != null) {
+						$("#dislikeResponse" + msgId).html(disCount);
+					}
 					// $.ajax({
 					// 	method: 'post',
-					// 	url: './reactions.php',
-					// 	data: {'msgId':msgId, 'emoName':emoName},
+					// 	url: './router.php',
+					// 	data: {'insertReaction': {'msgId':msgId, 'emoName':emoName}},
 					// 	dataType: 'text',
 					// 	success: function(data){
-					// 		$("#likeResponse" + msgId).html(data);
-					// 	},
+					// 			//data = $.parseJSON(data)
+					// 			console.log(data);
+					// 			$("#dislikeResponse" + msgId).html(data);
+				  //   	},
+				  //   	error: function(){
+				  //   		console.log("Error");
+				  //   	}
 					// });
-
-						$("#likeResponse" + msgId).html(data);
-							// console.log(data);
-			       	// $('#response pre').html( JSON.stringify( data ) );
 		    	},
 		    	error: function(){
 		    		console.log("Error");
@@ -37,29 +43,33 @@ $(document).ready(function(){
 			var emoName = e.currentTarget.className;
 			console.log(emoName);
 			var msgId = parseInt(e.currentTarget.id);
-			var reactionsArr = {'msgId':msgId,'emoName':emoName};
 			$.ajax({
 				method: 'post',
-				url: './reactions.php',
-				data: {'msgId':msgId, 'emoName':emoName},
-				// success: success,
+				url: './router.php',
+				data: {'insertReaction': {'msgId':msgId, 'emoName':emoName, 'isInsert': "true"}},
 				dataType: 'text',
 				success: function(data){
-					// console.log(data);
-						// $('#dislikeResponse' + msgId).html(data);
+					 data = $.parseJSON(data)
+					 console.log(data);
+						$("#dislikeResponse" + msgId).html(data['emoResp']['count']);
+						var likeCount = data['likeCount'];
+						if (likeCount != null) {
+							$("#likeResponse" + msgId).html(likeCount);
+						}
 						// $.ajax({
 						// 	method: 'post',
-						// 	url: './reactions.php',
-						// 	data: {'msgId':msgId, 'emoName':emoName},
+						// 	url: './router.php',
+						// 	data: {'insertReaction': {'msgId':msgId, 'emoName':emoName, 'isInsert': "false"}},
 						// 	dataType: 'text',
-						// 	success: function(data){
-						// 		$("#dislikeResponse" + msgId).html(data);
-						// 	},
+						// 	success: function(data) {
+						// 		 //data = $.parseJSON(data)
+						// 		 console.log(data);
+						// 			$("#dislikeResponse" + msgId).html(data);
+					  //   	},
+					  //   	error: function(){
+					  //   		console.log("Error");
+					  //   	}
 						// });
-
-						$("#dislikeResponse" + msgId).html(data);
-							// console.log(data);
-			       	// $('#response pre').html( JSON.stringify( data ) );
 		    	},
 		    	error: function(){
 		    		console.log("Error");
@@ -82,14 +92,14 @@ $(document).ready(function(){
 					var str="";
 					data.forEach(function(e){
 						console.log(e);
-						var lastElement = data.length;
-						console.log(lastElement);
-						if(lastElement != data.length){
+						// var lastElement = data.length;
+						// console.log(lastElement);
+						// if(lastElement != data.length){
 							str+="<div class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
-						}
-						else{
-							str+="<div id='bottom_reply' class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
-						}
+						//}
+						// else{
+						// 	str+="<div id='bottom_reply' class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
+						// }
 					});
 					str+="<div class='row client_thread_reply_entry_area'><div class = 'col-xs-12'><input type='text' class='client_reply_message'><input type='submit' id="+thread_id+" class='client_reply_message_submit'></div></div>";
 					$(".client_thread_list").html(str);
@@ -97,7 +107,7 @@ $(document).ready(function(){
 			});
 		});
 
-		$(".close_thread_dispaly").on("click",function(e){
+		$(".close_thread_display").on("click",function(e){
 			$(".client_thread_display_main").removeClass("col-xs-3");
 			$(".client_thread_display_main").hide();
 			$(".client_main_continer").removeClass("col-xs-7").addClass("col-xs-10")
