@@ -119,29 +119,27 @@
                 "</div>";
 
       }  else {
-      $name = "<div id='bottom' class = 'EntireMessage'>
+      $name = "<div id = 'bottom' class = 'EntireMessage'>
+								<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+								"</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+								<ul class = 'MessageUL'>
+									<li class = 'MessageLI'>".$value['message']."</li>
+								</ul>
 
-              <strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
-              "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
-              <ul class = 'MessageUL'>
-                <li class = 'MessageLI'>".$value['message']."</li>
-              </ul>
+								<label class='like' name='like' id=".$msgId.">
+								<i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+								 </label>&nbsp &nbsp
+								<span id = 'likeResponse".$msgId."'>   $likeCount     </span>
+								<label class='dislike' name='dislike' id=".$msgId.">
+								<i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
+								</label> &nbsp &nbsp
+								<span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
 
-              <label class='like' name='like' id=".$msgId.">
-              <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-               </label>&nbsp &nbsp
-              <span id = 'likeResponse".$msgId."'>   $likeCount     </span>
-              <label class='dislike' name='dislike' id=".$msgId.">
-              <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
-              </label> &nbsp &nbsp
-              <span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
-                // <form class = 'replyForm' method='post' action=".$actionUrl.">
-                  "<input type='hidden' name='threadId' value=".$msgId.">
-                  <input type='hidden' name='channel' value= ".$_POST['channel'].">
-                  <input type='submit' class='threadIdSubmit' name='threadIdSubmit' value='reply'>".
-                // </form>
+									"<input type='hidden' name='threadId' value=".$msgId.">
+									<input type='hidden' name='channel' value= ".$_POST['channel'].">
+									<input type='submit'id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>".
 
-            "</div>";
+							"</div>";
     }
 		// <p id='bottomMsg'></p>
       echo $name;

@@ -25,10 +25,12 @@
     <div class="row client_main_row">
       <div class="col-xs-2 client_navbar row change_row_prop">
       <!-- side nav bar -->
-
-        <a href='<?php echo "profile_page.php?userid=".$_SESSION['userid']; ?>'>musicf17.slack.com</a>
-
-        <!-- </div> -->
+        <div class="client_navbar_header">
+          <span>Musicf17.slack.com</span>
+          <a href='<?php echo "profile_page.php?userid=".$_SESSION['userid']; ?>'>
+            <span style="color:white;"><?php echo $_SESSION['userid']; ?></span>
+          </a>
+        </div>
         <div class="client_channel_header row">
           <h4>Channels
             <a href="#" class="client_new_chanenl" data-toggle="modal" data-target="#NewChannel">
@@ -43,11 +45,16 @@
       <div class="col-xs-10 client_main_continer">
         <div class="client_message_header row change_row_prop">
           <!-- header -->
-          <div class="client_channel_title row change_row_prop">
+          <div class="client_channel_title col-xs-8">
             <h5 class="client_channel_title_view"><strong><?php echo $channelHeading;?></strong></h5>
-            <!-- inviting new users after creating channel -->
           </div>
-          <div class="client_invite_users row change_row_prop">
+          <div class="serch_users_in_workspace col-xs-3">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+          </div>
+          <div class="col-xs-1">
+          </div>
+          <div class="client_invite_users col-xs-12">
             <a class="client_invite_users_link" href="#" data-toggle="modal" data-target = "#inviteUsers">
               <i class="fa fa-user-o" aria-hidden="true"></i>
             </a>

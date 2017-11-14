@@ -23,12 +23,9 @@ html, body{
   background-color: #4d394b !important;
   height: 100%;
 }
-.client_user_profile_button{
-  width: 100% !important;
-  font-size: 100% !important;
-  background-color: #4d394b !important;
+.client_navbar_header{
+  color: white;
 }
-
 .client_main_continer{
   padding: 0% !important;
   height: 100% !important;
@@ -42,7 +39,8 @@ html, body{
   margin-right: 5%;
 }
 .client_message_header{
-  background-color: #E4E1E0;
+  /*background-color: #E4E1E0;*/
+  border-bottom: ridge;
 }
 .client_channel_header{
   background-color: #4d394b !important;
@@ -76,10 +74,7 @@ html, body{
   height: 85%;
   max-height: 100%;
 }
-/*.display_along_user{
-  height: 30px;
-  width: 30px;
-}*/
+
 .MessageUL{
   list-style: none;
 }
