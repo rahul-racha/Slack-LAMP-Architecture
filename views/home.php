@@ -26,7 +26,7 @@
       <div class="col-xs-2 client_navbar row change_row_prop">
       <!-- side nav bar -->
 
-        <a href='<?php echo "profile_page.php?userid=".$_SESSION['userid']; ?>'>musicf17.slack.com</a>
+        <a href='<?php echo "profile.php?userid=".$_SESSION['userid']; ?>'>musicf17.slack.com</a>
 
         <!-- </div> -->
         <div class="client_channel_header row">
