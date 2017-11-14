@@ -70,12 +70,89 @@
 
     }
 
+    public function retrievePatternMatchedUsers($keyword) {
+      $dbConVar = new dbConnect();
+      $pattern = "%".$keyword."%";
+      $conn = $dbConVar->createConnectionObject();
+      $userList = array();
+      $retUsers = "SELECT user_id, first_name, last_name, display_name
+                   FROM user_info
+                   WHERE user_id LIKE '$pattern'";
+      $result = mysqli_query($conn, $retUsers);
+      if (mysqli_num_rows($result) > 0)
+      {
+        while ($row = $result->fetch_assoc())
+        {
+          array_push($userList, $row);
+        }
+      }
+      if ($result) {
+        mysqli_free_result($result);
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $userList;
+    }
+
+    public function retrieveRxnMetrics($userID) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $rxnMetrics = array();
+      $pattern = ";".$userID.";"; // ";".$_SESSION['userid'].";";
+      $getRxnMetrics = "SELECT channel_name, B.emo_name AS emo_name, COUNT(B.emo_name) emo_count
+                     FROM (
+                     SELECT C.channel_id, C.user_id, C.msg_id, R.emo_id, emo_name
+                     FROM emoticons INNER JOIN reactions AS R ON emoticons.emo_id = R.emo_id
+                     INNER JOIN channel_messages AS C ON C.msg_id = R.msg_id
+                     WHERE R.users LIKE '%{$pattern}%'
+                     ) B INNER JOIN workspace_channels AS W ON B.channel_id = W.channel_id
+                     GROUP BY B.channel_id, B.emo_name";
+      $result = mysqli_query($conn, $getRxnMetrics);
+     if (mysqli_num_rows($result) > 0)
+     {
+       while ($row = $result->fetch_assoc())
+       {
+         array_push($rxnMetrics, $row);
+       }
+     }
+     mysqli_free_result($result);
+     $dbConVar->closeConnectionObject($conn);
+     return $rxnMetrics;
+   }
+
+   public function retrievePostMetrics($userID) {
+     $dbConVar = new dbConnect();
+     $conn = $dbConVar->createConnectionObject();
+     $postMetrics = array();
+     $getPostMetrics = "SELECT channel_name, COUNT(G.msg_id) msg_count
+                        FROM (
+                        SELECT channel_name, M.channel_id, M.msg_id
+                        FROM channel_messages AS M INNER JOIN workspace_channels AS W
+                        ON M.channel_id = W.channel_id
+                        WHERE M.user_id = '".$userID."'
+                        ) G
+                        GROUP BY channel_name";
+     $result = mysqli_query($conn, $getPostMetrics);
+     if (mysqli_num_rows($result) > 0)
+     {
+       while ($row = $result->fetch_assoc())
+       {
+         array_push($postMetrics, $row);
+       }
+     }
+     mysqli_free_result($result);
+     $dbConVar->closeConnectionObject($conn);
+     return $postMetrics;
+
+   }
+
     public function retrieveChannels($workspaceUrl)
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
-      $this->channels = array();
-      $retChannels = "SELECT channel_name
+      $this->channels = array();//('apple','baana'); //array(array("channel"=> NULL, "type"=>NULL));
+      $channelType = array();//('Public','Private');
+      $combinedArray = array();
+      $retChannels = "SELECT channel_name, type
                       FROM workspace_channels
                       WHERE url = '$workspaceUrl' AND channel_id IN (
                       SELECT DISTINCT channel_id
@@ -86,12 +163,17 @@
       {
         while ($row = $result->fetch_assoc())
         {
-            array_push($this->channels, $this->validateInputs($row['channel_name']));
+            //array_push($this->channels, $this->validateInputs($row['channel_name']));
+            //array_push($this->channelType, $this->validateInputs($row['type']));
+            $temp = array("channel"=>$this->validateInputs($row['channel_name']), "type"=>$this->validateInputs($row['type']));
+            array_push($combinedArray, $temp);
         }
+
       }
+      //$combinedArray = array_combine($this->channels, $channelType);
       mysqli_free_result($result);
       $dbConVar->closeConnectionObject($conn);
-      return $this->channels;
+      return $combinedArray;
     }
 
     public function retrieveMessages($channelName, $workspaceUrl)
@@ -99,7 +181,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->messages = array();
-      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, message, msg_id, created_time, type
+      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, avatar, message, msg_id, created_time, type
                       FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                       WHERE (type = 1 OR type = 2) AND channel_id
                       IN (
@@ -250,21 +332,22 @@
         $stmt->execute();
         $affectedRows = $stmt->affected_rows;
         $stmt->close();
-        if ($affectedRows == 1) {
-          $isUserAdded = $this->addUserToChannel($_SESSION['userid'], $channelName, $workspaceUrl);
-        }
+        // if ($affectedRows == 1) {
+        //   $isUserAdded = $this->addUserToChannel($_SESSION['userid'], $channelName, $workspaceUrl);
+        // }
       }
       $dbConVar->closeConnectionObject($conn);
-      $result = array("channelStatus" => $affectedRows, "userStatus" => $isUserAdded);
-      return $result;
+      //$result = array("channelStatus" => $affectedRows, "userStatus" => $isUserAdded);
+      //return $result;
+      return $affectedRows;
     }
 
     public function retrieveReplies($threadId) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->replies = array();
-      $getReplies = "SELECT user_id, msg_id, message, created_time
-                     FROM channel_messages
+      $getReplies = "SELECT user_id, first_name, last_name, msg_id, message, created_time
+                     FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                      WHERE dependency = $threadId
                      ORDER BY created_time ASC";
       $result = mysqli_query($conn, $getReplies);
@@ -325,19 +408,21 @@
       return $emoId;
     }
 
-    public function handleUserReaction($msgId, $emoId, $info, $isInsert) {
+    public function handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $users = NULL;
+      $count = NULL;
       if ($info != NULL && $info['users'] != NULL && !empty($info['users'])) {
       $users = $info['users'];
       }
-      $count = NULL;
       if ($isInsert == "true") {
         $count = $info['count'] + 1;
       } else {
-        if ($count > 0) {
+        if ($info['count'] > 0) {
           $count = $info['count'] - 1;
+        } else {
+          $count = 0;
         }
       }
       $affectedRows = NULL;
@@ -345,20 +430,42 @@
         if($users != NULL && !empty($users)) {
             if ($isInsert == "true") {
               $users = $users.$_SESSION['userid'].";";
+              //$users = "VVVVdeelled";
             } else {
-              str_replace(";".$_SESSION['userid'].";", ";", $users);
+              if ($info['count'] == 1) {
+                $users = NULL;
+              } else {
+                $users = str_replace(";".$_SESSION['userid'].";", ";", $users);
+                //$users = "deelled";
+              }
             }
         } else {
             if ($isInsert == "true") {
+              //$users = "dALASOOOO";
               $users = ";".$_SESSION['userid'].";";
+            } else {
+              $users = NULL;
             }
         }
-          $stmt = $conn->prepare("INSERT INTO reactions (msg_id, emo_id, users, count)
-                                  VALUES (?,?,?,?)");
+
+        if ($isUpdate == "true") {
+          $query = "UPDATE reactions
+                   SET users=?, count=?
+                   WHERE msg_id=? AND emo_id=?";
+          $stmt = $conn->prepare($query);
+          $stmt->bind_param("ssss", $users, $count, $msgId, $emoId);
+          $stmt->execute();
+          $affectedRows = $stmt->affected_rows;
+          $stmt->close();
+        } else {
+          $query = "INSERT INTO reactions (msg_id, emo_id, users, count)
+                    VALUES (?,?,?,?)";
+          $stmt = $conn->prepare($query);
           $stmt->bind_param("ssss", $msgId, $emoId, $users, $count);
           $stmt->execute();
           $affectedRows = $stmt->affected_rows;
           $stmt->close();
+        }
       }
       $dbConVar->closeConnectionObject($conn);
       return $affectedRows;

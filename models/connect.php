@@ -2,7 +2,7 @@
   class DbConnect {
 	   private $servername = 'localhost';
   	 private $port = '3306';
-  	 private $username = 'admin';//root';
+  	 private $username = 'admin';//'root';
   	 private $password = 'M0n@rch$';//'root';
   	 private $database = 'slack';
 

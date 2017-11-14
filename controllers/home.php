@@ -30,6 +30,12 @@
   class HomeController {
     private $homeModelVar;
 
+    public function redirectToHome()
+    {
+      $url = $_SESSION['basePath']."views/home.php#bottom";
+      header("location:".$url);
+    }
+
     public function viewChannels($workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();
@@ -39,14 +45,21 @@
         return $channels;
     }
 
-    public function getProfile() {
+    public function getProfile($user_id) {
       $this->homeModelVar = new HomeModel();
       $profile = array();
       $membership = array();
-      $profile = $this->homeModelVar->getUserProfile($_SESSION['userid']);
-      $membership = $this->homeModelVar->getUserMembership($_SESSION['userid']);
+      $profile = $this->homeModelVar->getUserProfile($user_id);
+      $membership = $this->homeModelVar->getUserMembership($user_id);
       $userData = array('profile'=>$profile, 'membership'=>$membership);
       return $userData;
+    }
+
+    public function getUsersForPattern($keyword) {
+      $this->homeModelVar = new HomeModel();
+      $userList = array();
+      $userList = $this->homeModelVar->retrievePatternMatchedUsers($keyword);
+      return $userList;
     }
 
     public function viewMessages($channelName, $workspaceUrl)
@@ -96,56 +109,68 @@
     //function is used for inserting messages and replies
     public function insertMessage($channelName, $message, $threadId, $messageType, $workspaceUrl)
     {
-        $this->homeModelVar = new HomeModel();
-        //$message = $this->homeModelVar->validateInputs($message);
         $responseString = NULL;
+        $this->homeModelVar = new HomeModel();
         $type = $this->getMessageType($messageType);
-
         $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $threadId, $type, $workspaceUrl);
-
-        if ($affectedRows == 0)
+        if ($affectedRows == 1) {
+          $responseString = 'Message is inserted';
+        } else if ($affectedRows == 0)
         {
             $responseString = 'Message not inserted';
-            echo $responseString;
         } else if ($affectedRows < 0)
         {
           $responseString = 'Query returned an error';
-          echo $responseString;
         }
         return $responseString;
     }
 
+    // public function createNewChannelByPrg($channelName, $purpose, $type, $workspaceUrl)
+    // {
+
+      //$status = array();
+
+      // switch ($status['channelStatus']) {
+      //   case 0:
+      //     $responseString['channel'] = "Channel ".$channelName." not created";
+      //     break;
+      //   case 1:
+      //     $responseString['channel'] = "Channel ".$channelName." is created";
+      //     break;
+      //   default:
+      //     $responseString['channel'] = 'Channel not created. SQL error';
+      //     break;
+      // }
+      //
+      // switch ($status['userStatus']) {
+      //   case 0:
+      //     $responseString['user'] = $_SESSION['userid']." is not added to channel";
+      //     break;
+      //   case 1:
+      //     $responseString['user'] = $_SESSION['userid']." is added to channel";
+      //     break;
+      //   default:
+      //     $responseString['user'] = $_SESSION['userid']." not added to ".$channelName.". SQL error";
+      //     break;
+      // }
+
+    //   return $responseString;
+    // }
+
     //create new channel for a workspace
     public function createNewChannel($channelName, $purpose, $type, $workspaceUrl) {
-      $this->homeModelVar = new HomeModel();
       $responseString = NULL;
-      $result = false;
-      $status = array();
-      $status = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
-      switch ($status['channelStatus']) {
+      $this->homeModelVar = new HomeModel();
+      $affectedRows = $this->homeModelVar->createChannel($channelName, $purpose, $type, $workspaceUrl);
+      switch ($affectedRows) {
         case 0:
-          $responseString = "Channel ".$channelName." not created";
+          $responseString = "false";//"Channel ".$channelName." not created";
           break;
         case 1:
-          $responseString = "Channel ".$channelName." is created";
-          $result = true;
+          $responseString = "true";//"Channel ".$channelName." is created";
           break;
         default:
-          $responseString = 'Query returned an error';
-          break;
-      }
-
-      switch ($status['userStatus']) {
-        case 0:
-          $responseString = $responseString." and ".$_SESSION['userid']." is not added to channel";
-          $result = false;
-          break;
-        case 1:
-          $responseString = $responseString." and ".$_SESSION['userid']." is added to channel";
-          break;
-        default:
-          $responseString = 'Query returned an error';
-          $result = false;
+          $responseString = "false";//"Channel not created. SQL error";
           break;
       }
       return $responseString;
@@ -153,14 +178,14 @@
 
     //add list of users to a channel
     public function inviteUsersToChannel($users, $channelName, $workspaceUrl) {
-      $this->homeModelVar = new HomeModel();
       $invitationResults = array('success' => array(), 'failed' => array());
-      foreach ($users as $userId) {
-        $successFeeds = $this->homeModelVar->addUserToChannel($userId, $channelName, $workspaceUrl);
+      $this->homeModelVar = new HomeModel();
+      foreach ($users as $userID) {
+        $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
         if ($successFeeds < 1) {
-          array_push($invitationResults['failed'], $userId." ".$channelName);
+          array_push($invitationResults['failed'], $userId);
         } else {
-          array_push($invitationResults['success'], $userId." ".$channelName);
+          array_push($invitationResults['success'], $userId);
         }
       }
       return $invitationResults;
@@ -193,9 +218,9 @@
       $isExists = NULL;
       $pos = strpos($users, ";".$_SESSION['userid'].";");
       if ($pos === false) {
-        $isExists = false;
+        $isExists = "false";
       } else {
-        $isExists = true;
+        $isExists = "true";
       }
       return $isExists;
     }
@@ -215,42 +240,71 @@
 
     public function handleReactionForMsg($msgId, $emoName) {
       $this->homeModelVar = new HomeModel();
-      $responseString = NULL;
+      $responseString = array('result'=>NULL,'message'=>NULL);
       $affectedRows = NULL;
       $info = array();
       $emoId = $this->homeModelVar->getEmoId($emoName);
       if ($emoId > 0) {
         $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
-        if ($info != NULL && $info['users'] != NULL) {
+        //$responseString['message'] = $this->isUserExistsForReaction($info['users']);//$info['users'];
+        //return $responseString;
+        if ($info != NULL && $info['users'] != NULL && !empty($info['users'])) {
           if ($this->isUserExistsForReaction($info['users']) == "false") {
             //if ($isInsert == "true") {
               $isInsert = "true";
-              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
+              $isUpdate = "true";
+              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
             //}
           } else {
             //if ($isInsert == "false") {
               $isInsert = "false";
-              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
+              $isUpdate = "true";
+              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
             //}
           }
         } else {
           //if ($isInsert == "true") {
+          $isUpdate = NULL;
+          if ($info == NULL) {
+            $isUpdate = "false";
+          } else {
+            $isUpdate = "true";
+          }
             $isInsert = "true";
             $info['count'] = 0;
-            $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert);
+            $info['users'] = NULL;
+            $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
           //}
         }
         if ($affectedRows == 1) {
-          $responseString = "success";
+          $responseString['result'] = "true";
+          $responseString['message'] = "success";
         } /*else if ($affectedRows == NULL) {
           $responseString = NULL;
-        }*/ else {
-          $responseString = "failed";
+        }*/
+        else if ($affectedRows == NULL) {
+          $responseString['result'] = "false";
+          $responseString['message'] = "failedEPIC";
+        }
+        else {
+          $responseString['result'] = "false";
+          $responseString['message'] = "failed";
         }
       } else {
-        $responseString = $emoName." is not found in database";
+        $responseString['result'] = "false";
+        $responseString['message'] = $emoName." is not found in database";
       }
       return $responseString;
+    }
+
+    public function getUserMetrics($userID) {
+      $this->homeModelVar = new HomeModel();
+      $rxnMetrics = array();
+      $msgMetrics  = array();
+      $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID);
+      $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID);
+      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics);
+      return $metrics;
     }
 
   }

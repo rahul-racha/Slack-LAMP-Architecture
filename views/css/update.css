@@ -1,0 +1,44 @@
+/*
+  .profile-div {
+  background-image: url("../images/users/default-avatar.png");
+  background-repeat: no-repeat;
+}
+*/
+
+#profile-pic {
+    border-radius: 50%;
+    height: 300px;
+    width: 300px;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    vertical-align: middle;
+    text-align: center;
+    color: transparent;
+    transition: all .3s ease;
+    text-decoration: none;
+}
+
+
+.root-pic-div {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  position: relative;
+}
+
+.hover-details {
+  position: absolute;
+  color: brown;
+  text-shadow: 1px 0 0 #fff;
+  font-style: oblique;
+  display: inline-block;
+  top: 55%;
+  left:14%;
+  z-index: 2;
+}
+
+button[type="submit"] {
+  margin-top: 20px;
+  margin-left: 48%;
+}
