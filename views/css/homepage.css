@@ -25,6 +25,7 @@ html, body{
 }
 .client_navbar_header{
   color: white;
+  margin-left: 8%;
 }
 .client_main_continer{
   padding: 0% !important;
@@ -78,15 +79,22 @@ html, body{
 .MessageUL{
   list-style: none;
 }
+.client_button_adding_code_snipet{
+  width: 0% !important;
+  padding: 1.1%;
+}
 .client_message_entry{
   position: fixed;
   bottom: 0% !important;
   margin-bottom: 2% !important;
-  margin-left: 2% !important;
+  /*margin-left: 2% !important;*/
   width: 80%;
 }
 .client_message_entry_textarea{
-  width: 100%;
+  width: 88%;
+}
+.client_messsage_entry_submit_button{
+  padding: 1.4%;
 }
 .client_thread_display_main{
   height: 100%;

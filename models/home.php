@@ -106,7 +106,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->messages = array();
-      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, message, msg_id, created_time, type
+      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, avatar, message, msg_id, created_time, type
                       FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                       WHERE (type = 1 OR type = 2) AND channel_id
                       IN (

@@ -64,13 +64,13 @@
           <?php displayMessages(); ?>
         </div>
           <!-- messge container -->
-        	<div class="client_message_entry col-xs-12">
+        	<div class="client_message_entry col-xs-12 row change_row_prop">
 						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
-              <input id="textArea" class="client_message_entry_textarea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
+              <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
               <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
               <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
               <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-              <input id="SubmitButton" type="hidden" name="submit"/>
+              <input id="SubmitButton" class="col-xs-1 client_messsage_entry_submit_button" type="submit" name="submit"/>
             </form>
           </div>
       </div>
