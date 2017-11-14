@@ -55,6 +55,13 @@
       return $userData;
     }
 
+    public function getUsersForPattern($keyword) {
+      $this->homeModelVar = new HomeModel();
+      $userList = array();
+      $userList = $this->homeModelVarretrievePatternMatchedUsers($keyword)
+      return $userList;
+    }
+
     public function viewMessages($channelName, $workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();

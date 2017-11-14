@@ -13,7 +13,7 @@ $user_profile = NULL;
 		$user_profile = $homeControlVar->getProfile($user_id);
   }
 ?>
-
+<!DOCTYPE html>
 <html>
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -48,7 +48,7 @@ $user_profile = NULL;
                   <span class="icon-cog icon-white"></span><span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
-                  <li><a href="#"><span class="icon-wrench"></span> Modify</a></li>
+                  <li><a href="update.php"><span class="icon-wrench"></span> Modify</a></li>
                   <li><a href="#"><span class="icon-trash"></span> Delete</a></li>
               </ul>
           </div>

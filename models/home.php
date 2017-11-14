@@ -70,6 +70,29 @@
 
     }
 
+    public function retrievePatternMatchedUsers($keyword) {
+      $dbConVar = new dbConnect();
+      $pattern = "%".$keyword."%";
+      $conn = $dbConVar->createConnectionObject();
+      $userList = array();
+      $retUsers = "SELECT user_id, first_name, last_name, display_name
+                   FROM user_info
+                   WHERE user_id LIKE '$pattern'";
+      $result = mysqli_query($conn, $retUsers);
+      if (mysqli_num_rows($result) > 0)
+      {
+        while ($row = $result->fetch_assoc())
+        {
+          array_push($userList, $row);
+        }
+      }
+      if ($result) {
+        mysqli_free_result($result);
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $userList;
+    }
+
     public function retrieveChannels($workspaceUrl)
     {
       $dbConVar = new dbConnect();
@@ -271,8 +294,8 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->replies = array();
-      $getReplies = "SELECT user_id, msg_id, message, created_time
-                     FROM channel_messages
+      $getReplies = "SELECT user_id, first_name, last_name, msg_id, message, created_time
+                     FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                      WHERE dependency = $threadId
                      ORDER BY created_time ASC";
       $result = mysqli_query($conn, $getReplies);
