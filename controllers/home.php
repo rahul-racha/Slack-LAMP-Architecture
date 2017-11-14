@@ -58,7 +58,7 @@
     public function getUsersForPattern($keyword) {
       $this->homeModelVar = new HomeModel();
       $userList = array();
-      $userList = $this->homeModelVarretrievePatternMatchedUsers($keyword)
+      $userList = $this->homeModelVar->retrievePatternMatchedUsers($keyword);
       return $userList;
     }
 
@@ -295,6 +295,16 @@
         $responseString['message'] = $emoName." is not found in database";
       }
       return $responseString;
+    }
+
+    public function getUserMetrics($userID) {
+      $this->homeModelVar = new HomeModel();
+      $rxnMetrics = array();
+      $msgMetrics  = array();
+      $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID);
+      $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID);
+      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics);
+      return $metrics;
     }
 
   }

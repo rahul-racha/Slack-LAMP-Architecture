@@ -93,6 +93,58 @@
       return $userList;
     }
 
+    public function retrieveRxnMetrics($userID) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $rxnMetrics = array();
+      $pattern = ";".$userID.";"; // ";".$_SESSION['userid'].";";
+      $getRxnMetrics = "SELECT channel_name, B.emo_name AS emo_name, COUNT(B.emo_name) emo_count
+                     FROM (
+                     SELECT C.channel_id, C.user_id, C.msg_id, R.emo_id, emo_name
+                     FROM emoticons INNER JOIN reactions AS R ON emoticons.emo_id = R.emo_id
+                     INNER JOIN channel_messages AS C ON C.msg_id = R.msg_id
+                     WHERE R.users LIKE '%{$pattern}%'
+                     ) B INNER JOIN workspace_channels AS W ON B.channel_id = W.channel_id
+                     GROUP BY B.channel_id, B.emo_name";
+      $result = mysqli_query($conn, $getRxnMetrics);
+     if (mysqli_num_rows($result) > 0)
+     {
+       while ($row = $result->fetch_assoc())
+       {
+         array_push($rxnMetrics, $row);
+       }
+     }
+     mysqli_free_result($result);
+     $dbConVar->closeConnectionObject($conn);
+     return $rxnMetrics;
+   }
+
+   public function retrievePostMetrics($userID) {
+     $dbConVar = new dbConnect();
+     $conn = $dbConVar->createConnectionObject();
+     $postMetrics = array();
+     $getPostMetrics = "SELECT channel_name, COUNT(G.msg_id) msg_count
+                        FROM (
+                        SELECT channel_name, M.channel_id, M.msg_id
+                        FROM channel_messages AS M INNER JOIN workspace_channels AS W
+                        ON M.channel_id = W.channel_id
+                        WHERE M.user_id = '".$userID."'
+                        ) G
+                        GROUP BY channel_name";
+     $result = mysqli_query($conn, $getPostMetrics);
+     if (mysqli_num_rows($result) > 0)
+     {
+       while ($row = $result->fetch_assoc())
+       {
+         array_push($postMetrics, $row);
+       }
+     }
+     mysqli_free_result($result);
+     $dbConVar->closeConnectionObject($conn);
+     return $postMetrics;
+
+   }
+
     public function retrieveChannels($workspaceUrl)
     {
       $dbConVar = new dbConnect();
