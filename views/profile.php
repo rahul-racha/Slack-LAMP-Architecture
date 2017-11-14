@@ -33,14 +33,21 @@ $metrics = array();
         <div class="col-xs-7">
           <h3><?php echo $user_profile["profile"][0][first_name]."   ".$user_profile["profile"][0][last_name]; ?></h3>
           <h6>Email: <?php echo $user_profile["profile"][0][user_id]; ?></h6>
-          <!--<h6>Channels: </h6>-->
+          <h6>Channels: </h6>
           <ul style="list-style: none;">
             <?php
-              //foreach ($user_profile["membership"] as $value) {
-                //if($value["type"]== 'Public'){
-                //  echo "<li>". $value["channel_name"] ."</li>";
-                //}
-              //}
+              echo "<h6>Public:</h6>";
+              foreach ($user_profile["membership"] as $value) {
+                if($value["type"]== 'Public'){
+                 echo "<li>". $value["channel_name"] ."</li>";
+                }
+              }
+              echo "<h6>Private:</h6>";
+              foreach ($user_profile["membership"] as $value) {
+                if($value["type"]== 'Private'){
+                 echo "<li>". $value["channel_name"] ."</li>";
+                }
+              }
             ?>
           </ul>
           <h6>Post Metrics: </h6>

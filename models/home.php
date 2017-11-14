@@ -49,9 +49,10 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $userMembership = array();
-      $getMembership = "SELECT channel_name, type
-                        FROM workspace_channels
-                        WHERE user_id = '$name'";
+      $getMembership = "SELECT DISTINCT channel_name, W.type
+                        FROM workspace_channels AS W INNER JOIN channel_messages AS C
+                        ON W.channel_id = C.channel_id
+                        WHERE C.user_id = '$name'";
       $result = mysqli_query($conn, $getMembership);
       if (mysqli_num_rows($result) > 0)
        {
@@ -346,7 +347,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->replies = array();
-      $getReplies = "SELECT user_id, first_name, last_name, msg_id, message, created_time
+      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, msg_id, message, created_time
                      FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                      WHERE dependency = $threadId
                      ORDER BY created_time ASC";

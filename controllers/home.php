@@ -196,9 +196,9 @@
       $responseString = NULL;
       $replyList = array();
       $replyList = $this->homeModelVar->retrieveReplies($threadId);
-      if (empty($replyList)) {
-        echo "No replies found for the thread";
-      }
+      // if (empty($replyList)) {
+      //   echo "No replies found for the thread";
+      // }
       return $replyList;
     }
 
