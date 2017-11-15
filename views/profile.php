@@ -4,13 +4,17 @@ $_SESSION['basePath'] = '../';
 require_once $_SESSION['basePath'].'controllers/home.php';
 
 $homeControlVar = new HomeController();
-$user_profile = NULL;
-
+$user_profile = array();
+$metrics = array();
   if(isset($_GET['userid'])){
     global $homeControlVar;
+    global $user_profile;
+    global $metrics;
 		$user_profile = array();
     $user_id = $_GET['userid'];
 		$user_profile = $homeControlVar->getProfile($user_id);
+    $metrics = $homeControlVar->getUserMetrics($user_id);
+    //var_dump($metrics);
   }
 ?>
 <!DOCTYPE html>
@@ -32,11 +36,40 @@ $user_profile = NULL;
           <h6>Channels: </h6>
           <ul style="list-style: none;">
             <?php
+              echo "<h6>Public:</h6>";
               foreach ($user_profile["membership"] as $value) {
                 if($value["type"]== 'Public'){
-                  echo "<li>". $value["channel_name"] ."</li>";
+                 echo "<li>". $value["channel_name"] ."</li>";
                 }
               }
+              echo "<h6>Private:</h6>";
+              foreach ($user_profile["membership"] as $value) {
+                if($value["type"]== 'Private'){
+                 echo "<li>". $value["channel_name"] ."</li>";
+                }
+              }
+            ?>
+          </ul>
+          <h6>Post Metrics: </h6>
+          <ul style="list-style: none;">
+            <?php
+              $postMetrics = array();
+              $postMetrics = $metrics["post"];
+              echo "<li><strong>"."Channel -- #Messages"."</strong></li>";
+              foreach ($postMetrics as $value) {
+                echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
+              }
+            ?>
+          </ul>
+          <h6>Reaction Metrics:</h6>
+          <ul style="list-style: none;">
+            <?php
+                $rxnMetrics = array();
+                $rxnMetrics = $metrics["reaction"];
+                echo "<li><strong>"."Channel -- Emoticon -- #Rxn"."</strong></li>";
+                foreach ($rxnMetrics as $value) {
+                  echo "<li>".$value["channel_name"]." -- ". $value["emo_name"]. " -- ". $value["emo_count"]. "</li>";
+                }
             ?>
           </ul>
           <h6><a href="#">More... </a></h6>

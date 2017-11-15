@@ -297,5 +297,15 @@
       return $responseString;
     }
 
+    public function getUserMetrics($userID) {
+      $this->homeModelVar = new HomeModel();
+      $rxnMetrics = array();
+      $msgMetrics  = array();
+      $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID);
+      $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID);
+      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics);
+      return $metrics;
+    }
+
   }
 ?>
