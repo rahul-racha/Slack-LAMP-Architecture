@@ -125,12 +125,11 @@
     //var_dump($newInviteUserResponse);
   }
 
-  // if(isset($_POST['threadId'])) {
-  //   global $threadsArr;
-  //   global $homeControlVar;
-  //   //echo $_POST['threadId'];
-  //   $threadsArr = $homeControlVar->getRepliesForThread($_POST['threadId']);
-  // }
+  if(isset($_POST['UserName'])){
+    global $homeControlVar;
+    $userList =$homeControlVar->getUsersForPattern($_POST['UserName']);
+    echo json_encode($userList);
+  }
 
   if(isset($_POST['thread_insertion'])){
     // global $thread_message;

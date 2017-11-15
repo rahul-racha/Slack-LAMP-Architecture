@@ -78,6 +78,7 @@ $(document).ready(function(){
 			$(".client_thread_display_main").addClass("col-xs-3");
 			$(".client_thread_display_main").show();
 			var thread_id = parseInt(e.currentTarget.id);
+			e.preventDefault();
 			$.ajax({
 				method: 'post',
 				url: './homepage.php',
@@ -85,20 +86,26 @@ $(document).ready(function(){
 				dataType: 'json',
 				success: function(data){
 					var str="";
-					data.forEach(function(e){
-						// console.log(e);
-						// var lastElement = data.length;
-						// console.log(lastElement);
-						// if(lastElement != data.length){
-							str+="<div class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
-						//}
-						// else{
-						// 	str+="<div id='bottom_reply' class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
-						// }
-					});
+					if(data.length){
+						data.forEach(function(e){
+							console.log(e);
+							// var lastElement = data.length;
+							// console.log(lastElement);
+							// if(lastElement != data.length){
+								str+="<div class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
+							//}
+							// else{
+							// 	str+="<div id='bottom_reply' class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
+							// }
+						});
+					}
+
 					str+="<div class='row client_thread_reply_entry_area'><div class = 'col-xs-12'><input type='text' class='client_reply_message'><input type='submit' id="+thread_id+" class='client_reply_message_submit'></div></div>";
 					$(".client_thread_list").html(str);
 				},
+				error: function(data){
+					console.log(data);
+				}
 			});
 		});
 
@@ -138,6 +145,28 @@ $(document).ready(function(){
 					});
 				},
 			});
+		});
+
+		$(".client_user_search").keyup(function(){
+			var UserName = $('.client_user_search').val();
+			$(".client_user_search_suggestions").show();
+			var user_id;
+			$.ajax({
+				method:'post',
+				url:'./router.php',
+				data: {'UserName':UserName},
+				dataType: 'json',
+				success: function(data){
+					$('ul.justList').empty();
+					data.forEach(function(e){
+						user_id = e['user_id'];
+						// console.log(user_id);
+						if(user_id.length){
+							$('<li />', {html:user_id}).appendTo('ul.justList');
+						}
+					});
+				},
+			})
 		});
 
 });

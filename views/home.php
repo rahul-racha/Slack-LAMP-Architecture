@@ -18,6 +18,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="js/home.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tokenfield/0.12.0/bootstrap-tokenfield.min.js"></script>
 </head>
 
 <body>
@@ -50,8 +51,9 @@
           </div>
           <div class="serch_users_in_workspace col-xs-3">
             <i class="fa fa-search" aria-hidden="true"></i>
-            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+            <input type="text" class="client_user_search" id="wrkspace_user_search" placeholder="Search for names..">
           </div>
+
           <div class="col-xs-1">
           </div>
           <div class="client_invite_users col-xs-12">
@@ -59,6 +61,11 @@
               <i class="fa fa-user-o" aria-hidden="true"></i>
             </a>
           </div>
+        </div>
+        <div class="client_user_search_suggestions">
+          <ul class="justList">
+
+          </ul>
         </div>
         <div class="client_message_display row change_row_pro">
           <?php displayMessages(); ?>

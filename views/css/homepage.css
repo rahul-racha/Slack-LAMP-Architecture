@@ -68,6 +68,21 @@ html, body{
 .client_invite_users_link{
   margin-left: 2% !important;
 }
+.client_user_search_suggestions{
+  overflow: scroll;
+  display: none;
+  /*display: block;*/
+  border: 1px solid;
+  background: white;
+  position: absolute;
+  width: 14%;
+  margin-left: 70%;
+  margin-top: -2.5%;
+  height: 50%;
+}
+.justList{
+  list-style: none;
+}
 .client_message_display{
   overflow-y: scroll;
   margin-left: 2% !important;
@@ -75,7 +90,9 @@ html, body{
   height: 85%;
   max-height: 100%;
 }
-
+.client_pic_display{
+  width:5%;
+}
 .MessageUL{
   list-style: none;
 }

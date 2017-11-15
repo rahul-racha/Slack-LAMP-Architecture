@@ -72,7 +72,7 @@
 
     public function retrievePatternMatchedUsers($keyword) {
       $dbConVar = new dbConnect();
-      $pattern = "%".$keyword."%";
+      $pattern = $keyword."%";
       $conn = $dbConVar->createConnectionObject();
       $userList = array();
       $retUsers = "SELECT user_id, first_name, last_name, display_name
@@ -294,7 +294,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->replies = array();
-      $getReplies = "SELECT user_id, first_name, last_name, msg_id, message, created_time
+      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, msg_id, message, created_time
                      FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                      WHERE dependency = $threadId
                      ORDER BY created_time ASC";
