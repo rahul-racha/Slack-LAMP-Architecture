@@ -58,6 +58,8 @@ $metrics = array();
               echo "<li><strong>"."Channel -- #Messages"."</strong></li>";
               foreach ($postMetrics as $value) {
                 echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
+                $total_messages_count += $value["msg_count"];
+                $num_channels++;
               }
             ?>
           </ul>
@@ -69,10 +71,19 @@ $metrics = array();
                 echo "<li><strong>"."Channel -- Emoticon -- #Rxn"."</strong></li>";
                 foreach ($rxnMetrics as $value) {
                   echo "<li>".$value["channel_name"]." -- ". $value["emo_name"]. " -- ". $value["emo_count"]. "</li>";
+                  $total_emo_count += $value["emo_count"];
                 }
             ?>
           </ul>
-          <h6><a href="#">More... </a></h6>
+          <!-- <h6><a href="#">More... </a></h6> -->
+          <?php
+            echo "<strong>Rating: </strong>";
+            // echo $total_messages_count;
+            // echo $num_channels;
+            // echo $total_emo_count;
+            $rating = ($total_messages_count * 0.5) + ($total_emo_count * 0.5);
+            echo $rating;
+          ?>
         </div>
         <div class="col-xs-2">
           <div class="btn-group">

@@ -19,6 +19,7 @@
   <script type="text/javascript" src="js/home.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tokenfield/0.12.0/bootstrap-tokenfield.min.js"></script>
+  <script type="text/javascript" src="js/textahead.js"></script>
 </head>
 
 <body>
@@ -51,7 +52,7 @@
           </div>
           <div class="serch_users_in_workspace col-xs-3">
             <i class="fa fa-search" aria-hidden="true"></i>
-            <input type="text" class="client_user_search" id="wrkspace_user_search" placeholder="Search for names..">
+            <input type="text" class="client_user_search" autocomplete="off" spellcheck="false" id="wrkspace_user_search" placeholder="Search for names..">
           </div>
 
           <div class="col-xs-1">

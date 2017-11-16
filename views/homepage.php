@@ -68,7 +68,7 @@
 				}
 				if ($type != NULL && $chName != NULL) {
 					$finalName = $sym." ".$chName;
-      		echo '<form method="post" action = "home.php#bottom">
+      		echo '<form method="post" action = "home.php">
 							<input type="hidden" name="channel" value="'.$chName.'" >
 							<input type="hidden" name="channelHeading" value="'.$finalName.'" >
 							<input type="submit" class="client_channel_display pull-left" value="'.$finalName.'" >
@@ -121,6 +121,7 @@
 
       }  else {
       $name = "<div id = 'bottom' class = 'EntireMessage'>
+								<img src=".$value['avatar']." class='client_pic_display'>
 								<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
 								"</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
 								<ul class = 'MessageUL'>

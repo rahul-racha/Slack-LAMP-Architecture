@@ -71,17 +71,17 @@ html, body{
 .client_user_search_suggestions{
   overflow: scroll;
   display: none;
-  /*display: block;*/
   border: 1px solid;
   background: white;
   position: absolute;
-  width: 14%;
-  margin-left: 70%;
-  margin-top: -2.5%;
-  height: 50%;
+  width: 16%;
+  display: block;
+  top: 25px;
+  left: 678px;
 }
 .justList{
   list-style: none;
+  display: none;
 }
 .client_message_display{
   overflow-y: scroll;
@@ -145,3 +145,52 @@ html, body{
   height: 100%;
   display: none;
 }
+/*user search*/
+/*.serch_users_in_workspace {
+	font-family: sans-serif;
+	position: relative;
+	margin: 100px;
+}
+.client_user_search, .tt-query, .tt-hint {
+	border: 2px solid #CCCCCC;
+	border-radius: 8px;
+	font-size: 22px;
+	height: 30px;
+	line-height: 30px;
+	outline: medium none;
+	padding: 8px 12px;
+	width: 396px;
+}
+.client_user_search {
+	background-color: #FFFFFF;
+}
+.client_user_search:focus {
+	border: 2px solid #0097CF;
+}
+.tt-query {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.tt-hint {
+	color: #999999;
+}
+.tt-menu {
+	background-color: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 8px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	margin-top: 12px;
+	padding: 8px 0;
+	width: 422px;
+}
+.tt-suggestion {
+	font-size: 22px;
+	padding: 3px 20px;
+}
+.tt-suggestion:hover {
+	cursor: pointer;
+	background-color: #0097CF;
+	color: #FFFFFF;
+}
+.tt-suggestion p {
+	margin: 0;
+}*/
