@@ -68,6 +68,9 @@ html, body{
 .client_invite_users_link{
   margin-left: 2% !important;
 }
+.serch_users_in_workspace{
+  opacity: 0.5;
+}
 .client_user_search_suggestions{
   overflow: scroll;
   display: none;

@@ -81,7 +81,7 @@ $metrics = array();
             // echo $total_messages_count;
             // echo $num_channels;
             // echo $total_emo_count;
-            $rating = ($total_messages_count * 0.5) + ($total_emo_count * 0.5);
+            // $rating = ($total_messages_count * 0.5) + ($total_emo_count * 0.5);
             echo $rating;
           ?>
         </div>
