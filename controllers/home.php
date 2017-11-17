@@ -301,9 +301,13 @@
       $this->homeModelVar = new HomeModel();
       $rxnMetrics = array();
       $msgMetrics  = array();
+      $trxnMetrics = array();
+      $tmsgMetrics = array();
       $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID);
       $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID);
-      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics);
+      $tmsgMetrics = $this->homeModelVar->retrieveNoChMsgs($userID);
+      $trxnMetrics = $this->homeModelVar->retrieveNoChRxns($userID);
+      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics, "treaction"=>$trxnMetrics, "tpost"=>$tmsgMetrics);
       return $metrics;
     }
 
