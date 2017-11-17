@@ -146,6 +146,58 @@
 
    }
 
+   public function retrieveNoChMsgs($userID) {
+     $dbConVar = new dbConnect();
+     $conn = $dbConVar->createConnectionObject();
+     $totalMsgs = array();
+     $getTotalMsgs = "SELECT channel_name, COUNT(msg_id) AS msg_count
+                      FROM channel_messages AS M INNER JOIN workspace_channels AS W
+                      ON M.channel_id = W.channel_id
+                      WHERE M.channel_id IN (
+                        SELECT channel_id
+                        FROM inside_channel
+                        WHERE user_id = '".$userID."')
+                      GROUP BY channel_name";
+    $result = mysqli_query($conn, $getTotalMsgs);
+    if (mysqli_num_rows($result) > 0)
+    {
+      while ($row = $result->fetch_assoc())
+      {
+        array_push($totalMsgs, $row);
+      }
+    }
+    mysqli_free_result($result);
+    $dbConVar->closeConnectionObject($conn);
+    return $totalMsgs;
+   }
+
+   public function retrieveNoChRxns($userID) {
+     $dbConVar = new dbConnect();
+     $conn = $dbConVar->createConnectionObject();
+     $pattern = ";".$userID.";";
+     $totalRxns = array();
+     $getTotalRxns = "SELECT W.channel_name, COUNT(R.emo_id) AS rxn_count
+                      FROM reactions AS R INNER JOIN channel_messages AS M
+                      ON R.msg_id = M.msg_id INNER JOIN workspace_channels
+                      AS W ON M.channel_id = W.channel_id
+                      WHERE (R.users IS NOT NULL AND R.users != '') AND M.channel_id IN (
+                       SELECT channel_id
+                       FROM inside_channel
+                       WHERE user_id = '".$userID."')
+                       GROUP BY W.channel_name";
+     $result = mysqli_query($conn, $getTotalRxns);
+     if (mysqli_num_rows($result) > 0)
+     {
+       while ($row = $result->fetch_assoc())
+       {
+         array_push($totalRxns, $row);
+       }
+     }
+     mysqli_free_result($result);
+     $dbConVar->closeConnectionObject($conn);
+     return $totalRxns;
+     }
+
     public function retrieveChannels($workspaceUrl)
     {
       $dbConVar = new dbConnect();
