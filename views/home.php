@@ -19,6 +19,7 @@
   <script type="text/javascript" src="js/home.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tokenfield/0.12.0/bootstrap-tokenfield.min.js"></script>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
   <script type="text/javascript" src="js/textahead.js"></script>
 </head>
 
@@ -74,7 +75,12 @@
           <!-- messge container -->
         	<div class="client_message_entry col-xs-12 row change_row_prop">
 						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
-              <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
+
+              <div class="col-xs-1">
+                <!--<i class="glyphicon glyphicon-plus"></i>-->
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#snippet">+</button>
+              </div>
+              <textarea id="textArea" class="client_message_entry_textarea col-xs-10" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
               <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
               <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
               <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
@@ -109,6 +115,27 @@
       <input type="submit" name="logout" value="logout">
     </form> -->
   </div> <!--end of main container -->
+
+  <!-- modal for adding snippets -->
+  <div class="modal fade" id="snippet" role="dialog">
+   <div class="modal-dialog modal-lg">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title">Add snippet</h4>
+       </div>
+       <div class="modal-body">
+         <form role="form">
+           <div class="form-group">
+             <label for="snip">code</label>
+             <textarea class="form-control" id="snip"></textarea>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       </div>
+     </div>
+   </div>
+ </div>
 
   <!-- modal for user profile -->
   <div class="modal fade" id="client_profile_page" role="dialog">

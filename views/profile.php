@@ -12,8 +12,8 @@ $metrics = array();
     global $metrics;
 		$user_profile = array();
     $user_id = $_GET['userid'];
-		$user_profile = $homeControlVar->getProfile($user_id);
-    $metrics = $homeControlVar->getUserMetrics($user_id);
+		$user_profile = $homeControlVar->getProfile($user_id, $workspace);
+    $metrics = $homeControlVar->getUserMetrics($user_id, $workspace);
     //var_dump($metrics);
   }
 ?>

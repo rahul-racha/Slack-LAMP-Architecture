@@ -45,20 +45,20 @@
         return $channels;
     }
 
-    public function getProfile($user_id) {
+    public function getProfile($user_id, $workspace) {
       $this->homeModelVar = new HomeModel();
       $profile = array();
       $membership = array();
-      $profile = $this->homeModelVar->getUserProfile($user_id);
-      $membership = $this->homeModelVar->getUserMembership($user_id);
+      $profile = $this->homeModelVar->getUserProfile($user_id, $workspace);
+      $membership = $this->homeModelVar->getUserMembership($user_id, $workspace);
       $userData = array('profile'=>$profile, 'membership'=>$membership);
       return $userData;
     }
 
-    public function getUsersForPattern($keyword) {
+    public function getUsersForPattern($keyword, $workspace) {
       $this->homeModelVar = new HomeModel();
       $userList = array();
-      $userList = $this->homeModelVar->retrievePatternMatchedUsers($keyword);
+      $userList = $this->homeModelVar->retrievePatternMatchedUsers($keyword, $workspace);
       return $userList;
     }
 
@@ -107,12 +107,12 @@
     }
 
     //function is used for inserting messages and replies
-    public function insertMessage($channelName, $message, $threadId, $messageType, $workspaceUrl)
+    public function insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $messageType, $workspaceUrl)
     {
         $responseString = NULL;
         $this->homeModelVar = new HomeModel();
         $type = $this->getMessageType($messageType);
-        $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $threadId, $type, $workspaceUrl);
+        $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl);
         if ($affectedRows == 1) {
           $responseString = 'Message is inserted';
         } else if ($affectedRows == 0)
@@ -189,6 +189,13 @@
         }
       }
       return $invitationResults;
+    }
+
+    public function getAdmins() {
+      $this->homeModelVar = new HomeModel();
+      $admins = array();
+      $admins = $this->homeModelVar->getAdmins();
+      return $admins;
     }
 
     public function getRepliesForThread($threadId) {
@@ -297,17 +304,20 @@
       return $responseString;
     }
 
-    public function getUserMetrics($userID) {
+    public function getUserMetrics($userID, $workspace) {
       $this->homeModelVar = new HomeModel();
       $rxnMetrics = array();
       $msgMetrics  = array();
       $trxnMetrics = array();
       $tmsgMetrics = array();
-      $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID);
-      $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID);
-      $tmsgMetrics = $this->homeModelVar->retrieveNoChMsgs($userID);
-      $trxnMetrics = $this->homeModelVar->retrieveNoChRxns($userID);
-      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics, "treaction"=>$trxnMetrics, "tpost"=>$tmsgMetrics);
+      $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID, $workspace);
+      $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID, $workspace);
+      $tmsgMetrics = $this->homeModelVar->retrieveNoChMsgs($userID, $workspace);
+      $trxnMetrics = $this->homeModelVar->retrieveNoChRxns($userID, $workspace);
+      $relMsgMetrics =  $this->homeModelVar->retrieveRelPostMetrics($userID, $workspace);
+      $relRxnMetrics =  $this->homeModelVar->retrieveRelRxnMetrics($userID, $workspace);
+      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics, "relRxnMetrics"=>$relRxnMetrics,
+                       "relPostMetrics"=>$relMsgMetrics, "treaction"=>$trxnMetrics, "tpost"=>$tmsgMetrics);
       return $metrics;
     }
 

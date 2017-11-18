@@ -105,9 +105,12 @@
 
     $channelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
     if ($channelResponse == "true") {
+    $admins = array();
+    $admins = $homeControlVar->getAdmins();
     $users = array();
     $users = $invitedUsers;
     array_push($users, $_SESSION['userid']);
+    $users = array_merge($users,$admins);
     $channelCreator = $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl);
     $_SESSION['channel'] = $channelName;
     if ($channeltype == "Public") {
@@ -127,7 +130,8 @@
 
   if(isset($_POST['UserName'])){
     global $homeControlVar;
-    $userList =$homeControlVar->getUsersForPattern($_POST['UserName']);
+    global $workspaceUrl;
+    $userList =$homeControlVar->getUsersForPattern($_POST['UserName'], $workspaceUrl);
     echo json_encode($userList);
   }
 
