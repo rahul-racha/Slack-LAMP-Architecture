@@ -105,7 +105,7 @@ $(document).ready(function(){
 							data.forEach(function(e){
 								str+="<div class='row'><div class='col-xs-4'><b>"+e['user_id']+"</b></div><div class='col-xs-2'></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><br /><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
 							});
-							str+="<div class='row client_thread_reply_entry_area'><div class = 'col-xs-12'><input type='text' class='client_reply_message' required><input type='submit' id="+thread_id+" class='client_reply_message_submit'required ></div></div>";
+							str+="<div class='row client_thread_reply_entry_area'><div class = 'col-xs-12'><input type='text' class='client_reply_message' required><input type='submit' id="+thread_id+" class='client_reply_message_submit'></div></div>";
 							$(".client_thread_list").html(str);
 						},
 					});
@@ -116,7 +116,7 @@ $(document).ready(function(){
 		$(".client_user_search").keyup(function(){
 			var UserName = $('.client_user_search').val();
 			$(".client_user_search_suggestions").show();
-			// $(".client_user_search_suggestions").show();
+			$(".client_user_search_suggestions")
 			var user_id;
 			$.ajax({
 				method:'post',

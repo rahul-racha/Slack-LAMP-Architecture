@@ -111,16 +111,19 @@
     {
         $responseString = NULL;
         $this->homeModelVar = new HomeModel();
-        $type = $this->getMessageType($messageType);
-        $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl);
-        if ($affectedRows == 1) {
-          $responseString = 'Message is inserted';
-        } else if ($affectedRows == 0)
-        {
-            $responseString = 'Message not inserted';
-        } else if ($affectedRows < 0)
-        {
-          $responseString = 'Query returned an error';
+        $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+        if ($chStatus == "unarchived") {
+          $type = $this->getMessageType($messageType);
+          $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl);
+          if ($affectedRows == 1) {
+            $responseString = 'Message is inserted';
+          } else if ($affectedRows == 0)
+          {
+              $responseString = 'Message not inserted';
+          } else if ($affectedRows < 0)
+          {
+            $responseString = 'Query returned an error';
+          }
         }
         return $responseString;
     }
@@ -177,16 +180,22 @@
     }
 
     //add list of users to a channel
-    public function inviteUsersToChannel($users, $channelName, $workspaceUrl) {
+    public function inviteUsersToChannel($users, $channelName, $workspaceUrl, $isCreate) {
       $invitationResults = array('success' => array(), 'failed' => array());
       $this->homeModelVar = new HomeModel();
-      foreach ($users as $userID) {
-        $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
-        if ($successFeeds < 1) {
-          array_push($invitationResults['failed'], $userId);
-        } else {
-          array_push($invitationResults['success'], $userId);
-        }
+      $chStatus = NULL;
+      if ($isCreate == "false") {
+        $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+      }
+      if ($chStatus == "unarchived") {
+          foreach ($users as $userID) {
+            $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
+            if ($successFeeds < 1) {
+              array_push($invitationResults['failed'], $userId);
+            } else {
+              array_push($invitationResults['success'], $userId);
+            }
+          }
       }
       return $invitationResults;
     }
@@ -245,11 +254,15 @@
       return $info;
     }
 
-    public function handleReactionForMsg($msgId, $emoName) {
+    public function handleReactionForMsg($msgId, $emoName, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $responseString = array('result'=>NULL,'message'=>NULL);
       $affectedRows = NULL;
       $info = array();
+      $channelName =  $this->homeModelVar->getChannelFromMsg($msgID);
+      $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+
+      if ($chStatus = "unarchived") {
       $emoId = $this->homeModelVar->getEmoId($emoName);
       if ($emoId > 0) {
         $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
@@ -301,6 +314,10 @@
         $responseString['result'] = "false";
         $responseString['message'] = $emoName." is not found in database";
       }
+    } else {
+      $responseString['result'] = "false";
+      $responseString['message'] = "Channel is archived";
+    }
       return $responseString;
     }
 

@@ -66,6 +66,86 @@
        return $admins;
      }
 
+     public function removeUserFromChannel($userID, $channelName, $workspace) {
+       $dbConVar = new dbConnect();
+       $conn = $dbConVar->createConnectionObject();
+       $chId = $this->getChannelId($channelName, $workspaceUrl);
+       $affectedRows = NULL;
+       if ($chId != NULL && $chId > 0) {
+         $delUsrFrmChannel = "DELETE FROM inside_channel
+                              WHERE user_id = ? AND channel_id = ?";
+         $stmt = $conn->prepare($delUsrFrmChannel);
+         $stmt->bind_param("ss", $userID, $chId);
+         $stmt->execute();
+         $affectedRows = $stmt->affected_rows;
+         $stmt->close();
+       }
+       $dbConVar->closeConnectionObject($conn);
+       return $affectedRows;
+     }
+
+     public function deletePostsFromChannel($msgID, $channelName, $workspace) {
+       $dbConVar = new dbConnect();
+       $conn = $dbConVar->createConnectionObject();
+       $affectedRows = NULL;
+       $chId = $this->getChannelId($channelName, $workspaceUrl);
+       if ($chId != NULL && $chId > 0) {
+         $delPosts = "DELETE FROM channel_messages
+                      WHERE (msg_id = ? OR dependency = ?)
+                      AND channel_id = ?";
+        $stmt = $conn->prepare($delPosts);
+        $stmt->bind_param("sss", $msgID, $msgID, $chId);
+        $stmt->execute();
+        $affectedRows = $stmt->affected_rows;
+        $stmt->close();
+       }
+       $dbConVar->closeConnectionObject($conn);
+       return $affectedRows;
+     }
+
+     public function updateChannelStatus($channelName, $workspace, $status) {
+       $dbConVar = new dbConnect();
+       $conn = $dbConVar->createConnectionObject();
+       $affectedRows = NULL;
+       $chId = $this->getChannelId($channelName, $workspaceUrl);
+       if ($chId != NULL && $chId > 0) {
+         $updateStatus = "UPDATE workspace_channels
+                          SET status = ?
+                          WHERE channel_id = ?";
+         $stmt = $conn->prepare($updateStatus);
+         $stmt->bind_param("ss", $status, $chId);
+         $stmt->execute();
+         $affectedRows = $stmt->affected_rows;
+         $stmt->close();
+       }
+       $dbConVar->closeConnectionObject($conn);
+       return $affectedRows;
+     }
+
+     public function getChannelStatus($channelName, $workspace) {
+       $dbConVar = new dbConnect();
+       $conn = $dbConVar->createConnectionObject();
+       $statusString = NULL;
+       $chId = $this->getChannelId($channelName, $workspaceUrl);
+       if ($chId != NULL && $chId > 0) {
+         $getChStatus = "SELECT status
+                         FROM workspace_channels
+                         WHERE channel_id = '$chId'";
+         $result = mysqli_query($conn, $getChStatus);
+         if (mysqli_num_rows($result) > 0)
+          {
+            while ($row = $result->fetch_assoc()) {
+              $statusString = $row['status'];
+            }
+          }
+       }
+       if ($result) {
+         mysqli_free_result($result);
+       }
+       $dbConVar->closeConnectionObject($conn);
+       return $statusString;
+     }
+
     public function getUserMembership($name, $workspace) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
@@ -350,8 +430,30 @@
         }
       }
       mysqli_free_result($result);
-      return $chId;
       $dbConVar->closeConnectionObject($conn);
+      return $chId;
+    }
+
+    public function getChannelFromMsg($msgID) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $chName = NULL;
+      $getChName = "SELECT channel_name
+                    FROM channel_messages AS M INNER JOIN workspace_channels AS W
+                    ON M.channel_id = W.channel_id
+                    WHERE msg_id = $msgID";
+      $result = mysqli_query($conn, $getChName);
+      if (mysqli_num_rows($result) > 0)
+      {
+        while ($row = $result->fetch_assoc())
+        {
+          $chName = $row['channel_name'];
+        }
+      }
+      mysqli_free_result($result);
+      $dbConVar->closeConnectionObject($conn);
+      return $chId;
+
     }
 
     public function insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl)
@@ -406,10 +508,13 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $updateType = "UPDATE channel_messages
-                     SET type = $type
-                     WHERE msg_id = $threadId";
-      $result = mysqli_query($conn, $updateType);
-      $affectedRows = mysqli_affected_rows($conn);
+                     SET type = ?
+                     WHERE msg_id = ?";
+      $stmt = $conn->prepare($updateType);
+      $stmt->bind_param("ss", $type, $threadId);
+      $stmt->execute();
+      $affectedRows = $stmt->affected_rows;
+      $stmt->close();
       return $affectedRows;
     }
 

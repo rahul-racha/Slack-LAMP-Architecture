@@ -23,6 +23,8 @@ $metrics = array();
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/starRating.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
   <body>
     <div class="container well">
@@ -50,40 +52,85 @@ $metrics = array();
               }
             ?>
           </ul>
-          <h6>Post Metrics: </h6>
+
           <ul style="list-style: none;">
             <?php
               $postMetrics = array();
               $postMetrics = $metrics["post"];
-              echo "<li><strong>"."Channel -- #Messages"."</strong></li>";
+              // echo "<li><strong>"."Channel -- #Messages"."</strong></li>";
               foreach ($postMetrics as $value) {
-                echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
-                $total_messages_count += $value["msg_count"];
-                $num_channels++;
+                // echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
+                $user_messages_count += $value["msg_count"];
+                // $num_channels++;
               }
             ?>
           </ul>
-          <h6>Reaction Metrics:</h6>
+
           <ul style="list-style: none;">
             <?php
                 $rxnMetrics = array();
                 $rxnMetrics = $metrics["reaction"];
-                echo "<li><strong>"."Channel -- Emoticon -- #Rxn"."</strong></li>";
+                // echo "<li><strong>"."Channel -- Emoticon -- #Rxn"."</strong></li>";
                 foreach ($rxnMetrics as $value) {
-                  echo "<li>".$value["channel_name"]." -- ". $value["emo_name"]. " -- ". $value["emo_count"]. "</li>";
-                  $total_emo_count += $value["emo_count"];
+                  // echo "<li>".$value["channel_name"]." -- ". $value["emo_name"]. " -- ". $value["emo_count"]. "</li>";
+                  $emo_count_user += $value["emo_count"];
                 }
             ?>
           </ul>
           <!-- <h6><a href="#">More... </a></h6> -->
-          <?php
-            echo "<strong>Rating: </strong>";
-            // echo $total_messages_count;
-            // echo $num_channels;
-            // echo $total_emo_count;
-            $rating = ($total_messages_count * 0.5) + ($total_emo_count * 0.5);
-            echo $rating;
-          ?>
+          <ul style="list-style: none;">
+            <?php
+              $total_reaction_count = array();
+              $total_reaction_count = $metrics["treaction"];
+              // echo "reaction total";
+              foreach ($total_reaction_count as $value) {
+                // echo "<li>".$value["channel_name"]." -- ".$value["rxn_count"]."</li>";
+                $t_rxn_count += $value["rxn_count"];
+              }
+            ?>
+          </ul>
+          <ul style="list-style: none;">
+            <?php
+              $total_post_count = array();
+              $total_post_count = $metrics["tpost"];
+              // echo "post total";
+              foreach ($total_post_count as $value) {
+                // echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
+                $t_post_count += $value["msg_count"];
+              }
+            ?>
+          </ul>
+          <!-- <ul style="list-style:none;"> -->
+            <?php
+              $rxn_percentage = ($emo_count_user / $t_rxn_count)*100;
+              $post_percentage = ($user_messages_count / $t_post_count) * 100;
+              echo "<h6>Post Metrics: </h6>";
+              echo "<div class='star-ratings-sprite'><span style='width:".$post_percentage."%' class='star-ratings-sprite-rating'></span></div>";
+              // if($rxn_percentage <= 20){
+              //   echo "<button type='button' class='btn btn-danger'>Poor <span class='badge'></span></button>";
+              // }
+              // elseif ($rxn_percentage <=50 && $rxn_percentage >20) {
+              //   echo "<button type='button' class='btn btn-primary'>Good <span class='badge'></span></button>";
+              // }
+              // else {
+              //   echo "<button type='button' class='btn btn-success'>Excellent <span class='badge'></span></button>";
+              // }
+              echo "<h6>Reaction Metrics:</h6>";
+              echo "<div class='star-ratings-sprite'><span style='width:".$rxn_percentage."%' class='star-ratings-sprite-rating'></span></div>";
+              // echo $rxn_percentage."<br />";
+              // echo "<h6>Reaction Metrics:</h6>";
+              // if($post_percentage <= 20){
+              //   echo "<button type='button' class='btn btn-danger'>Poor <span class='badge'></span></button>";
+              // }
+              // elseif ($post_percentage <=50 && $post_percentage >20) {
+              //   echo "<button type='button' class='btn btn-primary'>Good <span class='badge'></span></button>";
+              // }
+              // else {
+              //   echo "<button type='button' class='btn btn-success'>Excellent <span class='badge'></span></button>";
+              // }
+              // echo $post_percentage."<br />";
+            ?>
+          <!-- </ul> -->
         </div>
         <div class="col-xs-2">
           <div class="btn-group">
