@@ -17,7 +17,7 @@
   //check if user exists in db when inviting
 
 
-  //include_once $_SESSION['basePath'].'errors.php';
+  include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/home.php';
 
    if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))
@@ -112,7 +112,7 @@
         $responseString = NULL;
         $this->homeModelVar = new HomeModel();
         $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
-        if ($chStatus == "unarchived") {
+        if ($chStatus != "archived") {
           $type = $this->getMessageType($messageType);
           $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl);
           if ($affectedRows == 1) {
@@ -187,7 +187,7 @@
       if ($isCreate == "false") {
         $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
       }
-      if ($chStatus == "unarchived") {
+      if ($chStatus != "archived") {
           foreach ($users as $userID) {
             $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
             if ($successFeeds < 1) {
@@ -262,7 +262,7 @@
       $channelName =  $this->homeModelVar->getChannelFromMsg($msgID);
       $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
 
-      if ($chStatus == "unarchived") {
+      if ($chStatus != "archived") {
         $emoId = $this->homeModelVar->getEmoId($emoName);
         if ($emoId > 0) {
           $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);

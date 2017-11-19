@@ -90,6 +90,8 @@
     $threadId = NULL;
     $messageType = 'post';
     unset($_POST["textarea"]);
+    $image_path = NULL;
+    $snippet = NULL;
     $message = $homeControlVar->insertMessage($channelName,$textArea,$image_path,$snippet,$threadId,$messageType, $workspaceUrl);
     $_SESSION['channel'] = $channelName;
     $_SESSION['channelHeading'] = $channelHeading;
@@ -107,11 +109,16 @@
     $channelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
     if ($channelResponse == "true") {
     $admins = array();
-    $admins = $homeControlVar->getAdmins();
-    $users = array();
-    $users = $invitedUsers;
-    array_push($users, $_SESSION['userid']);
-    $users = array_merge($users,$admins);
+    $temp = array();
+    $temp = $homeControlVar->getAdmins();
+    foreach ($temp as $value) {
+      array_push($admins, $value['user_id']);
+    }
+    $userList = array();
+    $userList = $invitedUsers;
+    array_push($userList, $_SESSION['userid']);
+    $users = array_merge($userList,$admins);
+    //echo $users;
     $isCreate = "true";
     $channelCreator = $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl, $isCreate);
     $_SESSION['channel'] = $channelName;
@@ -137,7 +144,7 @@
     echo json_encode($userList);
   }
 
-  if(isset($_POST['thread_insertion'])){
+  if(isset($_POST['thread_insertion'])) {
     // global $thread_message;
     global $homeControlVar;
     global $channelName;
@@ -146,26 +153,14 @@
     $thread_id = $_POST['thread_insertion']['thread_id'];
     $channelName = $_POST['thread_insertion']['channel_name'];
     $messageType = 'reply';
-    $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType, $workspaceUrl);
-    echo $message;
-    // $homeControlVar->redirectToHome();
-    // echo $messageType,$thread_id,$thread_message;
-    //  echo $messageType."".$thread_message."".$thread_id."".$channelName;
-
+    $image_path = NULL;
+    $snippet = NULL;
+    $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
   }
-
-  // function displayReplies() {
-  //   global $threadsArr;
-  //   if (!empty($threadsArr) && $threadsArr != NULL) {
-  //     var_dump($threadsArr);
-  //   }
-  // }
 
   if (isset($_POST['insertReaction'])) {
       global $homeControlVar;
       global $workspaceUrl;
-      //global $likeCount;
-      //global $dislikeCount;
       $likeCount = NULL;
       $dislikeCount = NULL;
       $reactionResponse = array();
@@ -191,7 +186,7 @@
             if ($isDislikeExists == "true") {
               $responseArray = $homeControlVar->handleReactionForMsg($msgId, "dislike", $workspaceUrl);
               //$result = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
-              if ($responseArray == "true") {
+              if ($responseArray['result'] == "true") {
                 $dislikeCount = (string) (intval($infoDislike['count']) - intval(1));
               } else {
                 $dislikeCount = (string) (intval($infoDislike['count']));
@@ -199,9 +194,9 @@
             }
         } else if ($emoName == "dislike" && $isDislikeExists == "true") {
             if ($isLikeExists == "true") {
-              $homeControlVar->handleReactionForMsg($msgId, "like", $workspaceUrl);
+              $responseArray = $homeControlVar->handleReactionForMsg($msgId, "like", $workspaceUrl);
               //$result = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
-              if ($responseArray == "true") {
+              if ($responseArray['result'] == "true") {
                 $likeCount = (string) (intval($infoLike['count']) - intval(1));
               } else {
                  $likeCount = (string) (intval($infoLike['count']));

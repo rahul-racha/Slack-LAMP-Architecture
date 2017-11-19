@@ -5,19 +5,24 @@ require_once $_SESSION['basePath'].'controllers/home.php';
 
 $homeControlVar = new HomeController();
 $workspaceUrl = "musicf17.slack.com";
+$user_messages_count = NULL;
+$emo_count_user = NULL;
+$t_rxn_count = NULL;
+$t_post_count = NULL;
 $user_profile = array();
 $metrics = array();
-  if(isset($_GET['userid'])){
+
+if(isset($_GET['userid'])) {
     global $homeControlVar;
     global $workspaceUrl;
     global $user_profile;
     global $metrics;
-		$user_profile = array();
     $user_id = $_GET['userid'];
 		$user_profile = $homeControlVar->getProfile($user_id, $workspaceUrl);
     $metrics = $homeControlVar->getUserMetrics($user_id, $workspaceUrl);
     //var_dump($metrics);
-  }
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,8 +40,8 @@ $metrics = array();
 		      <img src="http://i.axs.com/2014/11/promoted-media-optimized_545bb90b3fc9a.jpg" style="height:100px;">
         </div>
         <div class="col-xs-7">
-          <h3><?php echo $user_profile["profile"][0][first_name]."   ".$user_profile["profile"][0][last_name]; ?></h3>
-          <h6>Email: <?php echo $user_profile["profile"][0][user_id]; ?></h6>
+          <h3><?php echo $user_profile["profile"][0]["first_name"]."   ".$user_profile["profile"][0]["last_name"]; ?></h3>
+          <h6>Email: <?php echo $user_profile["profile"][0]["user_id"]; ?></h6>
           <h6>Channels: </h6>
           <ul style="list-style: none;">
             <?php
@@ -48,8 +53,8 @@ $metrics = array();
               }
               echo "<h6>Private:</h6>";
               foreach ($user_profile["membership"] as $value) {
-                if($value["type"]== 'Private'){
-                 echo "<li>". $value["channel_name"] ."</li>";
+                if($value["type"]== "Private"){
+                 echo "<li>". $value['channel_name'] ."</li>";
                 }
               }
             ?>

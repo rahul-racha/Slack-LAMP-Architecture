@@ -1,5 +1,5 @@
 <?php
-  //include_once $_SESSION['basePath'].'errors.php';
+  include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/connect.php';
 
   class HomeModel {
@@ -122,7 +122,7 @@
        return $affectedRows;
      }
 
-     public function getChannelStatus($channelName, $workspace) {
+     public function getChannelStatus($channelName, $workspaceUrl) {
        $dbConVar = new dbConnect();
        $conn = $dbConVar->createConnectionObject();
        $statusString = NULL;
@@ -130,7 +130,7 @@
        if ($chId != NULL && $chId > 0) {
          $getChStatus = "SELECT status
                          FROM workspace_channels
-                         WHERE channel_id = '$chId'";
+                         WHERE channel_id = $chId";
          $result = mysqli_query($conn, $getChStatus);
          if (mysqli_num_rows($result) > 0)
           {
@@ -320,7 +320,7 @@
       if (mysqli_num_rows($result) > 0)
       {
         while ($row = $result->fetch_assoc()) {
-          $array_push($relMsgs, $row);
+          array_push($relMsgs, $row);
         }
       }
       mysqli_free_result($result);
@@ -348,7 +348,7 @@
       if (mysqli_num_rows($result) > 0)
       {
         while ($row = $result->fetch_assoc()) {
-          $array_push($relRxns, $row);
+          array_push($relRxns, $row);
         }
       }
       mysqli_free_result($result);
@@ -432,8 +432,8 @@
         }
       }
       mysqli_free_result($result);
-      return $chId;
       $dbConVar->closeConnectionObject($conn);
+      return $chId;
     }
 
     public function getChannelFromMsg($msgID) {
@@ -491,7 +491,6 @@
           } else {
             $dependency = $threadId;
           }
-
           $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message,
                                   image_path, snippet, type, dependency)
                                   VALUES (?,?,?,?,?,?,?,?)");
