@@ -63,7 +63,8 @@
     if ($_POST["addUserExistingChannel"] != NULL && !empty($_POST["addUserExistingChannel"])) {
       $userList = array();
       $userList = $_POST["addUserExistingChannel"];
-      $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($userList, $channelName, $workspaceUrl);
+      $isCreate = "false";
+      $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($userList, $channelName, $workspaceUrl, $isCreate);
       if ($newInviteUserResponse['success'] != NULL && !empty($newInviteUserResponse['success']) &&
         empty($newInviteUserResponse['failed'])) {
           $temp = $newInviteUserResponse['success'];
@@ -89,7 +90,7 @@
     $threadId = NULL;
     $messageType = 'post';
     unset($_POST["textarea"]);
-    $message = $homeControlVar->insertMessage($channelName,$textArea,$threadId,$messageType, $workspaceUrl);
+    $message = $homeControlVar->insertMessage($channelName,$textArea,$image_path,$snippet,$threadId,$messageType, $workspaceUrl);
     $_SESSION['channel'] = $channelName;
     $_SESSION['channelHeading'] = $channelHeading;
     $homeControlVar->redirectToHome();
@@ -105,10 +106,14 @@
 
     $channelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
     if ($channelResponse == "true") {
+    $admins = array();
+    $admins = $homeControlVar->getAdmins();
     $users = array();
     $users = $invitedUsers;
     array_push($users, $_SESSION['userid']);
-    $channelCreator = $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl);
+    $users = array_merge($users,$admins);
+    $isCreate = "true";
+    $channelCreator = $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl, $isCreate);
     $_SESSION['channel'] = $channelName;
     if ($channeltype == "Public") {
       $channelHeading = "#"." ".$channelName;
@@ -127,7 +132,8 @@
 
   if(isset($_POST['UserName'])){
     global $homeControlVar;
-    $userList =$homeControlVar->getUsersForPattern($_POST['UserName']);
+    global $workspaceUrl;
+    $userList =$homeControlVar->getUsersForPattern($_POST['UserName'], $workspaceUrl);
     echo json_encode($userList);
   }
 
@@ -140,7 +146,7 @@
     $thread_id = $_POST['thread_insertion']['thread_id'];
     $channelName = $_POST['thread_insertion']['channel_name'];
     $messageType = 'reply';
-    $message = $homeControlVar->insertMessage($channelName,$thread_message,$thread_id,$messageType, $workspaceUrl);
+    $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType, $workspaceUrl);
     echo $message;
     // $homeControlVar->redirectToHome();
     // echo $messageType,$thread_id,$thread_message;
@@ -157,6 +163,7 @@
 
   if (isset($_POST['insertReaction'])) {
       global $homeControlVar;
+      global $workspaceUrl;
       //global $likeCount;
       //global $dislikeCount;
       $likeCount = NULL;
@@ -167,7 +174,7 @@
       //$isInsert = $_POST['insertReaction']['isInsert'];
       //$reactionsData = array();
       //$reactionsData=json_decode(stripslashes($_POST['reactionsData']));
-      $reactionHandling = $homeControlVar->handleReactionForMsg($msgId, $emoName);
+      $reactionHandling = $homeControlVar->handleReactionForMsg($msgId, $emoName, $workspaceUrl);
       $reactionResponse = $homeControlVar->getReactionInfoForMsg($msgId, $emoName);
 
       //if like +1 then dislike -1 & vice-versa
@@ -178,18 +185,27 @@
         $infoDislike = array();
         $infoDislike = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
         $isDislikeExists = $homeControlVar->isUserExistsForReaction($infoDislike['users']);
+        $responseArray = array();
 
         if($emoName == "like" && $isLikeExists == "true") {
             if ($isDislikeExists == "true") {
-              $homeControlVar->handleReactionForMsg($msgId, "dislike");
+              $responseArray = $homeControlVar->handleReactionForMsg($msgId, "dislike", $workspaceUrl);
               //$result = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
-              $dislikeCount = (string) (intval($infoDislike['count']) - intval(1));
+              if ($responseArray == "true") {
+                $dislikeCount = (string) (intval($infoDislike['count']) - intval(1));
+              } else {
+                $dislikeCount = (string) (intval($infoDislike['count']));
+              }
             }
         } else if ($emoName == "dislike" && $isDislikeExists == "true") {
             if ($isLikeExists == "true") {
-              $homeControlVar->handleReactionForMsg($msgId, "like");
+              $homeControlVar->handleReactionForMsg($msgId, "like", $workspaceUrl);
               //$result = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
-              $likeCount = (string) (intval($infoLike['count']) - intval(1));
+              if ($responseArray == "true") {
+                $likeCount = (string) (intval($infoLike['count']) - intval(1));
+              } else {
+                 $likeCount = (string) (intval($infoLike['count']));
+              }
             }
         }
       }
@@ -197,26 +213,4 @@
       $computedResp = array('emoResp'=>$reactionResponse, 'likeCount'=>$likeCount, 'dislikeCount'=>$dislikeCount);
       echo json_encode($computedResp);//$reactionResponse['count'];//json_encode($reactionResponse); $reactionHandling["message"];
     }
-    // if (isset($_POST['msgId']) && $_POST['emoName']) {
-    //   $reactionResponse = array();
-    //   global $homeControlVar;
-    //   //$reactionsData = array();
-    //   //$reactionsData=json_decode(stripslashes($_POST['reactionsData']));
-    //   $msgId=$_POST['msgId'];
-    //   $emoName =$_POST['emoName'];
-    //   $checkOtherArr = array();
-    //   $checkOtherArr = $homeControlVar->getReactionInfoForMsg($msgId, $emoName);
-    //   $checkOther = array();
-    //   $checkOther = $checkOtherArr['users'];
-    //   $userInfo = $homeControlVar->isUserExistsForReaction($checkOther);
-    //   // echo $userInfo;
-    //   if($userInfo == true)
-    //   {
-    //     $reactionResponse = $homeControlVar->handleReactionForMsg($msgId, $emoName);
-    //     echo $reactionResponse['count'];
-    //   }
-    //   else{
-    //     echo "error";
-    //   }
-    // }
 ?>
