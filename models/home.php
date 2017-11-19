@@ -22,13 +22,13 @@
       return $data;
     }
 
-    public function getUserProfile($name) {
+    public function getUserProfile($name, $workspace) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $userProfile = array();
-      $getProfile = "SELECT user_id, first_name, last_name, email, avatar
-                     FROM user_info
-                     WHERE user_id = '$name'";
+      $getProfile = "SELECT U.user_id as user_id, first_name, last_name, email, avatar, role
+                    FROM user_info AS U INNER JOIN workspace AS W ON U.user_id = W.user_id
+                    WHERE U.user_id = '$name' AND W.url = '$workspace'";
       $result = mysqli_query($conn, $getProfile);
       if (mysqli_num_rows($result) > 0)
        {
@@ -45,14 +45,115 @@
       return $userProfile;
     }
 
-    public function getUserMembership($name) {
+    public function getAdmins() {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $admins = array();
+      $getAdmins = "SELECT user_id, first_name, last_name, display_name, email, avatar
+                    FROM user_info
+                    WHERE role = 'admin'";
+      $result = mysqli_query($conn, $getAdmins);
+      if (mysqli_num_rows($result) > 0)
+       {
+         while ($row = $result->fetch_assoc()) {
+           array_push($admins, $row);
+         }
+       }
+       if ($result) {
+         mysqli_free_result($result);
+       }
+       $dbConVar->closeConnectionObject($conn);
+       return $admins;
+     }
+
+     public function removeUserFromChannel($userID, $channelName, $workspace) {
+       $dbConVar = new dbConnect();
+       $conn = $dbConVar->createConnectionObject();
+       $chId = $this->getChannelId($channelName, $workspaceUrl);
+       $affectedRows = NULL;
+       if ($chId != NULL && $chId > 0) {
+         $delUsrFrmChannel = "DELETE FROM inside_channel
+                              WHERE user_id = ? AND channel_id = ?";
+         $stmt = $conn->prepare($delUsrFrmChannel);
+         $stmt->bind_param("ss", $userID, $chId);
+         $stmt->execute();
+         $affectedRows = $stmt->affected_rows;
+         $stmt->close();
+       }
+       $dbConVar->closeConnectionObject($conn);
+       return $affectedRows;
+     }
+
+     public function deletePostsFromChannel($msgID, $channelName, $workspace) {
+       $dbConVar = new dbConnect();
+       $conn = $dbConVar->createConnectionObject();
+       $affectedRows = NULL;
+       $chId = $this->getChannelId($channelName, $workspaceUrl);
+       if ($chId != NULL && $chId > 0) {
+         $delPosts = "DELETE FROM channel_messages
+                      WHERE (msg_id = ? OR dependency = ?)
+                      AND channel_id = ?";
+        $stmt = $conn->prepare($delPosts);
+        $stmt->bind_param("sss", $msgID, $msgID, $chId);
+        $stmt->execute();
+        $affectedRows = $stmt->affected_rows;
+        $stmt->close();
+       }
+       $dbConVar->closeConnectionObject($conn);
+       return $affectedRows;
+     }
+
+     public function updateChannelStatus($channelName, $workspace, $status) {
+       $dbConVar = new dbConnect();
+       $conn = $dbConVar->createConnectionObject();
+       $affectedRows = NULL;
+       $chId = $this->getChannelId($channelName, $workspaceUrl);
+       if ($chId != NULL && $chId > 0) {
+         $updateStatus = "UPDATE workspace_channels
+                          SET status = ?
+                          WHERE channel_id = ?";
+         $stmt = $conn->prepare($updateStatus);
+         $stmt->bind_param("ss", $status, $chId);
+         $stmt->execute();
+         $affectedRows = $stmt->affected_rows;
+         $stmt->close();
+       }
+       $dbConVar->closeConnectionObject($conn);
+       return $affectedRows;
+     }
+
+     public function getChannelStatus($channelName, $workspace) {
+       $dbConVar = new dbConnect();
+       $conn = $dbConVar->createConnectionObject();
+       $statusString = NULL;
+       $chId = $this->getChannelId($channelName, $workspaceUrl);
+       if ($chId != NULL && $chId > 0) {
+         $getChStatus = "SELECT status
+                         FROM workspace_channels
+                         WHERE channel_id = '$chId'";
+         $result = mysqli_query($conn, $getChStatus);
+         if (mysqli_num_rows($result) > 0)
+          {
+            while ($row = $result->fetch_assoc()) {
+              $statusString = $row['status'];
+            }
+          }
+       }
+       if ($result) {
+         mysqli_free_result($result);
+       }
+       $dbConVar->closeConnectionObject($conn);
+       return $statusString;
+     }
+
+    public function getUserMembership($name, $workspace) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $userMembership = array();
       $getMembership = "SELECT DISTINCT channel_name, W.type
                         FROM workspace_channels AS W INNER JOIN channel_messages AS C
                         ON W.channel_id = C.channel_id
-                        WHERE C.user_id = '$name'";
+                        WHERE C.user_id = '$name' AND W.url = '$workspace'";
       $result = mysqli_query($conn, $getMembership);
       if (mysqli_num_rows($result) > 0)
        {
@@ -71,14 +172,14 @@
 
     }
 
-    public function retrievePatternMatchedUsers($keyword) {
+    public function retrievePatternMatchedUsers($keyword, $workspace) {
       $dbConVar = new dbConnect();
       $pattern = $keyword."%";
       $conn = $dbConVar->createConnectionObject();
       $userList = array();
-      $retUsers = "SELECT user_id, first_name, last_name, display_name
-                   FROM user_info
-                   WHERE user_id LIKE '$pattern'";
+      $retUsers = "SELECT U.user_id AS user_id, first_name, last_name, display_name
+                    FROM user_info AS U INNER JOIN workspace AS W ON U.user_id = W.user_id
+                    WHERE U.user_id LIKE '$pattern' AND W.url = '$workspace'";
       $result = mysqli_query($conn, $retUsers);
       if (mysqli_num_rows($result) > 0)
       {
@@ -94,7 +195,7 @@
       return $userList;
     }
 
-    public function retrieveRxnMetrics($userID) {
+    public function retrieveRxnMetrics($userID, $workspace) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $rxnMetrics = array();
@@ -106,6 +207,7 @@
                      INNER JOIN channel_messages AS C ON C.msg_id = R.msg_id
                      WHERE R.users LIKE '%{$pattern}%'
                      ) B INNER JOIN workspace_channels AS W ON B.channel_id = W.channel_id
+                     AND W.url = '$workspace'
                      GROUP BY B.channel_id, B.emo_name";
       $result = mysqli_query($conn, $getRxnMetrics);
      if (mysqli_num_rows($result) > 0)
@@ -120,7 +222,7 @@
      return $rxnMetrics;
    }
 
-   public function retrievePostMetrics($userID) {
+   public function retrievePostMetrics($userID, $workspace) {
      $dbConVar = new dbConnect();
      $conn = $dbConVar->createConnectionObject();
      $postMetrics = array();
@@ -129,7 +231,7 @@
                         SELECT channel_name, M.channel_id, M.msg_id
                         FROM channel_messages AS M INNER JOIN workspace_channels AS W
                         ON M.channel_id = W.channel_id
-                        WHERE M.user_id = '".$userID."'
+                        WHERE M.user_id = '".$userID."' AND W.url = '$workspace'
                         ) G
                         GROUP BY channel_name";
      $result = mysqli_query($conn, $getPostMetrics);
@@ -146,14 +248,14 @@
 
    }
 
-   public function retrieveNoChMsgs($userID) {
+   public function retrieveNoChMsgs($userID, $workspace) {
      $dbConVar = new dbConnect();
      $conn = $dbConVar->createConnectionObject();
      $totalMsgs = array();
      $getTotalMsgs = "SELECT channel_name, COUNT(msg_id) AS msg_count
                       FROM channel_messages AS M INNER JOIN workspace_channels AS W
                       ON M.channel_id = W.channel_id
-                      WHERE M.channel_id IN (
+                      WHERE W.url = '$workspace' AND M.channel_id IN (
                         SELECT channel_id
                         FROM inside_channel
                         WHERE user_id = '".$userID."')
@@ -171,7 +273,7 @@
     return $totalMsgs;
    }
 
-   public function retrieveNoChRxns($userID) {
+   public function retrieveNoChRxns($userID, $workspace) {
      $dbConVar = new dbConnect();
      $conn = $dbConVar->createConnectionObject();
      $pattern = ";".$userID.";";
@@ -180,7 +282,7 @@
                       FROM reactions AS R INNER JOIN channel_messages AS M
                       ON R.msg_id = M.msg_id INNER JOIN workspace_channels
                       AS W ON M.channel_id = W.channel_id
-                      WHERE (R.users IS NOT NULL AND R.users != '') AND M.channel_id IN (
+                      WHERE W.url = '$workspace' AND (R.users IS NOT NULL AND R.users != '') AND M.channel_id IN (
                        SELECT channel_id
                        FROM inside_channel
                        WHERE user_id = '".$userID."')
@@ -197,6 +299,62 @@
      $dbConVar->closeConnectionObject($conn);
      return $totalRxns;
      }
+
+
+     public function retrieveRelPostMetrics($userID, $workspace) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $relMsgs = array();
+      $getRelMsgs = "SELECT channel_name, MAX(msg_count) AS max_count
+                     FROM (
+                     SELECT channel_name, M.user_id as user_id, COUNT(msg_id) AS msg_count
+                     FROM channel_messages AS M INNER JOIN workspace_channels AS W
+                     ON M.channel_id = W.channel_id
+                     WHERE W.url = '$workspace' AND M.channel_id IN (
+                        SELECT channel_id
+                        FROM inside_channel
+                        WHERE user_id = '".$userID."')
+                     GROUP BY channel_name, M.user_id) TEMP
+                     GROUP BY channel_name";
+      $result = mysqli_query($conn, $getRelMsgs);
+      if (mysqli_num_rows($result) > 0)
+      {
+        while ($row = $result->fetch_assoc()) {
+          $array_push($relMsgs, $row);
+        }
+      }
+      mysqli_free_result($result);
+      $dbConVar->closeConnectionObject($conn);
+      return $relMsgs;
+    }
+
+    public function retrieveRelRxnMetrics($userID, $workspace) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $relRxns = array();
+      $getRelRxns = "SELECT channel_name, MAX(rxn_count) AS max_rx_count
+                     FROM (
+                     SELECT W.channel_name, M.user_id, COUNT(R.emo_id) AS rxn_count
+                     FROM reactions AS R INNER JOIN channel_messages AS M
+                     ON R.msg_id = M.msg_id INNER JOIN workspace_channels
+                     AS W ON M.channel_id = W.channel_id
+                     WHERE W.url = '$workspace' AND (R.users IS NOT NULL AND R.users != '') AND M.channel_id IN (
+                      SELECT channel_id
+                      FROM inside_channel
+                      WHERE user_id = '".$userID."')
+                      GROUP BY W.channel_name, M.user_id) TEMP
+                      GROUP BY channel_name";
+      $result = mysqli_query($conn, $getRelRxns);
+      if (mysqli_num_rows($result) > 0)
+      {
+        while ($row = $result->fetch_assoc()) {
+          $array_push($relRxns, $row);
+        }
+      }
+      mysqli_free_result($result);
+      $dbConVar->closeConnectionObject($conn);
+      return $relRxns;
+    }
 
     public function retrieveChannels($workspaceUrl)
     {
@@ -278,7 +436,28 @@
       $dbConVar->closeConnectionObject($conn);
     }
 
-    public function insertMessage($channelName, $message, $threadId, $type, $workspaceUrl)
+    public function getChannelFromMsg($msgID) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $chName = NULL;
+      $getChName = "SELECT channel_name
+                    FROM channel_messages AS M INNER JOIN workspace_channels AS W
+                    ON M.channel_id = W.channel_id
+                    WHERE msg_id = $msgID";
+      $result = mysqli_query($conn, $getChName);
+      if (mysqli_num_rows($result) > 0)
+      {
+        while ($row = $result->fetch_assoc())
+        {
+          $chName = $row['channel_name'];
+        }
+      }
+      mysqli_free_result($result);
+      $dbConVar->closeConnectionObject($conn);
+      return $chName;
+    }
+
+    public function insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl)
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
@@ -313,9 +492,10 @@
             $dependency = $threadId;
           }
 
-          $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message, type, dependency)
-                                  VALUES (?,?,?,?,?,?)");
-          $stmt->bind_param("ssssss", $chId, $_SESSION['userid'], $msgId, $message, $type, $dependency);
+          $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message,
+                                  image_path, snippet, type, dependency)
+                                  VALUES (?,?,?,?,?,?,?,?)");
+          $stmt->bind_param("ssssssss", $chId, $_SESSION['userid'], $msgId, $message, $imagePath, $snippet, $type, $dependency);
           $stmt->execute();
           //if ($stmt->affected_rows > 0) {}
           $affectedRows = $stmt->affected_rows;
@@ -330,10 +510,13 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $updateType = "UPDATE channel_messages
-                     SET type = $type
-                     WHERE msg_id = $threadId";
-      $result = mysqli_query($conn, $updateType);
-      $affectedRows = mysqli_affected_rows($conn);
+                      SET type = ?
+                      WHERE msg_id = ?";
+      $stmt = $conn->prepare($updateType);
+      $stmt->bind_param("ss", $type, $threadId);
+      $stmt->execute();
+      $affectedRows = $stmt->affected_rows;
+      $stmt->close();
       return $affectedRows;
     }
 
