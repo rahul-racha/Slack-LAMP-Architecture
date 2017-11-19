@@ -181,3 +181,30 @@ html, body{
 .client_code_snippet_textarea{
   width: 100%;
 }
+.client_image_upload_button{
+  width: 100%;
+  /*background-color: white;*/
+}
+/*uploading image for post*/
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+#img-upload{
+    width: 100%;
+}

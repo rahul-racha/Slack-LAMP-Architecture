@@ -95,7 +95,8 @@
                   <!-- <span class="caret"></span> -->
                   <ul class="dropdown-menu">
                     <li><a class="client_code_snippet_button" data-toggle="modal" data-target="#client_code_snippet">Code snippet</a></li>
-                    <li><a href="#">Send images</a></li>
+                    <li><a class="client_code_snippet_button" data-toggle="modal" data-target="#client_Add_image_to_post">Add image</a></li>
+                    <!-- <li><span><a>Add images</a><input type="file"></span></li> -->
                     <!-- <li><a href="#">JavaScript</a></li>
                     <li class="divider"></li>
                     <li><a href="#">About Us</a></li> -->
@@ -275,6 +276,39 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Create Snippet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add image -->
+  <div class="modal fade" id="client_Add_image_to_post" role="dialog">
+    <div class="modal-dialog modal-lg client_code_snippet_modal_body">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Upload Image</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <span class="btn btn-default btn-file">
+                  Browse… <input type="file" id="imgInp">
+                </span>
+              </span>
+              <input type="text" class="form-control" readonly>
+            </div>
+            <img id='img-upload'/>
+          </div>
+          <center><p>or</p></center>
+          <div>
+            <span>Images from web</span>
+            <input style="width:100%"></input>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Add image</button>
         </div>
       </div>
     </div>
