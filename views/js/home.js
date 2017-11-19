@@ -42,7 +42,6 @@ $(document).ready(function(){
 		    		console.log("Error");
 		    	}
 			});
-
 		});
 
 		$(".threadIdSubmit").on("click",function(e){
@@ -147,5 +146,56 @@ $(document).ready(function(){
 		    $('.client_user_search_suggestions').hide();
 		    // alert('hide');
 		})
+		// image upload modal preview
+		$(document).on('change', '.btn-file :file', function() {
+		var input = $(this),
+			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+		input.trigger('fileselect', [label]);
+		});
+
+		$('.btn-file :file').on('fileselect', function(event, label) {
+
+		    var input = $(this).parents('.input-group').find(':text'),
+		        log = label;
+
+		    if( input.length ) {
+		        input.val(log);
+		    } else {
+		        if( log ) alert(log);
+		    }
+
+		});
+		function readURL(input) {
+		    if (input.files && input.files[0]) {
+		        var reader = new FileReader();
+
+		        reader.onload = function (e) {
+		            $('#img-upload').attr('src', e.target.result);
+		        }
+		        reader.readAsDataURL(input.files[0]);
+		    }
+		}
+		$("#imgInp").change(function(){
+		    readURL(this);
+		});
+
+		//image upload ajax
+		$("#client_add_image_submit_button").on("click",function(e){
+			var image_upload_id = $("#imgInp").val();
+			$.ajax({
+				method: 'post',
+				url: './router.php',
+				data: {'insert_image':{'image_id':image_upload_id}},
+				// data: {'insertReaction': {'msgId':msgId, 'emoName':emoName, 'isInsert': "true"}},
+				dataType: 'text',
+				success: function(data){
+					console.log(data);
+
+		    	},
+		    	error: function(){
+		    		console.log("Error");
+		    	}
+			});
+		});
 
 });

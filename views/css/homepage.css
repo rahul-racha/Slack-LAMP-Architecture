@@ -185,6 +185,9 @@ html, body{
   width: 100%;
   /*background-color: white;*/
 }
+.client_add_image_modal_body{
+  overflow: scroll;
+}
 /*uploading image for post*/
 .btn-file {
     position: relative;

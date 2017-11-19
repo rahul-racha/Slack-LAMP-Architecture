@@ -288,7 +288,8 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Modal Header</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body client_add_image_modal_body">
+
           <div class="form-group">
             <label>Upload Image</label>
             <div class="input-group">
@@ -306,12 +307,15 @@
             <span>Images from web</span>
             <input style="width:100%"></input>
           </div>
+
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Add image</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="client_add_image_submit_button">Add image</button>
         </div>
       </div>
     </div>
   </div>
+
+
 </body>
 </html>

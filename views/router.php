@@ -89,10 +89,12 @@
     global $workspaceUrl;
     $threadId = NULL;
     $messageType = 'post';
-    unset($_POST["textarea"]);
+    $image_path = NULL;
+    $snippet = NULL;
     $message = $homeControlVar->insertMessage($channelName,$textArea,$image_path,$snippet,$threadId,$messageType, $workspaceUrl);
     $_SESSION['channel'] = $channelName;
     $_SESSION['channelHeading'] = $channelHeading;
+    unset($_POST["textarea"]);
     $homeControlVar->redirectToHome();
   }
 
@@ -146,6 +148,8 @@
     $thread_id = $_POST['thread_insertion']['thread_id'];
     $channelName = $_POST['thread_insertion']['channel_name'];
     $messageType = 'reply';
+    $image_path = NULL;
+    $snippet = NULL;
     $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType, $workspaceUrl);
     echo $message;
     // $homeControlVar->redirectToHome();
@@ -212,5 +216,11 @@
 
       $computedResp = array('emoResp'=>$reactionResponse, 'likeCount'=>$likeCount, 'dislikeCount'=>$dislikeCount);
       echo json_encode($computedResp);//$reactionResponse['count'];//json_encode($reactionResponse); $reactionHandling["message"];
+    }
+
+    if(isset($_POST['insert_image'])){
+      $image_id =$_POST["image_id"];
+      echo $image_id;;
+
     }
 ?>
