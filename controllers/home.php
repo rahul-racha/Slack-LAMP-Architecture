@@ -45,20 +45,20 @@
         return $channels;
     }
 
-    public function getProfile($user_id, $workspace) {
+    public function getProfile($user_id) {
       $this->homeModelVar = new HomeModel();
       $profile = array();
       $membership = array();
-      $profile = $this->homeModelVar->getUserProfile($user_id, $workspace);
-      $membership = $this->homeModelVar->getUserMembership($user_id, $workspace);
+      $profile = $this->homeModelVar->getUserProfile($user_id);
+      $membership = $this->homeModelVar->getUserMembership($user_id);
       $userData = array('profile'=>$profile, 'membership'=>$membership);
       return $userData;
     }
 
-    public function getUsersForPattern($keyword, $workspace) {
+    public function getUsersForPattern($keyword) {
       $this->homeModelVar = new HomeModel();
       $userList = array();
-      $userList = $this->homeModelVar->retrievePatternMatchedUsers($keyword, $workspace);
+      $userList = $this->homeModelVar->retrievePatternMatchedUsers($keyword);
       return $userList;
     }
 
@@ -107,23 +107,20 @@
     }
 
     //function is used for inserting messages and replies
-    public function insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $messageType, $workspaceUrl)
+    public function insertMessage($channelName, $message, $threadId, $messageType, $workspaceUrl)
     {
         $responseString = NULL;
         $this->homeModelVar = new HomeModel();
-        $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
-        if ($chStatus == "unarchived") {
-          $type = $this->getMessageType($messageType);
-          $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl);
-          if ($affectedRows == 1) {
-            $responseString = 'Message is inserted';
-          } else if ($affectedRows == 0)
-          {
-              $responseString = 'Message not inserted';
-          } else if ($affectedRows < 0)
-          {
-            $responseString = 'Query returned an error';
-          }
+        $type = $this->getMessageType($messageType);
+        $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $threadId, $type, $workspaceUrl);
+        if ($affectedRows == 1) {
+          $responseString = 'Message is inserted';
+        } else if ($affectedRows == 0)
+        {
+            $responseString = 'Message not inserted';
+        } else if ($affectedRows < 0)
+        {
+          $responseString = 'Query returned an error';
         }
         return $responseString;
     }
@@ -180,31 +177,18 @@
     }
 
     //add list of users to a channel
-    public function inviteUsersToChannel($users, $channelName, $workspaceUrl, $isCreate) {
+    public function inviteUsersToChannel($users, $channelName, $workspaceUrl) {
       $invitationResults = array('success' => array(), 'failed' => array());
       $this->homeModelVar = new HomeModel();
-      $chStatus = NULL;
-      if ($isCreate == "false") {
-        $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
-      }
-      if ($chStatus == "unarchived") {
-          foreach ($users as $userID) {
-            $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
-            if ($successFeeds < 1) {
-              array_push($invitationResults['failed'], $userId);
-            } else {
-              array_push($invitationResults['success'], $userId);
-            }
-          }
+      foreach ($users as $userID) {
+        $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
+        if ($successFeeds < 1) {
+          array_push($invitationResults['failed'], $userId);
+        } else {
+          array_push($invitationResults['success'], $userId);
+        }
       }
       return $invitationResults;
-    }
-
-    public function getAdmins() {
-      $this->homeModelVar = new HomeModel();
-      $admins = array();
-      $admins = $this->homeModelVar->getAdmins();
-      return $admins;
     }
 
     public function getRepliesForThread($threadId) {
@@ -254,15 +238,11 @@
       return $info;
     }
 
-    public function handleReactionForMsg($msgId, $emoName, $workspaceUrl) {
+    public function handleReactionForMsg($msgId, $emoName) {
       $this->homeModelVar = new HomeModel();
       $responseString = array('result'=>NULL,'message'=>NULL);
       $affectedRows = NULL;
       $info = array();
-      $channelName =  $this->homeModelVar->getChannelFromMsg($msgID);
-      $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
-
-      if ($chStatus = "unarchived") {
       $emoId = $this->homeModelVar->getEmoId($emoName);
       if ($emoId > 0) {
         $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
@@ -314,27 +294,20 @@
         $responseString['result'] = "false";
         $responseString['message'] = $emoName." is not found in database";
       }
-    } else {
-      $responseString['result'] = "false";
-      $responseString['message'] = "Channel is archived";
-    }
       return $responseString;
     }
 
-    public function getUserMetrics($userID, $workspace) {
+    public function getUserMetrics($userID) {
       $this->homeModelVar = new HomeModel();
       $rxnMetrics = array();
       $msgMetrics  = array();
       $trxnMetrics = array();
       $tmsgMetrics = array();
-      $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID, $workspace);
-      $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID, $workspace);
-      $tmsgMetrics = $this->homeModelVar->retrieveNoChMsgs($userID, $workspace);
-      $trxnMetrics = $this->homeModelVar->retrieveNoChRxns($userID, $workspace);
-      $relMsgMetrics =  $this->homeModelVar->retrieveRelPostMetrics($userID, $workspace);
-      $relRxnMetrics =  $this->homeModelVar->retrieveRelRxnMetrics($userID, $workspace);
-      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics, "relRxnMetrics"=>$relRxnMetrics,
-                       "relPostMetrics"=>$relMsgMetrics, "treaction"=>$trxnMetrics, "tpost"=>$tmsgMetrics);
+      $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID);
+      $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID);
+      $tmsgMetrics = $this->homeModelVar->retrieveNoChMsgs($userID);
+      $trxnMetrics = $this->homeModelVar->retrieveNoChRxns($userID);
+      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics, "treaction"=>$trxnMetrics, "tpost"=>$tmsgMetrics);
       return $metrics;
     }
 

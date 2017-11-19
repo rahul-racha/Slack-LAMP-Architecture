@@ -63,8 +63,7 @@
     if ($_POST["addUserExistingChannel"] != NULL && !empty($_POST["addUserExistingChannel"])) {
       $userList = array();
       $userList = $_POST["addUserExistingChannel"];
-      $isCreate = "false";
-      $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($userList, $channelName, $workspaceUrl, $isCreate);
+      $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($userList, $channelName, $workspaceUrl);
       if ($newInviteUserResponse['success'] != NULL && !empty($newInviteUserResponse['success']) &&
         empty($newInviteUserResponse['failed'])) {
           $temp = $newInviteUserResponse['success'];
@@ -106,14 +105,10 @@
 
     $channelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
     if ($channelResponse == "true") {
-    $admins = array();
-    $admins = $homeControlVar->getAdmins();
     $users = array();
     $users = $invitedUsers;
     array_push($users, $_SESSION['userid']);
-    $users = array_merge($users,$admins);
-    $isCreate = "true";
-    $channelCreator = $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl, $isCreate);
+    $channelCreator = $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl);
     $_SESSION['channel'] = $channelName;
     if ($channeltype == "Public") {
       $channelHeading = "#"." ".$channelName;
@@ -132,8 +127,7 @@
 
   if(isset($_POST['UserName'])){
     global $homeControlVar;
-    global $workspaceUrl;
-    $userList =$homeControlVar->getUsersForPattern($_POST['UserName'], $workspaceUrl);
+    $userList =$homeControlVar->getUsersForPattern($_POST['UserName']);
     echo json_encode($userList);
   }
 
@@ -163,7 +157,6 @@
 
   if (isset($_POST['insertReaction'])) {
       global $homeControlVar;
-      global $workspaceUrl;
       //global $likeCount;
       //global $dislikeCount;
       $likeCount = NULL;
@@ -174,37 +167,29 @@
       //$isInsert = $_POST['insertReaction']['isInsert'];
       //$reactionsData = array();
       //$reactionsData=json_decode(stripslashes($_POST['reactionsData']));
-      $reactionHandling = $homeControlVar->handleReactionForMsg($msgId, $emoName, $workspaceUrl);
+      $reactionHandling = $homeControlVar->handleReactionForMsg($msgId, $emoName);
       $reactionResponse = $homeControlVar->getReactionInfoForMsg($msgId, $emoName);
 
       //if like +1 then dislike -1 & vice-versa
       if ($emoName == "like" || $emoName == "dislike") {
         $infoLike = array();
-        $infoLike = $homeControlVar->getReactionInfoForMsg($msgId, "like", $workspaceUrl);
+        $infoLike = $homeControlVar->getReactionInfoForMsg($msgId, "like");
         $isLikeExists = $homeControlVar->isUserExistsForReaction($infoLike['users']);
         $infoDislike = array();
         $infoDislike = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
         $isDislikeExists = $homeControlVar->isUserExistsForReaction($infoDislike['users']);
-        $responseArray = array();
+
         if($emoName == "like" && $isLikeExists == "true") {
             if ($isDislikeExists == "true") {
-              $responseArray = $homeControlVar->handleReactionForMsg($msgId, "dislike", $workspaceUrl);
+              $homeControlVar->handleReactionForMsg($msgId, "dislike");
               //$result = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
-              if ($responseArray == "true") {
-                $dislikeCount = (string) (intval($infoDislike['count']) - intval(1));
-              } else {
-                $dislikeCount = (string) (intval($infoDislike['count']));
-              }
+              $dislikeCount = (string) (intval($infoDislike['count']) - intval(1));
             }
         } else if ($emoName == "dislike" && $isDislikeExists == "true") {
             if ($isLikeExists == "true") {
-              $responseArray = $homeControlVar->handleReactionForMsg($msgId, "like", $workspaceUrl);
+              $homeControlVar->handleReactionForMsg($msgId, "like");
               //$result = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
-              if ($responseArray == "true") {
-                $likeCount = (string) (intval($infoLike['count']) - intval(1));
-              } else {
-                $likeCount = (string) (intval($infoLike['count']));
-              }
+              $likeCount = (string) (intval($infoLike['count']) - intval(1));
             }
         }
       }

@@ -163,7 +163,7 @@
 		echo json_encode($replyList);
 	}
 
-	if(isset($_GET["random"])) {
+	if(isset($_GET["random"])){
 		// global $homeControlVar;
 		echo "I am here";
 		// $user_profile = array();
