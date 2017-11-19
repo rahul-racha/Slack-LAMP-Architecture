@@ -68,11 +68,13 @@
 				}
 				if ($type != NULL && $chName != NULL) {
 					$finalName = $sym." ".$chName;
-      		echo '<form method="post" action = "home.php">
-							<input type="hidden" name="channel" value="'.$chName.'" >
-							<input type="hidden" name="channelHeading" value="'.$finalName.'" >
-							<input type="submit" class="client_channel_display pull-left" value="'.$finalName.'" >
-							</form>';
+      		echo '<div class="col-xs-12">
+									<form method="post" action = "home.php">
+										<input type="hidden" name="channel" value="'.$chName.'" >
+										<input type="hidden" name="channelHeading" value="'.$finalName.'" >
+										<input type="submit" class="client_channel_display" value="'.$finalName.'" >
+									</form>
+								</div>';
 						}
      			}
 			}
@@ -96,31 +98,34 @@
       $dislikeCount = getReactionCount($msgId, $dislikeEmo);
       $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgIdRef);
       if (count($channelMessages) != $i) {
-        $name = "<div class = 'EntireMessage'>
-									<img src=".$value['avatar']." class='client_pic_display'>
-									<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
-                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
-                  <ul class = 'MessageUL'>
-                    <li class = 'MessageLI'>".$value['message']."</li>
-                  </ul>
+        $name = "<div class = 'EntireMessage col-xs-12 row change_row_prop'>
+									<div class='message_profile_pic'>
+										<img src=".$value['avatar']." class='client_pic_display'>
+									</div>
+									<div class='message_content_wrapper'>
+										<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+	                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+	                  <ul class = 'MessageUL'>
+	                    <li class = 'MessageLI'>".$value['message']."</li>
+	                  </ul>
 
-                  <label class='like' name='like' id=".$msgId.">
-                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-                   </label>&nbsp &nbsp
-                  <span id = 'likeResponse".$msgId."'>   $likeCount     </span>
-                  <label class='dislike' name='dislike' id=".$msgId.">
-                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
-                  </label> &nbsp &nbsp
-                  <span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
+	                  <label class='like' name='like' id=".$msgId.">
+	                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+	                   </label>&nbsp &nbsp
+	                  <span id = 'likeResponse".$msgId."'>   $likeCount     </span>
+	                  <label class='dislike' name='dislike' id=".$msgId.">
+	                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
+	                  </label> &nbsp &nbsp
+	                  <span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' name='channel' value= ".$_POST['channel'].">
-										<input type='submit'id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>".
-
-                "</div>";
+										<input type='submit'id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
+									</div>
+                </div>";
 
       }  else {
-      $name = "<div id = 'bottom' class = 'EntireMessage'>
+      $name = "<div id = 'bottom' class = 'EntireMessage col-xs-12'>
 								<img src=".$value['avatar']." class='client_pic_display'>
 								<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
 								"</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
