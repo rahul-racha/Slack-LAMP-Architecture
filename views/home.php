@@ -25,31 +25,47 @@
     <div class="row client_main_row">
       <div class="col-xs-2 client_navbar row change_row_prop">
       <!-- side nav bar -->
-        <div class="client_navbar_header">
-          <span>Musicf17.slack.com</span>
-          <a href='<?php echo "profile.php?userid=".$_SESSION['userid']; ?>'>
-            <span style="color:white;"><?php echo $_SESSION['userid']; ?></span>
-          </a>
+        <div class="client_navbar_header col-xs-12 row">
+          <div class="dropdown col-xs-12">
+            <button class="btn btn-default dropdown-toggle client_navbar_dropdown_button" type="button" data-toggle="dropdown">Musicf17.slack.com
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu client_navbar_dropdown_ul">
+              <li class="dropdown-header">
+                <img style="width: 20%;" src='<?php echo "images/users/".$_SESSION['userid'].".jpg" ?>'> &nbsp
+                <?php echo $_SESSION['userid']; ?>
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href='<?php echo "profile.php?userid=".$_SESSION['userid']; ?>'>
+                  <span style="color:black;">Profile & Account</span>
+                </a>
+              </li>
+              <li><a href="#">Help</a></li>
+              <!-- <li><a href="#">JavaScript</a></li> -->
+              <li class="divider"></li>
+              <li><a href="#">logout</a></li>
+            </ul>
+          </div>
         </div>
-        <div class="client_channel_header row">
+        <div class="client_channel_header col-xs-12 row">
           <h4>Channels
             <a href="#" class="client_new_chanenl" data-toggle="modal" data-target="#NewChannel">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </a>
           </h4>
         </div>
-				<div class="client_channel_display row">
+				<div class="client_channel_display col-xs-12 row">
         	<?php displayChannels(); ?>
 				</div>
       </div>
-      <div class="col-xs-10 client_main_continer">
-        <div class="client_message_header row change_row_prop">
+      <div class="client_main_continer col-xs-10 row change_row_prop">
+        <div class="client_message_header col-xs-12 row change_row_prop">
           <!-- header -->
           <div class="client_channel_title col-xs-8">
             <h5 class="client_channel_title_view"><strong><?php echo $channelHeading;?></strong></h5>
           </div>
-          <div class="serch_users_in_workspace col-xs-3">
-            <i class="fa fa-search" aria-hidden="true"></i>
+          <div class="right-inner-addon serch_users_in_workspace col-xs-3">
+            <!-- <i class="fa fa-search" aria-hidden="true"></i> -->
             <input type="text" class="client_user_search" autocomplete="off" spellcheck="false" id="wrkspace_user_search" placeholder="Search for names..">
           </div>
 
@@ -66,18 +82,34 @@
 
           </ul>
         </div>
-        <div class="client_message_display row change_row_pro">
+        <div class="client_message_display col-xs-12 row change_row_pro">
           <?php displayMessages(); ?>
         </div>
           <!-- messge container -->
         	<div class="client_message_entry col-xs-12 row change_row_prop">
-						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
-              <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
-              <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-              <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
-              <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-              <input id="SubmitButton" class="col-xs-1 client_messsage_entry_submit_button" type="submit" name="submit"/>
-            </form>
+            <div class="input-group">
+              <span class="input-group-addon">
+                <div class="dropup">
+                  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-plus" aria-hidden="true"></i></a>
+                  <!-- <span class="caret"></span> -->
+                  <ul class="dropdown-menu">
+                    <li><a class="client_code_snippet_button" data-toggle="modal" data-target="#client_code_snippet">Code snippet</a></li>
+                    <li><a href="#">Send images</a></li>
+                    <!-- <li><a href="#">JavaScript</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">About Us</a></li> -->
+                  </ul>
+                </div>
+              </span>
+  						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
+                <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
+                <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+                <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
+                <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+                <input id="SubmitButton" class="col-xs-1 client_messsage_entry_submit_button" type="submit" name="submit"/>
+              </form>
+          </div>
           </div>
       </div>
       <div class="client_thread_display_main" >
@@ -226,6 +258,23 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Code snippet -->
+  <div class="modal fade" id="client_code_snippet" role="dialog">
+    <div class="modal-dialog modal-lg client_code_snippet_modal_body">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <textarea class="client_code_snippet_textarea" rows="9"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Create Snippet</button>
         </div>
       </div>
     </div>

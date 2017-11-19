@@ -116,7 +116,12 @@ $(document).ready(function(){
 		$(".client_user_search").keyup(function(){
 			var UserName = $('.client_user_search').val();
 			$(".client_user_search_suggestions").show();
-			$(".client_user_search_suggestions")
+			// var p = $( ".client_user_search" );
+			// var offset = p.offset();
+			// p.html( "left: " + offset.left + ", top: " + offset.top );
+			// $(".client_user_search_suggestions").css({
+		  //   'width': ($(".client_user_search").width() + '%')
+		  // });
 			var user_id;
 			$.ajax({
 				method:'post',
@@ -124,6 +129,7 @@ $(document).ready(function(){
 				data: {'UserName':UserName},
 				dataType: 'json',
 				success: function(data){
+					console.log(data);
 					$('div.client_user_search_suggestions').empty();
 					data.forEach(function(e){
 						user_id = e['user_id'];
@@ -136,5 +142,10 @@ $(document).ready(function(){
 				},
 			})
 		});
+
+		$('body').click(function(){
+		    $('.client_user_search_suggestions').hide();
+		    // alert('hide');
+		})
 
 });
