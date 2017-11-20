@@ -82,6 +82,32 @@
     $homeControlVar->redirectToHome();
   }
 
+  if (isset($_POST['removeUsersExistingChannel']) && $_POST['removeUsersExistingChannel'] == 'removeUser') {
+    global $channelName;
+    global $channelHeading;
+    global $workspaceUrl;
+    $userList = array();
+    $removedUserResponse = array();
+    $userList = $_POST["removeUserExistingChannel"];
+    //print_r($userList);
+    $removedUserResponse = $homeControlVar->removeUsersFromChannel($userList, $channelName, $workspaceUrl);
+    //print_r($removedUserResponse);
+    if ($removedUserResponse['success'] != NULL && !empty($removedUserResponse['success']) &&
+      empty($removedUserResponse['failed'])) {
+        $temp = $removedUserResponse['success'];
+        //use a popup
+    } else {
+          $temp = $removedUserResponse['failed'];
+        //use a popup
+    }
+    $_SESSION['channel'] = $channelName;
+    $_SESSION['channelHeading'] = $channelHeading;
+    unset($_POST['removeUsersExistingChannel']);
+    unset($_POST["channel"]);
+    unset($_POST['removeUserExistingChannel']);
+    $homeControlVar->redirectToHome();
+  }
+
   function insertMessage($textArea) {
     global $homeControlVar;
     global $channelName;
@@ -156,6 +182,15 @@
     $image_path = NULL;
     $snippet = NULL;
     $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
+  }
+
+  if (isset($_POST['deletePost'])) {
+    global $homeControlVar;
+    global $workspaceUrl;
+    $msgID = $_POST['deletePost']['msgID'];
+    $channelName = $_POST['deletePost']['ch_name'];
+    $isSuccess = $homeControlVar->deletePostsFromChannel($msgID, $channelName, $workspaceUrl);
+    echo $isSuccess;
   }
 
   if (isset($_POST['insertReaction'])) {

@@ -119,9 +119,11 @@
 	                  <span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
-										<input type='hidden' name='channel' value= ".$_POST['channel'].">
-										<input type='submit'id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
-									</div>";
+										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
+										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
+									</div>
+                </div>";
 
       }  else {
       $name = "<div class='message_profile_pic col-xs-1'>
@@ -145,9 +147,10 @@
 									<span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
 
 									"<input type='hidden' name='threadId' value=".$msgId.">
-									<input type='hidden' name='channel' value= ".$_POST['channel'].">
+									<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
 									<input type='submit'id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
-								</div>";
+									<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>".
+							"</div>";
     }
 		// <p id='bottomMsg'></p>
       echo $name;
@@ -159,7 +162,8 @@
     global $homeControlVar;
     $info = array();
     $info = $homeControlVar->getReactionInfoForMsg($msgId, $emoName);
-    return $info['count'];
+		//print_r($info["count"]);
+    return isset($info["count"]) ? $info["count"] : NULL;
   }
 
 	if (isset($_POST["thread_id"])){
@@ -169,7 +173,7 @@
 		echo json_encode($replyList);
 	}
 
-	if(isset($_GET["random"])){
+	if (isset($_GET["random"])) {
 		// global $homeControlVar;
 		echo "I am here";
 		// $user_profile = array();
