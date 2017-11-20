@@ -44,10 +44,18 @@
                   <span style="color:black;">Profile & Account</span>
                 </a>
               </li>
-              <li><a href="#">Help</a></li>
+              <li><a href="../help.html">Help</a></li>
               <!-- <li><a href="#">JavaScript</a></li> -->
+              <!-- <form method="post" action="<?php //echo htmlspecialchars("router.php"); ?>">
+                <input type="submit" name="logout" value="logout">
+              </form> -->
               <li class="divider"></li>
-              <li><a href="#">logout</a></li>
+                <form method="post" action="<?php echo htmlspecialchars("router.php"); ?>">
+                  <li>
+                    <input type="submit" name="logout" value="logout" style="border:0;margin-left:5%;">
+                  </li>
+                </form>
+                <!-- <a href="#">logout</a></li> -->
             </ul>
           </div>
         </div>
@@ -143,9 +151,7 @@
         </div>
       </div>
     </div>
-    <!-- <form method="post" action="<?php //echo htmlspecialchars("router.php"); ?>">
-      <input type="submit" name="logout" value="logout">
-    </form> -->
+
   </div> <!--end of main container -->
 
   <!-- modal for user profile -->
@@ -340,7 +346,7 @@
           <center><p>or</p></center>
           <div>
             <span>Images from web</span>
-            <input style="width:100%"></input>
+            <input style="width:100%" class="client_image_upload_from_url"></input>
           </div>
 
         </div>

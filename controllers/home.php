@@ -259,7 +259,7 @@
       $responseString = array('result'=>NULL,'message'=>NULL);
       $affectedRows = NULL;
       $info = array();
-      $channelName =  $this->homeModelVar->getChannelFromMsg($msgID);
+      $channelName =  $this->homeModelVar->getChannelFromMsg($msgId);
       $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
 
       if ($chStatus != "archived") {

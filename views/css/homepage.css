@@ -79,6 +79,7 @@ html, body{
   opacity: 0.5;
 }
 .client_user_search_suggestions{
+  z-index:100;
   overflow-y: scroll;
   display: none;
   border: 1px solid;

@@ -80,7 +80,7 @@ if(isset($_GET['userid'])) {
             $dislike_count = 0;
                 $rxnMetrics = array();
                 $rxnMetrics = $metrics["reaction"];
-                print_r($rxnMetrics);
+                // print_r($rxnMetrics);
                 echo "<li><strong>"."Channel -- #Reactions"."</strong></li>";
                 foreach ($rxnMetrics as $value) {
                   if($value["emo_name"] == "like"){
@@ -92,9 +92,9 @@ if(isset($_GET['userid'])) {
                   echo "<li>".$value["channel_name"]." -- ". $value["emo_name"]. " -- ". $value["emo_count"]. "</li>";
                   $emo_count_user += $value["emo_count"];
                 }
-                echo $like_count;
-                echo $dislike_count;
-                echo $emo_count_user;
+                // echo $like_count;
+                // echo $dislike_count;
+                // echo $emo_count_user;
             ?>
           </ul>
           <!-- <h6><a href="#">More... </a></h6> -->
@@ -112,7 +112,7 @@ if(isset($_GET['userid'])) {
             <?php
               $relative_reaction_count = array();
               $relative_reaction_count = $metrics["relRxn"];
-              print_r($relative_reaction_count);
+              // print_r($relative_reaction_count);
               foreach ($relative_reaction_count as $value) {
                 echo "<li>".$value["channel_name"]." -- ".$value["max_rx_count"]."</li>";
                 $r_rxn_count += $value["max_rx_count"];
@@ -170,7 +170,7 @@ if(isset($_GET['userid'])) {
               </a>
               <ul class="dropdown-menu">
                   <li><a href="update.php"><span class="icon-wrench"></span> Modify</a></li>
-                  <li><a href="#"><span class="icon-trash"></span> Delete</a></li>
+                  <!-- <li><a href="#"><span class="icon-trash"></span> Delete</a></li> -->
               </ul>
           </div>
         </div>
@@ -178,11 +178,3 @@ if(isset($_GET['userid'])) {
     </div>
   </body>
 </html>
-
-
-<!--
-<div>
-  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-  <span>".$emo_count_user."</span>
-  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
-</div> -->

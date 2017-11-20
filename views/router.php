@@ -256,6 +256,19 @@
       $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
       echo $message;
     }
+    //image from url
+    if(isset($_POST["image_insertion_from_url"])){
+      $channelName = $_POST["image_insertion_from_url"]["retChannel"];
+      $thread_message = NULL;
+      $snippet = NULL;
+      $image_path = $_POST["image_insertion_from_url"]["image_upload_from_url_path"];
+      $threadId = NULL;
+      $messageType = 'post';
+      global $homeControlVar;
+      global $workspaceUrl;
+      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
+      echo $message;
+    }
     // code insertion
     if(isset($_POST["snippet_insertion"])){
       $channelName = $_POST["snippet_insertion"]["retChannel"];

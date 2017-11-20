@@ -476,6 +476,8 @@
           while ($row = $result->fetch_assoc())
           {
             $row['message'] = $this->validateInputs($row['message']);
+            $row['image_path'] = $this->validateInputs($row['image_path']);
+            $row['snippet'] = $this->validateInputs($row['snippet']);
             array_push($this->messages, $row);
           }
       }
@@ -652,7 +654,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->replies = array();
-      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, msg_id, message, created_time
+      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, avatar, msg_id, message, created_time
                      FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                      WHERE dependency = $threadId
                      ORDER BY created_time ASC";
