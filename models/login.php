@@ -1,6 +1,6 @@
 <?php
 
-  //include_once $_SESSION['basePath'].'errors.php';
+  include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/connect.php';
 
   class LoginModel {
@@ -26,20 +26,26 @@
         $isExists = NULL;
         $dbConVar = new dbConnect();
         $conn = $dbConVar->createConnectionObject();
+        $profileInfo = array();
         $userid = mysqli_real_escape_string($conn, $userid);
         $password = mysqli_real_escape_string($conn, $password);
-        $isUserExists = "SELECT user_id, password
+        $isUserExists = "SELECT user_id, password, role
                          FROM user_info
                          where user_id = '$userid' AND password = '$password'";
         $result = mysqli_query($conn, $isUserExists);
         //var_dump($result);
         if (mysqli_num_rows($result) > 0) {
-          $isExists = true;
+          while ($row = $result->fetch_assoc())
+          {
+            $row["isExists"] = true;
+            array_push($profileInfo, $row);
+          }
         } else {
-         $isExists = false;
+          $row["isExists"] = false;
+          array_push($profileInfo, $row);
         }
         $dbConVar->closeConnectionObject($conn);
-        return $isExists;
+        return $profileInfo;
     }
 
     public function checkUserExist($userId, $email)

@@ -1,5 +1,5 @@
 <?php
-    //include $_SESSION['basePath'].'errors.php';
+    include $_SESSION['basePath'].'errors.php';
     require_once $_SESSION['basePath'].'models/login.php';
 
     class LoginController {
@@ -16,14 +16,15 @@
         {
           $userid = $this->loginModelVar->validateInputs($_POST['userid']);
           $password = $this->loginModelVar->validateInputs($_POST['password']);
-          //session_start();
-          if ($this->loginModelVar->verifyCredentials($userid, $password) == true)
+          $profileInfo = array();
+          $profileInfo = $this->loginModelVar->verifyCredentials($userid, $password);
+          if ($profileInfo[0]["isExists"] == true)
           {
             $_SESSION['userid'] = $userid;
             $_SESSION['password'] = $password;
+            $_SESSION['userRole'] = $profileInfo[0]["role"];
             header("location:views/home.php#bottom");
             session_write_close();
-            //include './views/home.php';
           } else {
 
             $_SESSION['invalidCredentials'] = 'true';

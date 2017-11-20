@@ -66,7 +66,7 @@
        return $admins;
      }
 
-     public function removeUserFromChannel($userID, $channelName, $workspace) {
+     public function removeUserFromChannel($userID, $channelName, $workspaceUrl) {
        $dbConVar = new dbConnect();
        $conn = $dbConVar->createConnectionObject();
        $chId = $this->getChannelId($channelName, $workspaceUrl);
@@ -84,7 +84,7 @@
        return $affectedRows;
      }
 
-     public function deletePostsFromChannel($msgID, $channelName, $workspace) {
+     public function deletePostsFromChannel($msgID, $channelName, $workspaceUrl) {
        $dbConVar = new dbConnect();
        $conn = $dbConVar->createConnectionObject();
        $affectedRows = NULL;
@@ -151,9 +151,9 @@
       $conn = $dbConVar->createConnectionObject();
       $userMembership = array();
       $getMembership = "SELECT DISTINCT channel_name, W.type
-                        FROM workspace_channels AS W INNER JOIN channel_messages AS C
-                        ON W.channel_id = C.channel_id
-                        WHERE C.user_id = '$name' AND W.url = '$workspace'";
+                        FROM workspace_channels AS W INNER JOIN inside_channel AS I
+                        ON W.channel_id = I.channel_id
+                        WHERE I.user_id = '$name' AND W.url = '$workspace'";
       $result = mysqli_query($conn, $getMembership);
       if (mysqli_num_rows($result) > 0)
        {
@@ -174,12 +174,12 @@
 
     public function retrievePatternMatchedUsers($keyword, $workspace) {
       $dbConVar = new dbConnect();
-      $pattern = $keyword."%";
+      $pattern = "%".$keyword."%";
       $conn = $dbConVar->createConnectionObject();
       $userList = array();
       $retUsers = "SELECT U.user_id AS user_id, first_name, last_name, display_name
-                    FROM user_info AS U INNER JOIN workspace AS W ON U.user_id = W.user_id
-                    WHERE U.user_id LIKE '$pattern' AND W.url = '$workspace'";
+                   FROM user_info AS U INNER JOIN workspace AS W ON U.user_id = W.user_id
+                   WHERE U.user_id LIKE '$pattern' AND W.url = '$workspace'";
       $result = mysqli_query($conn, $retUsers);
       if (mysqli_num_rows($result) > 0)
       {
@@ -191,6 +191,30 @@
       if ($result) {
         mysqli_free_result($result);
       }
+      $dbConVar->closeConnectionObject($conn);
+      return $userList;
+    }
+
+    public function retUsersFromChannel($channelName, $workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $userList = array();
+      $chId = $this->getChannelId($channelName, $workspaceUrl);
+      if ($chId != NULL && $chId > 0) {
+        $getUsersFromCh = "SELECT user_id
+                           FROM inside_channel
+                           WHERE channel_id = $chId";
+        $result = mysqli_query($conn, $getUsersFromCh);
+       if (mysqli_num_rows($result) > 0)
+       {
+         while ($row = $result->fetch_assoc())
+         {
+           array_push($userList, $row["user_id"]);
+         }
+       }
+        mysqli_free_result($result);
+      }
+
       $dbConVar->closeConnectionObject($conn);
       return $userList;
     }
@@ -328,10 +352,56 @@
       return $relMsgs;
     }
 
+    public function retUserChannelRelRxnMetrics($userID, $channelName, $workspace) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $pattern = ";".$userID.";";
+      //$relRxns = array();
+      $rxnCount = NULL;
+      $getRelMsgs = "SELECT channel_name, SUM(emo_count) AS emo_count
+                     FROM (
+                     SELECT channel_name, B.emo_name AS emo_name, COUNT(B.emo_name) AS emo_count
+                     FROM (
+                     SELECT C.channel_id, C.user_id, C.msg_id, R.emo_id, emo_name
+                     FROM emoticons INNER JOIN reactions AS R ON emoticons.emo_id = R.emo_id
+                     INNER JOIN channel_messages AS C ON C.msg_id = R.msg_id
+                     WHERE R.users LIKE '%{$pattern}%'
+                     ) B INNER JOIN workspace_channels AS W ON B.channel_id = W.channel_id
+                     AND W.url = '$workspace' AND channel_name = '$channelName'
+                     GROUP BY B.channel_id, B.emo_name) TEMP
+                     GROUP BY channel_name";
+      $result = mysqli_query($conn, $getRelMsgs);
+      if (mysqli_num_rows($result) > 0)
+      {
+        while ($row = $result->fetch_assoc()) {
+          //array_push($relRxns, $row);
+          $rxnCount = $row['emo_count'];
+        }
+      }
+      mysqli_free_result($result);
+      $dbConVar->closeConnectionObject($conn);
+      return $rxnCount;
+    }
+
     public function retrieveRelRxnMetrics($userID, $workspace) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
+      $pattern = ";".$userID.";";
       $relRxns = array();
+      // $getRelRxns = "     SELECT REF.user_id
+      //                     FROM inside_channel AS REF
+      //                     WHERE REF.channel_id IN (
+      //                       SELECT * FROM (
+      //                         SELECT W.channel_name, M.channel_id, M.user_id, R.msg_id, R.emo_id, R.users
+      //                         FROM reactions AS R INNER JOIN channel_messages AS M
+      //                         ON R.msg_id = M.msg_id INNER JOIN workspace_channels
+      //                         AS W ON M.channel_id = W.channel_id
+      //                         WHERE W.url = '$workspace' AND (R.users IS NOT NULL AND R.users != '') AND M.channel_id IN (
+      //                             SELECT channel_id
+      //                             FROM inside_channel
+      //                             WHERE user_id = '".$userID."')
+      //                       ) TEMP
+      //                     )";
       $getRelRxns = "SELECT channel_name, MAX(rxn_count) AS max_rx_count
                      FROM (
                      SELECT W.channel_name, M.user_id, COUNT(R.emo_id) AS rxn_count
@@ -614,6 +684,7 @@
           $row['count'] = $this->validateInputs($row['count']);
           $info['users'] = $row['users'];
           $info['count'] = $row['count'];
+          //array_push($info, $row);
         }
       }
       if ($result) {

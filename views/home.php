@@ -4,6 +4,10 @@
   //session_write_close();
   //require_once $_SESSION['basePath'].'controllers/home.php';
   require 'homepage.php';
+  echo '<script>'.
+       'var userID = '.json_encode($_SESSION['userid']).';'.
+       'var userRole = '.json_encode($_SESSION['userRole']).';'.
+       '</script>';
 ?>
 
 <!DOCTYPE html>
@@ -75,6 +79,9 @@
             <a class="client_invite_users_link" href="#" data-toggle="modal" data-target = "#inviteUsers">
               <i class="fa fa-user-o" aria-hidden="true"></i>
             </a>
+            <a class="client_invite_users_link" href="#" data-toggle="modal" data-target = "#removeUsers">
+              <i class="fa fa fa-trash-o" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
         <div class="client_user_search_suggestions">
@@ -99,14 +106,14 @@
                     <!-- <li><span><a>Add images</a><input type="file"></span></li> -->
                     <!-- <li><a href="#">JavaScript</a></li>
                     <li class="divider"></li>
-                    <li><a href="#">About Us</a></li> -->
+                    <li><a href="#">About Us</a></li>($_POST["channelHeading"]) ? $_POST["channelHeading"]: NULL -->
                   </ul>
                 </div>
               </span>
   						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
                 <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
                 <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-                <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
+                <input type="hidden" name="channelHeading" value="<?php echo $channelHeading; ?>"/>
                 <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
                 <input id="SubmitButton" class="col-xs-1 client_messsage_entry_submit_button" type="submit" name="submit"/>
               </form>
@@ -252,9 +259,35 @@
               <input type="text" class="form-control" name="addUserExistingChannel[]">
             </div>
               <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
-              <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
+              <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
               <input type="hidden" name="inviteUsersExistingChannel" value = "inviteUser">
               <input type="submit" value="Invite" class="btn btn-primary btn-sm">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Remove Users -->
+  <div class="modal fade" id="removeUsers" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Cancel Membership</h4>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
+            <div class="form-group">
+              <label for="removingNewUsers">Remove members</label>
+              <input type="text" class="form-control" name="removeUserExistingChannel[]">
+            </div>
+              <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
+              <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input type="hidden" name="removeUsersExistingChannel" value = "removeUser">
+              <input type="submit" value="Remove" class="btn btn-primary btn-sm">
           </form>
         </div>
         <div class="modal-footer">

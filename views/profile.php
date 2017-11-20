@@ -46,6 +46,7 @@ if(isset($_GET['userid'])) {
           <ul style="list-style: none;">
             <?php
               echo "<h6>Public:</h6>";
+              //print_r($user_profile["membership"]);
               foreach ($user_profile["membership"] as $value) {
                 if($value["type"]== 'Public'){
                  echo "<li>". $value["channel_name"] ."</li>";

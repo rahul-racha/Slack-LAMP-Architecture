@@ -1,5 +1,12 @@
 
 $(document).ready(function(){
+		if (userRole == "admin") {
+			$(".delPost").show();
+			$(".fa-trash-o").show();
+		} else {
+			$(".delPost").hide();
+			$(".fa-trash-o").hide();
+		}
 		$(".like").on("click",function(e){
 			var emoName = e.currentTarget.className;
 			var msgId = parseInt(e.currentTarget.id);
@@ -43,6 +50,25 @@ $(document).ready(function(){
 		    	}
 			});
 
+		});
+
+		$(".delPost").on("click", function(e) {
+			var channelName = $(".chNameForMsg").attr("value");
+			var msgID = parseInt(e.currentTarget.id);
+			$.ajax({
+				method: 'post',
+				url: './router.php',
+				data: { 'deletePost' : {'msgID': msgID, 'ch_name': channelName}},
+				dataType: 'text',
+				success: function(data) {
+					if (data == "true") {
+						window.location.reload(true);
+					}
+				},
+				error: function(){
+					console.log("Error");
+				}
+			});
 		});
 
 		$(".threadIdSubmit").on("click",function(e){

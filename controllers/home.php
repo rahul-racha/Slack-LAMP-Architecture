@@ -20,7 +20,7 @@
   include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/home.php';
 
-   if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))
+   if (!isset($_SESSION['userid']) || !isset($_SESSION['password']) || !isset($_SESSION['userRole']))
    {
      header("location:login.php", true, 303);
    } //else if (isset($_POST["textarea"])) {
@@ -191,9 +191,9 @@
           foreach ($users as $userID) {
             $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
             if ($successFeeds < 1) {
-              array_push($invitationResults['failed'], $userId);
+              array_push($invitationResults['failed'], $userID);
             } else {
-              array_push($invitationResults['success'], $userId);
+              array_push($invitationResults['success'], $userID);
             }
           }
       }
@@ -338,6 +338,12 @@
       return $metrics;
     }
 
+    public function getChMetricsForUser($userID, $channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $rxnCount = $this->homeModelVar->retUserChannelRelRxnMetrics($userID, $channelName, $workspaceUrl);
+      return $rxnCount;
+    }
+
     //Admin functions
     public function removeUsersFromChannel($userList, $channelName, $workspaceUrl) {
       $removedUsers = array('success' => array(), 'failed' => array());
@@ -351,6 +357,13 @@
         }
       }
       return $removedUsers;
+    }
+
+    public function retUsersFromChannel($channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $userList = array();
+      $userList = $this->homeModelVar->retUsersFromChannel($channelName, $workspaceUrl);
+      return $userList;
     }
 
     public function deletePostsFromChannel($msgID, $channelName, $workspaceUrl) {
