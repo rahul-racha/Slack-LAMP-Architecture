@@ -59,7 +59,7 @@ $(document).ready(function(){
 					var str="";
 					//if(data.length){
 						data.forEach(function(e){
-							console.log(e);
+							// console.log(e);
 							// var lastElement = data.length;
 							// console.log(lastElement);
 							// if(lastElement != data.length){
@@ -121,6 +121,7 @@ $(document).ready(function(){
 			// $(".client_user_search_suggestions").css({
 		  //   'width': ($(".client_user_search").width() + '%')
 		  // });
+			var inp=$(this);
 			var user_id;
 			$.ajax({
 				method:'post',
@@ -130,15 +131,24 @@ $(document).ready(function(){
 				success: function(data){
 					console.log(data);
 					$('div.client_user_search_suggestions').empty();
+					var str = "<ul class='list-group'>";
 					data.forEach(function(e){
 						user_id = e['user_id'];
 						console.log(e);
-						if(user_id.length){
-							$(".client_user_search_suggestions").append("<div><a href='./profile.php?userid="+user_id+"'>" + user_id + "</a></div>");
+						// if(user_id.length){
+							str += "<li class='list-group-item search_suggestion_li'><a class='sugg_elements' href='./profile.php?userid="+user_id+"'>" + user_id + "</a></li>";
 							// $('<li />', {html:user_id}).appendTo('ul.justList');
-						}
+						// }
 					});
-				},
+					str+= "</ul>"
+					$(".client_user_search_suggestions").append(str);
+					$('.client_user_search_suggestions').css({
+						position:'absolute',
+							top:inp.offset().top+25,
+							left:inp.offset().left-$('.serch_users_in_workspace').width()+15,
+							width:$('.serch_users_in_workspace').width()
+					});
+				}
 			})
 		});
 
@@ -180,13 +190,31 @@ $(document).ready(function(){
 		});
 
 		//image upload ajax
-		$("#client_add_image_submit_button").on("click",function(e){
-			var image_upload_id = $("#imgInp").val();
+		$(".client_add_image_submit_button").on("click",function(e){
+			var image_upload_path = $(".client_image_upload_read").val();
+			var retChannel = $("#retChannel").val();
 			$.ajax({
 				method: 'post',
 				url: './router.php',
-				data: {'insert_image':{'image_id':image_upload_id}},
-				// data: {'insertReaction': {'msgId':msgId, 'emoName':emoName, 'isInsert': "true"}},
+				data: {'image_insertion':{'image_path':image_upload_path,'retChannel':retChannel}},
+				dataType: 'text',
+				success: function(data){
+					// console.log(data);
+
+		    	},
+		    	error: function(){
+		    		console.log("Error");
+		    	}
+			});
+		});
+		// code snippet ajax
+		$(".client_snippet_submit").on("click",function(e){
+			var snippet_text = $(".client_code_snippet_textarea").val();
+			var retChannel = $("#retChannel").val();
+			$.ajax({
+				method: 'post',
+				url: './router.php',
+				data: {'snippet_insertion':{'snippet_text':snippet_text,'retChannel':retChannel}},
 				dataType: 'text',
 				success: function(data){
 					console.log(data);
@@ -197,5 +225,6 @@ $(document).ready(function(){
 		    	}
 			});
 		});
+
 
 });

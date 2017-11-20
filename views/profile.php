@@ -20,7 +20,7 @@ if(isset($_GET['userid'])) {
     $user_id = $_GET['userid'];
 		$user_profile = $homeControlVar->getProfile($user_id, $workspaceUrl);
     $metrics = $homeControlVar->getUserMetrics($user_id, $workspaceUrl);
-    //var_dump($metrics);
+    // print_r($metrics);
 }
 
 ?>
@@ -37,7 +37,7 @@ if(isset($_GET['userid'])) {
     <div class="container well">
 	    <div class="row-fluid">
         <div class="col-xs-3" >
-		      <img src="http://i.axs.com/2014/11/promoted-media-optimized_545bb90b3fc9a.jpg" style="height:100px;">
+		      <img src="<?php echo $user_profile["profile"][0]["avatar"] ?>" style="height:100px;">
         </div>
         <div class="col-xs-7">
           <h3><?php echo $user_profile["profile"][0]["first_name"]."   ".$user_profile["profile"][0]["last_name"]; ?></h3>
@@ -46,17 +46,18 @@ if(isset($_GET['userid'])) {
           <ul style="list-style: none;">
             <?php
               echo "<h6>Public:</h6>";
+              // print_r($user_profile["membership"]);
               foreach ($user_profile["membership"] as $value) {
                 if($value["type"]== 'Public'){
                  echo "<li>". $value["channel_name"] ."</li>";
                 }
               }
-              echo "<h6>Private:</h6>";
-              foreach ($user_profile["membership"] as $value) {
-                if($value["type"]== "Private"){
-                 echo "<li>". $value['channel_name'] ."</li>";
-                }
-              }
+              // echo "<h6>Private:</h6>";
+              // foreach ($user_profile["membership"] as $value) {
+              //   if($value["type"]== "Private") {
+              //    echo "<li>". $value['channel_name'] ."</li>";
+              //   }
+              // }
             ?>
           </ul>
 
@@ -64,9 +65,9 @@ if(isset($_GET['userid'])) {
             <?php
               $postMetrics = array();
               $postMetrics = $metrics["post"];
-              // echo "<li><strong>"."Channel -- #Messages"."</strong></li>";
+              echo "<li><strong>"."Channel -- #Messages"."</strong></li>";
               foreach ($postMetrics as $value) {
-                // echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
+                echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
                 $user_messages_count += $value["msg_count"];
                 // $num_channels++;
               }
@@ -75,44 +76,58 @@ if(isset($_GET['userid'])) {
 
           <ul style="list-style: none;">
             <?php
+            $like_count = 0;
+            $dislike_count = 0;
                 $rxnMetrics = array();
                 $rxnMetrics = $metrics["reaction"];
-                // echo "<li><strong>"."Channel -- Emoticon -- #Rxn"."</strong></li>";
+                print_r($rxnMetrics);
+                echo "<li><strong>"."Channel -- #Reactions"."</strong></li>";
                 foreach ($rxnMetrics as $value) {
-                  // echo "<li>".$value["channel_name"]." -- ". $value["emo_name"]. " -- ". $value["emo_count"]. "</li>";
+                  if($value["emo_name"] == "like"){
+                    $like_count = $value["emo_count"];
+                  }
+                  else {
+                    $dislike_count = $value["emo_count"];
+                  }
+                  echo "<li>".$value["channel_name"]." -- ". $value["emo_name"]. " -- ". $value["emo_count"]. "</li>";
                   $emo_count_user += $value["emo_count"];
                 }
+                echo $like_count;
+                echo $dislike_count;
+                echo $emo_count_user;
             ?>
           </ul>
           <!-- <h6><a href="#">More... </a></h6> -->
           <ul style="list-style: none;">
             <?php
-              $total_reaction_count = array();
-              $total_reaction_count = $metrics["treaction"];
-              // echo "reaction total";
-              foreach ($total_reaction_count as $value) {
-                // echo "<li>".$value["channel_name"]." -- ".$value["rxn_count"]."</li>";
-                $t_rxn_count += $value["rxn_count"];
+              $relative_post_count = array();
+              $relative_post_count = $metrics["relPost"];
+              foreach ($relative_post_count as $value) {
+                // echo "<li>".$value["channel_name"]." -- ".$value["max_count"]."</li>";
+                $r_post_count += $value["max_count"];
               }
             ?>
           </ul>
           <ul style="list-style: none;">
             <?php
-              $total_post_count = array();
-              $total_post_count = $metrics["tpost"];
-              // echo "post total";
-              foreach ($total_post_count as $value) {
-                // echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
-                $t_post_count += $value["msg_count"];
+              $relative_reaction_count = array();
+              $relative_reaction_count = $metrics["relRxn"];
+              print_r($relative_reaction_count);
+              foreach ($relative_reaction_count as $value) {
+                echo "<li>".$value["channel_name"]." -- ".$value["max_rx_count"]."</li>";
+                $r_rxn_count += $value["max_rx_count"];
               }
+              echo $r_rxn_count;
             ?>
           </ul>
-          <!-- <ul style="list-style:none;"> -->
             <?php
-              $rxn_percentage = ($emo_count_user / $t_rxn_count)*100;
-              $post_percentage = ($user_messages_count / $t_post_count) * 100;
+              $rxn_percentage = ($emo_count_user / $r_rxn_count)*100;
+              $post_percentage = ($user_messages_count / $r_post_count) * 100;
               echo "<h6>Post Metrics: </h6>";
-              echo "<div class='star-ratings-sprite'><span style='width:".$post_percentage."%' class='star-ratings-sprite-rating'></span></div>";
+              echo "<div class='star-ratings-sprite'>
+                      <span style='width:".$post_percentage."%' class='star-ratings-sprite-rating'></span>
+                    </div>
+                    <span style='margin-left:2%;'>".$post_percentage."%</span>";
               // if($rxn_percentage <= 20){
               //   echo "<button type='button' class='btn btn-danger'>Poor <span class='badge'></span></button>";
               // }
@@ -123,7 +138,15 @@ if(isset($_GET['userid'])) {
               //   echo "<button type='button' class='btn btn-success'>Excellent <span class='badge'></span></button>";
               // }
               echo "<h6>Reaction Metrics:</h6>";
-              echo "<div class='star-ratings-sprite'><span style='width:".$rxn_percentage."%' class='star-ratings-sprite-rating'></span></div>";
+              echo "<div class='star-ratings-sprite'>
+                      <span style='width:".$rxn_percentage."%' class='star-ratings-sprite-rating'></span>
+                    </div>
+                    <span style='margin-left:2%;'>".$rxn_percentage."%</span>
+                    <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+                    <span>".$like_count."</span>
+                    <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
+                    <span>".$dislike_count."</span>";
+
               // echo $rxn_percentage."<br />";
               // echo "<h6>Reaction Metrics:</h6>";
               // if($post_percentage <= 20){
@@ -155,3 +178,11 @@ if(isset($_GET['userid'])) {
     </div>
   </body>
 </html>
+
+
+<!--
+<div>
+  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+  <span>".$emo_count_user."</span>
+  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
+</div> -->

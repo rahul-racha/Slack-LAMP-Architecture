@@ -82,7 +82,7 @@
 
           </ul>
         </div>
-        <div class="client_message_display col-xs-12 row change_row_pro">
+        <div class="client_message_display col-xs-12 row change_row_prop">
           <?php displayMessages(); ?>
         </div>
           <!-- messge container -->
@@ -272,10 +272,11 @@
           <h4 class="modal-title">Modal Header</h4>
         </div>
         <div class="modal-body">
+          <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
           <textarea class="client_code_snippet_textarea" rows="9"></textarea>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Create Snippet</button>
+          <button type="button" class="btn btn-default client_snippet_submit" data-dismiss="modal">Create Snippet</button>
         </div>
       </div>
     </div>
@@ -298,7 +299,8 @@
                   Browse… <input type="file" id="imgInp">
                 </span>
               </span>
-              <input type="text" class="form-control" readonly>
+              <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+              <input type="text" class="form-control client_image_upload_read" readonly>
             </div>
             <img id='img-upload'/>
           </div>
@@ -310,7 +312,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" id="client_add_image_submit_button">Add image</button>
+          <button type="button" class="btn btn-default client_add_image_submit_button" data-dismiss="modal">Add image</button>
         </div>
       </div>
     </div>

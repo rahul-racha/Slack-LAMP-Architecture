@@ -208,10 +208,30 @@
       $computedResp = array('emoResp'=>$reactionResponse, 'likeCount'=>$likeCount, 'dislikeCount'=>$dislikeCount);
       echo json_encode($computedResp);//$reactionResponse['count'];//json_encode($reactionResponse); $reactionHandling["message"];
     }
-
-    if(isset($_POST['insert_image'])){
-      $image_id =$_POST["image_id"];
-      echo $image_id;;
-
+    // image insertion
+    if(isset($_POST["image_insertion"])){
+      $channelName = $_POST["image_insertion"]["retChannel"];
+      $thread_message = NULL;
+      $snippet = NULL;
+      $image_path = $_POST["image_insertion"]["image_path"];
+      $threadId = NULL;
+      $messageType = 'post';
+      global $homeControlVar;
+      global $workspaceUrl;
+      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
+      echo $message;
+    }
+    // code insertion
+    if(isset($_POST["snippet_insertion"])){
+      $channelName = $_POST["snippet_insertion"]["retChannel"];
+      $thread_message = NULL;
+      $snippet = $_POST["snippet_insertion"]["snippet_text"];
+      $image_path = NULL;
+      $threadId = NULL;
+      $messageType = 'post';
+      global $homeControlVar;
+      global $workspaceUrl;
+      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
+      echo $message;
     }
 ?>

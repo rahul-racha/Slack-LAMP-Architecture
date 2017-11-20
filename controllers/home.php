@@ -17,7 +17,7 @@
   //check if user exists in db when inviting
 
 
-  include_once $_SESSION['basePath'].'errors.php';
+  //include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/home.php';
 
    if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))

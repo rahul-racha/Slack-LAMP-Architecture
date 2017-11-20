@@ -1,5 +1,5 @@
 <?php
-  include_once $_SESSION['basePath'].'errors.php';
+  //include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/connect.php';
 
   class HomeModel {
@@ -392,7 +392,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->messages = array();
-      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, avatar, message, msg_id, created_time, type
+      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, avatar, message, image_path, snippet, msg_id, created_time, type
                       FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                       WHERE (type = 1 OR type = 2) AND channel_id
                       IN (
@@ -459,6 +459,7 @@
 
     public function insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl)
     {
+      $temp=array();
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $affectedRows = NULL;
