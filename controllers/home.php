@@ -62,11 +62,11 @@
       return $userList;
     }
 
-    public function viewMessages($channelName, $workspaceUrl)
+    public function viewMessages($channelName, $workspaceUrl,$retChannel)
     {
         $this->homeModelVar = new HomeModel();
         $messages = array();
-        $messages = $this->homeModelVar->retrieveMessages($channelName, $workspaceUrl);
+        $messages = $this->homeModelVar->retrieveMessages($channelName, $workspaceUrl,$retChannel);
         return $messages;
     }
 

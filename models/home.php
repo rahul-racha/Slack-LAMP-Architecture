@@ -458,18 +458,22 @@
       return $combinedArray;
     }
 
-    public function retrieveMessages($channelName, $workspaceUrl)
+    public function retrieveMessages($channelName, $workspaceUrl,$retChannel)
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->messages = array();
-      $retMessages = "SELECT channel_id, channel_messages.user_id, first_name, last_name, avatar, message, image_path, snippet, msg_id, created_time, type
+      $retMessages = "SELECT *
+                      FROM (
+                      SELECT channel_id, channel_messages.user_id AS userID, first_name, last_name, avatar, message,
+                      image_path, snippet, msg_id, created_time, type
                       FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                       WHERE (type = 1 OR type = 2) AND channel_id
                       IN (
                       SELECT channel_id
                       FROM workspace_channels
                       WHERE channel_name = '$channelName' AND url = '$workspaceUrl')
+                      ORDER BY created_time DESC LIMIT $retChannel,10) TEMP
                       ORDER BY created_time ASC";
       $result = mysqli_query($conn, $retMessages);
       if (mysqli_num_rows($result) > 0)
@@ -487,6 +491,7 @@
       }
       $dbConVar->closeConnectionObject($conn);
       return $this->messages;
+      // return $retMessages;
     }
 
     public function getChannelId($channelName, $workspaceUrl) {

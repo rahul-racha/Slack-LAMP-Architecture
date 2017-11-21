@@ -36,6 +36,11 @@ if(isset($_GET['userid'])) {
   <body>
     <div class="container well">
 	    <div class="row-fluid">
+        <div class="col-xs-12" style="margin-bottom:2%;">
+          <a href="home.php" class="btn btn-default">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp Back
+          </a>
+        </div>
         <div class="col-xs-3" >
 		      <img src="<?php echo $user_profile["profile"][0]["avatar"] ?>" style="height:100px;">
         </div>

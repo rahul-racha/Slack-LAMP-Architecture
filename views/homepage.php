@@ -128,17 +128,27 @@
 			}
   }
 
-  function displayMessages() {
+  function displayMessages($retChannel,$Channel_name) {
     global $homeControlVar;
-    global $channelName;
     global $workspaceUrl;
-    $channelMessages = $homeControlVar->viewMessages($channelName, $workspaceUrl);
+		// echo $workspaceUrl;
+		// echo $retChannel;
+		// echo $Channel_name;
+    $channelMessages = $homeControlVar->viewMessages($Channel_name, $workspaceUrl, $retChannel);
+		// echo "msgid:".$retChannel;
+		// echo sizeof($channelMessages);
     $i = 1;
+		$name = "";
+		$msgId = NULL;
+		$firstMsgId = NULL;
+		$loadMore = "";
     foreach ($channelMessages as $key => $value) {
       $CurrentTime = new DateTime($value["created_time"]);
       $strip = $CurrentTime->format('H:i @Y-m-d');
-      $name = "";
       $msgId = $value['msg_id'];
+			if ($firstMsgId == NULL) {
+				$firstMsgId = $value['msg_id'];
+			}
       $msgIdRef = $msgId."action";
       $likeEmo = "like";
       $dislikeEmo = "dislike";
@@ -148,7 +158,9 @@
 
       if($value["message"] || $value["image_path"] || $value["snippet"] != "")
 			{
-        $name = "<div class='message_profile_pic col-xs-1'>
+				if(count($channelMessages != $i))
+				{
+        $name = $name. "<div class='message_profile_pic col-xs-1'>
 									 <img src=".$value['avatar']." class='client_pic_display'>
 								 </div>
 								 <div class='message_content_wrapper col-xs-10'>
@@ -180,10 +192,52 @@
 										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
                 </div>";
+
+				}
+			else{
+				$name = $name. "<div id='bottom' class='message_profile_pic col-xs-1'>
+									 <img src=".$value['avatar']." class='client_pic_display'>
+								 </div>
+								 <div class='message_content_wrapper col-xs-10'>
+										<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+										"</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+										<ul class = 'MessageUL'>";
+										if($value["message"] != "" ){
+											$name=$name. "<li class = 'MessageLI'>".$value['message']."</li>";
+										}
+										else if($value["image_path"] != ""){
+											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+										}
+										else if($value["snippet"] != ""){
+											$name=$name. "<li class = 'MessageLI'><pre><code>".$value["snippet"]."</code></pre></li>";
+										}
+										$name=$name. "</ul>
+
+										<label class='like' name='like' id=".$msgId.">
+										<i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+										 </label>&nbsp &nbsp
+										<span id = 'likeResponse".$msgId."'>   $likeCount     </span>
+										<label class='dislike' name='dislike' id=".$msgId.">
+										<i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
+										</label> &nbsp &nbsp
+										<span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
+
+										"<input type='hidden' name='threadId' value=".$msgId.">
+										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
+										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
+								</div>";
 			}
-      echo $name;
-      $i++;
+		}
+		$i++;
     }
+		$loadMore = "<div class='col-xs-12 loadMoreButton'>
+							<input type='hidden' class='post_load_ret_channel_name' value='".$Channel_name."'></input>
+							<input type='hidden' class='post_load_retChannel' value='".$_SESSION["loadCount"]."'></input>
+							<center><input type='submit' class='client_posts_load_more' value='load more'></input></center>
+					</div>";
+		$name = $loadMore.$name;
+		echo $name;
   }
 
   function getReactionCount($msgId, $emoName) {
@@ -207,6 +261,14 @@
 		// $user_profile = array();
 		// $user_profile = $homeControlVar->getProfile();
 		echo "hello";
+	}
+	// pagination
+	if(isset($_POST["pagination"])){
+		$retChannel = intval($_POST["pagination"]["retChannel"]);
+		$Channel_name = $_POST["pagination"]["Channel_name"];
+		$_SESSION["loadCount"] = $_SESSION["loadCount"] + 5;
+		displayMessages($retChannel,$Channel_name);
+		// echo $str;
 	}
 
 ?>
