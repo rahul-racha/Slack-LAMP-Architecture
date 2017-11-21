@@ -45,7 +45,7 @@
                   <span style="color:black;">Profile & Account</span>
                 </a>
               </li>
-              <li><a href="../help.html">Help</a></li>
+              <li><a href="help.html">Help</a></li>
               <!-- <li><a href="#">JavaScript</a></li> -->
               <!-- <form method="post" action="<?php //echo htmlspecialchars("router.php"); ?>">
                 <input type="submit" name="logout" value="logout">
@@ -351,7 +351,7 @@
             <div class="input-group">
               <span class="input-group-btn">
                 <span class="btn btn-default btn-file">
-                  Browse… <input type="file" id="imgInp">
+                  Browse… <input type="file" name="image_uploaded_post" id="imgInp">
                 </span>
               </span>
               <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>

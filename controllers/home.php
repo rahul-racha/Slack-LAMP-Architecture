@@ -36,6 +36,13 @@
       header("location:".$url);
     }
 
+    public function validateInputs($data) {
+      $data = trim($data);
+      //$data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+    }
+
     public function viewChannels($workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();

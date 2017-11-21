@@ -12,6 +12,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<script src="js/login.js"></script>
 
 	<body>
@@ -26,13 +27,13 @@
 		                <h4 class="modal-title" id="myModalLabel">
 		                    Registration</h4>
 		            </div>
-		            <div class="modal-body">
-		                <div class="row">
+		            <div class="modal-body row">
+		                <!-- <div class="row"> -->
 		                    <div class="col-md-8" style="border-right: 1px dotted #C2C2C2;padding-right: 30px;">
 		                        <div class="tab-content">
 		                            <div class="tab-pane active" id="Registration">
 		                                <form role="form" class="form-horizontal" name= "registraionForm"  id="registraionForm" method="post" onsubmit = "event.preventDefault(); doClientValidation();" action="<?php echo htmlspecialchars('./router.php?register=new'); ?>">
-			                                <div class="form-group">
+			                                <div class="form-group row">
 		                                    <label for="firstName" class="col-sm-3 control-label">
 		                                       First Name</label>
 		                                    <div class="col-sm-8">
@@ -40,7 +41,7 @@
 		                                    	<span id="nameErrMsg0" class="error"></span>
 		                                    </div>
 			                                </div>
-			                                <div class="form-group">
+			                                <div class="form-group row">
 		                                    <label for="lastName" class="col-sm-3 control-label">
 		                                        Last Name</label>
 		                                    <div class="col-sm-8">
@@ -48,7 +49,7 @@
 		                                    <span id="nameErrMsg1" class="error"></span>
 		                                    </div>
 			                                </div>
-		                                	<div class="form-group">
+		                                	<div class="form-group row">
 		                                  	<label for="email" class="col-sm-3 control-label">
 		                                        Email</label>
 		                                    <div class="col-sm-8">
@@ -56,7 +57,7 @@
 		                                      <span id="nameErrMsg5" class="error"></span>
 		                                   	</div>
 		                                  </div>
-		                                  <div class="form-group">
+		                                  <div class="form-group row">
 		                                    <label for="userId" class="col-sm-3 control-label">
 		                                      Choose your username</label>
 		                                    <div class="col-sm-8">
@@ -64,13 +65,16 @@
 		                                    <span id="nameErrMsg2" class="error"></span>
 		                                    </div>
 		                                 	</div>
-		                                 	<div class="form-group">
+		                                 	<div class="form-group row">
 		                                    <label for="password" class="col-sm-3 control-label">
 		                                      Create a Password</label>
-		                                    <div class="col-sm-8">
+		                                    <div class="col-sm-7">
 		                                      <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete="off" required/>
-		                                    <span id="nameErrMsg3" class="error"></span>
+		                                    <span id="nameErrMsg3" class="error">Atleast 1 uppercase, 1 lowercase and a special character</span>
 		                                    </div>
+																				<div class="col-xs-1">
+																					<a class="instructions"><i class="fa fa-info" aria-hidden="true"></i></a>
+																				</div>
 		                                 	</div>
 		                                 	<div class="form-group">
 		                                    <label for="confirmpassword" class="col-sm-3 control-label">
@@ -95,7 +99,7 @@
 		                    <div class="col-md-4">
 		                    	<!-- profile pic upload -->
 		                    </div>
-		                </div>
+		                <!-- </div> -->
 		            </div>
 		        </div>
 		    </div>

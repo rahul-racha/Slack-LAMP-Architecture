@@ -9,6 +9,7 @@ $user_messages_count = NULL;
 $emo_count_user = NULL;
 $t_rxn_count = NULL;
 $t_post_count = NULL;
+// $ch_metrics_user = array();
 $user_profile = array();
 $metrics = array();
 $postRating = NULL;
@@ -176,7 +177,16 @@ function computePostRatings($postInfo, $relPostInfo) {
               foreach ($postMetrics as $value) {
                 echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
                 $user_messages_count += $value["msg_count"];
-                // $num_channels++;
+              }
+            ?>
+          </ul>
+          <ul style="list-style: none;">
+            <?php
+              $relative_post_count = array();
+              $relative_post_count = $metrics["relPost"];
+              foreach ($relative_post_count as $value) {
+                // echo "<li>".$value["channel_name"]." -- ".$value["max_count"]."</li>";
+                $r_post_count += $value["max_count"];
               }
             ?>
           </ul>
@@ -204,27 +214,15 @@ function computePostRatings($postInfo, $relPostInfo) {
                 // echo $emo_count_user;
             ?>
           </ul>
-          <!-- <h6><a href="#">More... </a></h6> -->
-          <ul style="list-style: none;">
-            <?php
-              $relative_post_count = array();
-              $relative_post_count = $metrics["relPost"];
-              foreach ($relative_post_count as $value) {
-                // echo "<li>".$value["channel_name"]." -- ".$value["max_count"]."</li>";
-                $r_post_count += $value["max_count"];
-              }
-            ?>
-          </ul>
           <ul style="list-style: none;">
             <?php
               $relative_reaction_count = array();
               $relative_reaction_count = $metrics["relRxn"];
-              // print_r($relative_reaction_count);
               foreach ($relative_reaction_count as $value) {
                 echo "<li>".$value["channel_name"]." -- ".$value["max_rx_count"]."</li>";
                 $r_rxn_count += $value["max_rx_count"];
               }
-              echo $r_rxn_count;
+              
             ?>
           </ul>
             <?php

@@ -103,3 +103,9 @@ function validatePassword(value) {
 	}
 	return response;
 }
+
+$(document).ready(function(){
+	$(".instructions").on("click",function(e){
+		$("#nameErrMsg3").show();
+	});
+});

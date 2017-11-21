@@ -17,8 +17,8 @@ input[type=text], input[type=password] {
     width: 100%;
     padding: 15px;
     margin: 0 0 14px;
-    
-    
+
+
 }
 input[type=submit] {
 	background-color: red;
@@ -28,7 +28,7 @@ input[type=submit] {
     border: 0;
     cursor: pointer;
     width: 100%;
-    
+
 }
 
 form input {
@@ -63,7 +63,7 @@ body {
   background: white;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;      
+  -moz-osx-font-smoothing: grayscale;
 }
 
 
@@ -90,4 +90,11 @@ div#OR {
     top: 40%;
     z-index: 1;
     background: #DFDFDF;
+}
+
+#nameErrMsg3{
+  display: none;
+}
+.instructions{
+  cursor: pointer;
 }

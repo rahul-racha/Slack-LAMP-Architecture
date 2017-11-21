@@ -7,11 +7,11 @@
     private $channels = array();
     private $messages = array();
 
-    public function validMySQL($data) {
-      $data = stripslashes($data);
+    public function validMySQL($conn, $data) {
+      //$data = stripslashes($data);
       //$data = htmlentities($data);
-      $data = strip_tags($data);
-      //$data = mysql_real_escape_string($data);
+      //$data = strip_tags($data);
+      $data = mysql_real_escape_string($conn, $data);
       return $data;
     }
 
@@ -34,7 +34,11 @@
        {
          while ($row = $result->fetch_assoc())
          {
-
+            $row["user_id"] = $this->validateInputs($row["user_id"]);
+            $row["first_name"] = $this->validateInputs($row["first_name"]);
+            $row["last_name"] = $this->validateInputs($row["last_name"]);
+            $row["email"] = $this->validateInputs($row["email"]);
+            $row["role"] = $this->validateInputs($row["role"]);
            array_push($userProfile, $row);
          }
        }
@@ -56,6 +60,11 @@
       if (mysqli_num_rows($result) > 0)
        {
          while ($row = $result->fetch_assoc()) {
+           $row["user_id"] = $this->validateInputs($row["user_id"]);
+           $row["first_name"] = $this->validateInputs($row["first_name"]);
+           $row["last_name"] = $this->validateInputs($row["last_name"]);
+           $row["display_name"] = $this->validateInputs($row["display_name"]);
+           $row["email"] = $this->validateInputs($row["email"]);
            array_push($admins, $row);
          }
        }
@@ -72,6 +81,7 @@
        $chId = $this->getChannelId($channelName, $workspaceUrl);
        $affectedRows = NULL;
        if ($chId != NULL && $chId > 0) {
+          $userID = $this->validMySQL($conn, $userID);
          $delUsrFrmChannel = "DELETE FROM inside_channel
                               WHERE user_id = ? AND channel_id = ?";
          $stmt = $conn->prepare($delUsrFrmChannel);
@@ -109,6 +119,7 @@
        $affectedRows = NULL;
        $chId = $this->getChannelId($channelName, $workspaceUrl);
        if ($chId != NULL && $chId > 0) {
+         $status = $this->validMySQL($conn, $status);
          $updateStatus = "UPDATE workspace_channels
                           SET status = ?
                           WHERE channel_id = ?";
@@ -135,7 +146,8 @@
          if (mysqli_num_rows($result) > 0)
           {
             while ($row = $result->fetch_assoc()) {
-              $statusString = $row['status'];
+
+              $statusString = $this->validateInputs($row['status']);
             }
           }
        }
@@ -185,6 +197,7 @@
       {
         while ($row = $result->fetch_assoc())
         {
+          $row["user_id"] = $this->validateInputs($row["user_id"]);
           array_push($userList, $row);
         }
       }
@@ -209,6 +222,7 @@
        {
          while ($row = $result->fetch_assoc())
          {
+           $row["user_id"] = $this->validateInputs($row["user_id"]);
            array_push($userList, $row["user_id"]);
          }
        }
@@ -238,6 +252,7 @@
        {
          while ($row = $result->fetch_assoc())
          {
+           $row["user_id"] = $this->validateInputs($row["user_id"]);
            array_push($userList, $row["user_id"]);
          }
        }
@@ -261,6 +276,7 @@
       {
        while ($row = $result->fetch_assoc())
        {
+         $row['channel_name'] = $this->validateInputs($row['channel_name']);
          array_push($channelList, $row['channel_name']);
        }
       }
@@ -288,6 +304,9 @@
      {
        while ($row = $result->fetch_assoc())
        {
+         $row['channel_name'] = $this->validateInputs($row['channel_name']);
+         $row['emo_name'] = $this->validateInputs($row['emo_name']);
+         $row['emo_count'] = $this->validateInputs($row['emo_count']);
          array_push($rxnMetrics, $row);
        }
      }
@@ -313,6 +332,8 @@
      {
        while ($row = $result->fetch_assoc())
        {
+         $row['channel_name'] = $this->validateInputs($row['channel_name']);
+         $row['msg_count'] = $this->validateInputs($row['msg_count']);
          array_push($postMetrics, $row);
        }
      }
@@ -394,6 +415,8 @@
       if (mysqli_num_rows($result) > 0)
       {
         while ($row = $result->fetch_assoc()) {
+          $row['channel_name'] = $this->validateInputs($row['channel_name']);
+          $row['max_count'] = $this->validateInputs($row['max_count']);
           array_push($relMsgs, $row);
         }
       }
@@ -425,7 +448,7 @@
       {
         while ($row = $result->fetch_assoc()) {
           //array_push($relRxns, $row);
-          $rxnCount = $row['emo_count'];
+          $rxnCount = $this->validateInputs($row['emo_count']);
         }
       }
       mysqli_free_result($result);
@@ -577,7 +600,7 @@
       {
         while ($row = $result->fetch_assoc())
         {
-          $chName = $row['channel_name'];
+          $chName = $this->validateInputs($row['channel_name']);
         }
       }
       mysqli_free_result($result);
@@ -620,6 +643,9 @@
           } else {
             $dependency = $threadId;
           }
+          $message = $this->validMySQL($conn, $message);
+          $imagePath = $this->validMySQL($conn, $imagePath);
+          $snippet = $this->validMySQL($conn, $snippet);
           $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message,
                                   image_path, snippet, type, dependency)
                                   VALUES (?,?,?,?,?,?,?,?)");
@@ -656,6 +682,7 @@
       $affectedRows = 0;
       $channelId = $this->getChannelId($channelName, $workspaceUrl);
       if ($channelId != NULL && $channelId > 0) {
+        $userId = $this->validMySQL($conn,$userId);
         $stmt = $conn->prepare("INSERT INTO inside_channel (channel_id, user_id)
                                 VALUES (?,?)");
         $stmt->bind_param("ss", $channelId, $userId);
@@ -690,6 +717,8 @@
       $affectedRows = 0;
       $channelExists = $this->checkChannelExists($channelName, $workspaceUrl);
       if ($channelExists == 0) {
+        $channelName = $this->validMySQL($conn, $channelName);
+        $purpose = $this->validMySQL($conn, $purpose);
         $stmt = $conn->prepare("INSERT INTO workspace_channels (channel_id, channel_name, purpose, url, user_id, type)
                                 VALUES (?,?,?,?,?,?)");
         $stmt->bind_param("ssssss", $channelId, $channelName, $purpose, $workspaceUrl, $_SESSION['userid'], $type);
@@ -710,7 +739,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->replies = array();
-      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, avatar, msg_id, message, created_time
+      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, avatar,image_path,snippet, msg_id, message, created_time
                      FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                      WHERE dependency = $threadId
                      ORDER BY created_time ASC";
@@ -719,6 +748,10 @@
         while ($row = $result->fetch_assoc())
         {
           $row['message'] = $this->validateInputs($row['message']);
+          $row['first_name'] = $this->validateInputs($row['first_name']);
+          $row['last_name'] = $this->validateInputs($row['last_name']);
+          $row['image_path'] = $this->validateInputs($row['image_path']);
+          $row['snippet'] = $this->validateInputs($row['snippet']);
           array_push($this->replies, $row);
         }
       }
