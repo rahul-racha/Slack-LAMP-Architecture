@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 21, 2017 at 08:29 PM
+-- Generation Time: Nov 21, 2017 at 08:38 PM
 -- Server version: 5.6.35
 -- PHP Version: 7.1.6
 
@@ -187,7 +187,7 @@ CREATE TABLE `user_info` (
   `email` varchar(20) NOT NULL,
   `time_zone` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `skype` varchar(50) NOT NULL,
-  `avatar` varchar(150) NOT NULL
+  `avatar` varchar(150) NOT NULL DEFAULT 'images/users/admin.jpg'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -195,15 +195,15 @@ CREATE TABLE `user_info` (
 --
 
 INSERT INTO `user_info` (`user_id`, `password`, `first_name`, `last_name`, `display_name`, `role`, `what_i_do`, `status`, `phone_number`, `email`, `time_zone`, `skype`, `avatar`) VALUES
-('admin', 'M0n@rch$', 'admin', '', 'admin', 'admin', NULL, '', '', '', '2017-11-17 22:47:59', '', ''),
-('chinga', '@chick', 'Chick', 'Hicks', 'Chick Hicks', 'user', NULL, '', '', 'chinga@cars.com', '2017-11-14 15:44:25', '', ''),
-('hornet', '@doc', 'Doc', ' Hudson', 'Doc  Hudson', 'user', NULL, '', '', 'hornet@rsprings.gov', '2017-11-14 15:44:29', '', ''),
-('iamami', '12345678Aa!', 'Amitabh', 'Bachan', '', 'user', NULL, '', '', 'amitab@ac.in', '2017-10-31 18:32:59', '', ''),
-('kachow', '@mcqueen', 'Lightning', 'McQueen', 'Lightning McQueen', 'user', NULL, '', '', 'kachow@rusteze.com', '2017-11-14 15:44:33', '', ''),
+('admin', 'M0n@rch$', 'admin', '', 'admin', 'admin', NULL, '', '', '', '2017-11-21 19:38:00', '', 'images/users/admin.jpg'),
+('chinga', '@chick', 'Chick', 'Hicks', 'Chick Hicks', 'user', NULL, '', '', 'chinga@cars.com', '2017-11-21 19:38:02', '', 'images/users/admin.jpg'),
+('hornet', '@doc', 'Doc', ' Hudson', 'Doc  Hudson', 'user', NULL, '', '', 'hornet@rsprings.gov', '2017-11-21 19:38:04', '', 'images/users/admin.jpg'),
+('iamami', '12345678Aa!', 'Amitabh', 'Bachan', '', 'user', NULL, '', '', 'amitab@ac.in', '2017-11-21 19:38:05', '', 'images/users/admin.jpg'),
+('kachow', '@mcqueen', 'Lightning', 'McQueen', 'Lightning McQueen', 'user', NULL, '', '', 'kachow@rusteze.com', '2017-11-21 19:38:06', '', 'images/users/admin.jpg'),
 ('mater', '@mater', 'Tow', 'Mater', 'Tow Mater', 'user', NULL, '', '', 'mater@rsprings.gov', '2017-11-14 17:37:59', '', 'images/users/mater.jpg'),
 ('porsche', '@sally', 'Sally', 'Carrera', 'Sally Carrera', 'user', NULL, '', '', 'porsche@rsprings.gov', '2017-11-14 17:29:31', '', 'images/users/porsche.jpg'),
-('singhis', '123', 'okay', 'singh', '', 'user', NULL, '', '', 'singh@s.com', '2017-10-29 23:35:42', '', ''),
-('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', 'user', NULL, '', '', 'topsecret@agent.org', '2017-11-14 15:44:49', '', '');
+('singhis', '123', 'okay', 'singh', '', 'user', NULL, '', '', 'singh@s.com', '2017-11-21 19:38:08', '', 'images/users/admin.jpg'),
+('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', 'user', NULL, '', '', 'topsecret@agent.org', '2017-11-21 19:38:10', '', 'images/users/admin.jpg');
 
 -- --------------------------------------------------------
 
