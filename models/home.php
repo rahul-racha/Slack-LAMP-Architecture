@@ -81,7 +81,7 @@
        $chId = $this->getChannelId($channelName, $workspaceUrl);
        $affectedRows = NULL;
        if ($chId != NULL && $chId > 0) {
-          $userID = $this->validMySQL($conn, $userID);
+          //$userID = $this->validMySQL($conn, $userID);
          $delUsrFrmChannel = "DELETE FROM inside_channel
                               WHERE user_id = ? AND channel_id = ?";
          $stmt = $conn->prepare($delUsrFrmChannel);
@@ -119,7 +119,7 @@
        $affectedRows = NULL;
        $chId = $this->getChannelId($channelName, $workspaceUrl);
        if ($chId != NULL && $chId > 0) {
-         $status = $this->validMySQL($conn, $status);
+         //$status = $this->validMySQL($conn, $status);
          $updateStatus = "UPDATE workspace_channels
                           SET status = ?
                           WHERE channel_id = ?";
@@ -643,9 +643,9 @@
           } else {
             $dependency = $threadId;
           }
-          $message = $this->validMySQL($conn, $message);
-          $imagePath = $this->validMySQL($conn, $imagePath);
-          $snippet = $this->validMySQL($conn, $snippet);
+          //$message = $this->validMySQL($conn, $message);
+          //$imagePath = $this->validMySQL($conn, $imagePath);
+          //$snippet = $this->validMySQL($conn, $snippet);
           $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message,
                                   image_path, snippet, type, dependency)
                                   VALUES (?,?,?,?,?,?,?,?)");
@@ -682,7 +682,7 @@
       $affectedRows = 0;
       $channelId = $this->getChannelId($channelName, $workspaceUrl);
       if ($channelId != NULL && $channelId > 0) {
-        $userId = $this->validMySQL($conn,$userId);
+        //$userId = $this->validMySQL($conn,$userId);
         $stmt = $conn->prepare("INSERT INTO inside_channel (channel_id, user_id)
                                 VALUES (?,?)");
         $stmt->bind_param("ss", $channelId, $userId);
@@ -717,8 +717,8 @@
       $affectedRows = 0;
       $channelExists = $this->checkChannelExists($channelName, $workspaceUrl);
       if ($channelExists == 0) {
-        $channelName = $this->validMySQL($conn, $channelName);
-        $purpose = $this->validMySQL($conn, $purpose);
+        //$channelName = $this->validMySQL($conn, $channelName);
+        //$purpose = $this->validMySQL($conn, $purpose);
         $stmt = $conn->prepare("INSERT INTO workspace_channels (channel_id, channel_name, purpose, url, user_id, type)
                                 VALUES (?,?,?,?,?,?)");
         $stmt->bind_param("ssssss", $channelId, $channelName, $purpose, $workspaceUrl, $_SESSION['userid'], $type);
