@@ -1,0 +1,7 @@
+/*.help_description{
+  display: none;
+}*/
+.help_description_col{
+  overflow-y: scroll;
+  height: 300px;
+}

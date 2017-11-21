@@ -98,7 +98,13 @@
           </ul>
         </div>
         <div class="client_message_display col-xs-12 row change_row_prop">
-          <?php displayMessages(); ?>
+          <?php
+            $retChannel=0;
+            $_SESSION['loadCount'] = 5;
+            $channel_name = $_POST["channel"];
+            // echo $channel_name;
+            displayMessages($retChannel,$channel_name);
+          ?>
         </div>
           <!-- messge container -->
         	<div class="client_message_entry col-xs-12 row change_row_prop">

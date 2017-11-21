@@ -7,16 +7,17 @@ $(document).ready(function(){
 			$(".delPost").hide();
 			$(".fa-trash-o").hide();
 		}
-		$(".like").on("click",function(e){
+		$(document).on("click",".like",function(e){
+		// $(".like").on("click",function(e){
 			var emoName = e.currentTarget.className;
 			var msgId = parseInt(e.currentTarget.id);
 			$.ajax({
 				method: 'post',
 				url: './router.php',
 				data: {'insertReaction': {'msgId':msgId, 'emoName':emoName}},
-				dataType: 'text',
+				dataType: 'json',
 				success: function(data){
-					data = $.parseJSON(data)
+					//data = $.parseJSON(data)
 					$("#likeResponse" + msgId).html(data['emoResp']['count']);
 					var disCount = data['dislikeCount'];
 					if (disCount != null) {
@@ -28,17 +29,17 @@ $(document).ready(function(){
 		    	}
 			});
 		});
-
-		$(".dislike").on("click",function(e){
+		$(document).on("click",".dislike",function(e){
+		// $(".dislike").on("click",function(e){
 			var emoName = e.currentTarget.className;
 			var msgId = parseInt(e.currentTarget.id);
 			$.ajax({
 				method: 'post',
 				url: './router.php',
 				data: {'insertReaction': {'msgId':msgId, 'emoName':emoName, 'isInsert': "true"}},
-				dataType: 'text',
+				dataType: 'json',
 				success: function(data){
-					 data = $.parseJSON(data)
+					 //data = $.parseJSON(data)
 						$("#dislikeResponse" + msgId).html(data['emoResp']['count']);
 						var likeCount = data['likeCount'];
 						if (likeCount != null) {
@@ -51,7 +52,8 @@ $(document).ready(function(){
 			});
 		});
 
-		$(".delPost").on("click", function(e) {
+		$(document).on("click",".delPost",function(e){
+		// $(".delPost").on("click", function(e) {
 			var channelName = $(".chNameForMsg").attr("value");
 			var msgID = parseInt(e.currentTarget.id);
 			$.ajax({
@@ -70,7 +72,8 @@ $(document).ready(function(){
 			});
 		});
 
-		$(".threadIdSubmit").on("click",function(e){
+		$(document).on("click",".threadIdSubmit",function(e){
+		// $(".threadIdSubmit").on("click",function(e){
 			$(".client_main_continer").removeClass("col-xs-10").addClass("col-xs-7");
 			$(".client_thread_display_main").addClass("col-xs-3");
 			$(".client_thread_display_main").show();
@@ -261,5 +264,31 @@ $(document).ready(function(){
 			});
 		});
 
+		// post load pagination
+		$(document).on("click",".client_posts_load_more",function(e){
+		// $(".client_posts_load_more").on("click",function(e){
+			var retChannel = parseInt($(".post_load_retChannel").val());
+			var Channel_name = $(".post_load_ret_channel_name").val();
+			$.ajax({
+				method:'post',
+				url: './homepage.php',
+				data: {'pagination':{'retChannel':retChannel,'Channel_name':Channel_name}},
+				dataType: 'text',
+				success: function(data){
+					$('.loadMoreButton').remove();
+					$(".client_message_display").prepend(data);
+					if (userRole == "admin") {
+						$(".delPost").show();
+						$(".fa-trash-o").show();
+					} else {
+						$(".delPost").hide();
+						$(".fa-trash-o").hide();
+					}
+		    },
+		    error: function(){
+		    	console.log("Error");
+		    }
+			});
+		});
 
 });
