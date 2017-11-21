@@ -26,14 +26,22 @@ html, body{
 .client_navbar_header{
   color: white;
 }
+.client_navbar_dropdown_button{
+  color: white !important;
+  background-color: #4d394b !important;
+  width: 100%;
+  border: none !important;
+}
+.client_navbar_dropdown_ul{
+  color: black;
+  margin-left: 13% !important;
+  min-width: 250px !important;
+}
 .client_main_continer{
   padding: 0% !important;
   height: 100% !important;
 }
-.btn-info{
-  background-color: #4d394b !important;
-  border-color: #4d394b !important;
-}
+
 .client_new_chanenl{
   float: right;
   margin-right: 5%;
@@ -53,10 +61,10 @@ html, body{
 .client_channel_display{
   background-color: #4d394b !important;
   color: #fff;
-  width: 100% !important;
+  /*width: 100% !important;*/
   border: none;
-  margin-left: 0% !important;
-  margin-right: 0% !important;
+  /*margin-left: 0% !important;*/
+  /*margin-right: 0% !important;*/
 }
 .client_channel_title_view{
   margin-left: 2% !important;
@@ -67,26 +75,77 @@ html, body{
 .client_invite_users_link{
   margin-left: 2% !important;
 }
+.serch_users_in_workspace{
+  opacity: 0.5;
+}
+.client_user_search_suggestions{
+  z-index:100;
+  overflow-y: scroll;
+  display: none;
+  border: 1px solid;
+  background: white;
+  position: absolute;
+}
+.client_user_search{
+  width: 100%;
+}
+/*.sugg_elements_list{
+  list-style: none;
+}*/
+.search_suggestion_li{
+  border: none !important;
+}
+.sugg_elements{
+  text-decoration: none !important;
+  color: black;
+}
+/*.justList{
+  list-style: none;
+  display: none;
+}*/
 .client_message_display{
   overflow-y: scroll;
-  margin-left: 2% !important;
+  /*margin-left: 2% !important;*/
   width: 100%;
   height: 85%;
   max-height: 100%;
 }
-
+.message_profile_pic{
+  /*position: absolute !important;*/
+}
+.client_pic_display{
+  /*width:100%;*/
+  width: 52px;
+}
+.message_content_wrapper{
+  margin-left: 1%;
+  /*overflow-x: scroll;*/
+}
 .MessageUL{
   list-style: none;
+  margin-left: -4%;
+
+}
+.client_button_adding_code_snipet{
+  width: 0% !important;
+  padding: 1.1%;
+}
+.input-group-addon{
+   background-color: white !important;
+   border: none !important;
 }
 .client_message_entry{
   position: fixed;
   bottom: 0% !important;
   margin-bottom: 2% !important;
-  margin-left: 2% !important;
+  /*margin-left: 2% !important;*/
   width: 80%;
 }
 .client_message_entry_textarea{
-  width: 100%;
+  width: 88%;
+}
+.client_messsage_entry_submit_button{
+  padding: 1.4%;
 }
 .client_thread_display_main{
   height: 100%;
@@ -119,4 +178,50 @@ html, body{
 .client_user_profile_display_main{
   height: 100%;
   display: none;
+}
+.client_code_snippet_button{
+  background-color: white !important;
+  border: none !important;
+  color: black !important;
+  cursor: pointer !important;
+}
+.client_code_snippet_modal_body{
+  width: 40% !important;
+}
+.client_code_snippet_textarea{
+  width: 100%;
+}
+.client_image_upload_button{
+  width: 100%;
+  /*background-color: white;*/
+}
+.client_add_image_modal_body{
+  overflow: scroll;
+}
+/*uploading image for post*/
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+#img-upload{
+    width: 100%;
+}
+
+.delUserClass, .inviteUserClass {
+  display: inline-block;
 }

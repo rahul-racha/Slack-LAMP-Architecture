@@ -20,7 +20,7 @@
   //include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/home.php';
 
-   if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))
+   if (!isset($_SESSION['userid']) || !isset($_SESSION['password']) || !isset($_SESSION['userRole']))
    {
      header("location:login.php", true, 303);
    } //else if (isset($_POST["textarea"])) {
@@ -36,6 +36,13 @@
       header("location:".$url);
     }
 
+    public function validateInputs($data) {
+      $data = trim($data);
+      //$data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+    }
+
     public function viewChannels($workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();
@@ -45,28 +52,28 @@
         return $channels;
     }
 
-    public function getProfile($user_id) {
+    public function getProfile($user_id, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $profile = array();
       $membership = array();
-      $profile = $this->homeModelVar->getUserProfile($user_id);
-      $membership = $this->homeModelVar->getUserMembership($user_id);
+      $profile = $this->homeModelVar->getUserProfile($user_id, $workspaceUrl);
+      $membership = $this->homeModelVar->getUserMembership($user_id, $workspaceUrl);
       $userData = array('profile'=>$profile, 'membership'=>$membership);
       return $userData;
     }
 
-    public function getUsersForPattern($keyword) {
+    public function getUsersForPattern($keyword, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $userList = array();
-      $userList = $this->homeModelVar->retrievePatternMatchedUsers($keyword);
+      $userList = $this->homeModelVar->retrievePatternMatchedUsers($keyword, $workspaceUrl);
       return $userList;
     }
 
-    public function viewMessages($channelName, $workspaceUrl)
+    public function viewMessages($channelName, $workspaceUrl,$retChannel)
     {
         $this->homeModelVar = new HomeModel();
         $messages = array();
-        $messages = $this->homeModelVar->retrieveMessages($channelName, $workspaceUrl);
+        $messages = $this->homeModelVar->retrieveMessages($channelName, $workspaceUrl,$retChannel);
         return $messages;
     }
 
@@ -107,20 +114,25 @@
     }
 
     //function is used for inserting messages and replies
-    public function insertMessage($channelName, $message, $threadId, $messageType, $workspaceUrl)
+    public function insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $messageType, $workspaceUrl)
     {
         $responseString = NULL;
         $this->homeModelVar = new HomeModel();
-        $type = $this->getMessageType($messageType);
-        $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $threadId, $type, $workspaceUrl);
-        if ($affectedRows == 1) {
-          $responseString = 'Message is inserted';
-        } else if ($affectedRows == 0)
-        {
-            $responseString = 'Message not inserted';
-        } else if ($affectedRows < 0)
-        {
-          $responseString = 'Query returned an error';
+        $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+        if ($chStatus != "archived") {
+          $type = $this->getMessageType($messageType);
+          $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl);
+          if ($affectedRows == 1) {
+            $responseString = 'Message is inserted';
+          } else if ($affectedRows == 0)
+          {
+              $responseString = 'Message not inserted';
+          } else if ($affectedRows < 0)
+          {
+            $responseString = 'Query returned an error';
+          }
+        } else {
+          $responseString = "Channel is archived";
         }
         return $responseString;
     }
@@ -177,18 +189,31 @@
     }
 
     //add list of users to a channel
-    public function inviteUsersToChannel($users, $channelName, $workspaceUrl) {
+    public function inviteUsersToChannel($users, $channelName, $workspaceUrl, $isCreate) {
       $invitationResults = array('success' => array(), 'failed' => array());
       $this->homeModelVar = new HomeModel();
-      foreach ($users as $userID) {
-        $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
-        if ($successFeeds < 1) {
-          array_push($invitationResults['failed'], $userId);
-        } else {
-          array_push($invitationResults['success'], $userId);
-        }
+      $chStatus = NULL;
+      if ($isCreate == "false") {
+        $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+      }
+      if ($chStatus != "archived") {
+          foreach ($users as $userID) {
+            $successFeeds = $this->homeModelVar->addUserToChannel($userID, $channelName, $workspaceUrl);
+            if ($successFeeds < 1) {
+              array_push($invitationResults['failed'], $userID);
+            } else {
+              array_push($invitationResults['success'], $userID);
+            }
+          }
       }
       return $invitationResults;
+    }
+
+    public function getAdmins() {
+      $this->homeModelVar = new HomeModel();
+      $admins = array();
+      $admins = $this->homeModelVar->getAdmins();
+      return $admins;
     }
 
     public function getRepliesForThread($threadId) {
@@ -196,9 +221,9 @@
       $responseString = NULL;
       $replyList = array();
       $replyList = $this->homeModelVar->retrieveReplies($threadId);
-      if (empty($replyList)) {
-        echo "No replies found for the thread";
-      }
+      // if (empty($replyList)) {
+      //   echo "No replies found for the thread";
+      // }
       return $replyList;
     }
 
@@ -238,73 +263,166 @@
       return $info;
     }
 
-    public function handleReactionForMsg($msgId, $emoName) {
+    public function handleReactionForMsg($msgId, $emoName, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $responseString = array('result'=>NULL,'message'=>NULL);
       $affectedRows = NULL;
       $info = array();
-      $emoId = $this->homeModelVar->getEmoId($emoName);
-      if ($emoId > 0) {
-        $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
-        //$responseString['message'] = $this->isUserExistsForReaction($info['users']);//$info['users'];
-        //return $responseString;
-        if ($info != NULL && $info['users'] != NULL && !empty($info['users'])) {
-          if ($this->isUserExistsForReaction($info['users']) == "false") {
-            //if ($isInsert == "true") {
-              $isInsert = "true";
-              $isUpdate = "true";
-              $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
-            //}
+      $channelName =  $this->homeModelVar->getChannelFromMsg($msgId);
+      $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+
+      if ($chStatus != "archived") {
+        $emoId = $this->homeModelVar->getEmoId($emoName);
+        if ($emoId > 0) {
+          $info = $this->homeModelVar->getInfoForMsgReaction($msgId, $emoId);
+          //$responseString['message'] = $this->isUserExistsForReaction($info['users']);//$info['users'];
+          //return $responseString;
+          if ($info != NULL && $info['users'] != NULL && !empty($info['users'])) {
+            if ($this->isUserExistsForReaction($info['users']) == "false") {
+              //if ($isInsert == "true") {
+                $isInsert = "true";
+                $isUpdate = "true";
+                $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
+              //}
+            } else {
+              //if ($isInsert == "false") {
+                $isInsert = "false";
+                $isUpdate = "true";
+                $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
+              //}
+            }
           } else {
-            //if ($isInsert == "false") {
-              $isInsert = "false";
+            //if ($isInsert == "true") {
+            $isUpdate = NULL;
+            if ($info == NULL) {
+              $isUpdate = "false";
+            } else {
               $isUpdate = "true";
+            }
+              $isInsert = "true";
+              $info['count'] = 0;
+              $info['users'] = NULL;
               $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
             //}
+          }
+          if ($affectedRows == 1) {
+            $responseString['result'] = "true";
+            $responseString['message'] = "success";
+          } /*else if ($affectedRows == NULL) {
+            $responseString = NULL;
+          }*/
+          else if ($affectedRows == NULL) {
+            $responseString['result'] = "false";
+            $responseString['message'] = "failedEPIC";
+          }
+          else {
+            $responseString['result'] = "false";
+            $responseString['message'] = "failed";
           }
         } else {
-          //if ($isInsert == "true") {
-          $isUpdate = NULL;
-          if ($info == NULL) {
-            $isUpdate = "false";
-          } else {
-            $isUpdate = "true";
-          }
-            $isInsert = "true";
-            $info['count'] = 0;
-            $info['users'] = NULL;
-            $affectedRows = $this->homeModelVar->handleUserReaction($msgId, $emoId, $info, $isInsert, $isUpdate);
-          //}
-        }
-        if ($affectedRows == 1) {
-          $responseString['result'] = "true";
-          $responseString['message'] = "success";
-        } /*else if ($affectedRows == NULL) {
-          $responseString = NULL;
-        }*/
-        else if ($affectedRows == NULL) {
           $responseString['result'] = "false";
-          $responseString['message'] = "failedEPIC";
-        }
-        else {
-          $responseString['result'] = "false";
-          $responseString['message'] = "failed";
+          $responseString['message'] = $emoName." is not found in database";
         }
       } else {
-        $responseString['result'] = "false";
-        $responseString['message'] = $emoName." is not found in database";
-      }
+      $responseString['result'] = "false";
+      $responseString['message'] = "Channel is archived";
+    }
       return $responseString;
     }
 
-    public function getUserMetrics($userID) {
+    public function getUserMetrics($userID, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $rxnMetrics = array();
       $msgMetrics  = array();
-      $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID);
-      $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID);
-      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics);
+      $trxnMetrics = array();
+      $tmsgMetrics = array();
+      $rxnMetrics = $this->homeModelVar->retrieveRxnMetrics($userID, $workspaceUrl);
+      $msgMetrics = $this->homeModelVar->retrievePostMetrics($userID, $workspaceUrl);
+      $tmsgMetrics = $this->homeModelVar->retrieveNoChMsgs($userID, $workspaceUrl);
+      $trxnMetrics = $this->homeModelVar->retrieveNoChRxns($userID, $workspaceUrl);
+      $relRxnMetrics =  $this->homeModelVar->retrieveRelRxnMetrics($userID, $workspaceUrl);
+      $relPostMetrics = $this->homeModelVar->retrieveRelPostMetrics($userID, $workspaceUrl);
+      $metrics = array("reaction"=>$rxnMetrics, "post"=>$msgMetrics, "relRxn"=>$relRxnMetrics, "relPost"=>$relPostMetrics,
+                      "treaction"=>$trxnMetrics, "tpost"=>$tmsgMetrics);
       return $metrics;
+    }
+
+    public function getChMetricsForUser($userID, $channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $rxnCount = $this->homeModelVar->retUserChannelRelRxnMetrics($userID, $channelName, $workspaceUrl);
+      return $rxnCount;
+    }
+
+    //Admin functions
+    public function removeUsersFromChannel($userList, $channelName, $workspaceUrl) {
+      $removedUsers = array('success' => array(), 'failed' => array());
+      $this->homeModelVar = new HomeModel();
+      $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+      if ($chStatus != "archived") {
+        foreach ($userList as $userID) {
+          $affectedRows = $this->homeModelVar->removeUserFromChannel($userID, $channelName, $workspaceUrl);
+          if ($affectedRows > 0) {
+            array_push($removedUsers['success'], $userID);
+          } else {
+            array_push($removedUsers['failed'], $userID);
+          }
+        }
+      }
+      return $removedUsers;
+    }
+
+    public function retChannelsOfUser($userID, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $channelList = array();
+      $channelList = $this->homeModelVar->retChannelsOfUser($userID, $workspaceUrl);
+      return $channelList;
+    }
+
+    public function retUsersFromChannel($channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $userList = array();
+      $userList = $this->homeModelVar->retUsersFromChannel($channelName, $workspaceUrl);
+      return $userList;
+    }
+
+    public function retInviteUsersForChannel($channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $userList = array();
+      $userList = $this->homeModelVar->retInviteUsersForChannel($channelName, $workspaceUrl);
+      return $userList;
+    }
+
+    public function deletePostsFromChannel($msgID, $channelName, $workspaceUrl) {
+      $isSuccess = NULL;
+      $this->homeModelVar = new HomeModel();
+      $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+      if ($chStatus != "archived") {
+        $affectedRows = $this->homeModelVar->deletePostsFromChannel($msgID, $channelName, $workspaceUrl);
+        if ($affectedRows > 0) {
+          $isSuccess = "true";
+        } else {
+          $isSuccess = "false";
+        }
+      }
+      return $isSuccess;
+    }
+
+    public function updateChannelStatus($channelName, $workspaceUrl, $status) {
+      $isSuccess = NULL;
+      $this->homeModelVar = new HomeModel();
+      $affectedRows = $this->homeModelVar->updateChannelStatus($channelName, $workspaceUrl, $status);
+      if ($affectedRows > 0) {
+        $isSuccess = "true";
+      } else {
+        $isSuccess = "false";
+      }
+      return $isSuccess;
+    }
+
+    public function getChannelStatus($channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $statusString = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+      return $statusString;
     }
 
   }

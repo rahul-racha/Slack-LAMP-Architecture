@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 14, 2017 at 10:02 PM
+-- Generation Time: Nov 21, 2017 at 08:29 PM
 -- Server version: 5.6.35
 -- PHP Version: 7.1.6
 
@@ -27,7 +27,9 @@ CREATE TABLE `channel_messages` (
   `channel_id` int(11) NOT NULL,
   `user_id` varchar(20) NOT NULL,
   `msg_id` bigint(20) NOT NULL,
-  `message` longtext NOT NULL,
+  `message` longtext,
+  `image_path` varchar(100) DEFAULT NULL,
+  `snippet` text,
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `type` smallint(6) DEFAULT NULL,
   `dependency` bigint(20) DEFAULT NULL
@@ -37,17 +39,11 @@ CREATE TABLE `channel_messages` (
 -- Dumping data for table `channel_messages`
 --
 
-INSERT INTO `channel_messages` (`channel_id`, `user_id`, `msg_id`, `message`, `created_time`, `type`, `dependency`) VALUES
-(3, 'mater', 7, 'hey', '2017-11-14 20:59:36', 1, 7),
-(3, 'porsche', 1, 'hey ppl', '2017-11-11 23:30:28', 1, 1),
-(3, 'porsche', 6, 'sdsd', '2017-11-14 19:35:33', 1, 6),
-(4, 'mater', 8, 'okay no probs', '2017-11-14 20:59:45', 1, 8),
-(4, 'porsche', 2, 'okayy', '2017-11-11 23:30:39', 1, 2),
-(4, 'porsche', 3, 'fine', '2017-11-14 19:35:14', 1, 3),
-(4, 'porsche', 5, 'hd', '2017-11-14 19:35:27', 1, 5),
-(6, 'mater', 9, 'hwyy', '2017-11-14 20:59:53', 1, 9),
-(6, 'mater', 10, 'xuce', '2017-11-14 21:00:05', 1, 10),
-(19, 'porsche', 4, 'sdsd', '2017-11-14 19:35:21', 1, 4);
+INSERT INTO `channel_messages` (`channel_id`, `user_id`, `msg_id`, `message`, `image_path`, `snippet`, `created_time`, `type`, `dependency`) VALUES
+(26, 'admin', 8, 'Opps', NULL, NULL, '2017-11-21 00:31:42', 1, 8),
+(27, 'admin', 6, 'heyy', NULL, NULL, '2017-11-20 22:31:04', 1, 6),
+(27, 'mater', 9, 'Hmm', NULL, NULL, '2017-11-21 07:01:43', 1, 9),
+(27, 'mater', 10, 'Fine', NULL, NULL, '2017-11-21 07:01:46', 1, 10);
 
 -- --------------------------------------------------------
 
@@ -102,22 +98,17 @@ CREATE TABLE `inside_channel` (
 --
 
 INSERT INTO `inside_channel` (`channel_id`, `user_id`, `joined_date`, `left_date`) VALUES
-(3, 'mater', '2017-10-31 05:54:03', '0000-00-00 00:00:00'),
-(3, 'porsche', '2017-10-31 17:37:48', '0000-00-00 00:00:00'),
-(4, 'chinga', '2017-11-10 15:35:55', '0000-00-00 00:00:00'),
-(4, 'mater', '2017-10-31 05:56:50', '0000-00-00 00:00:00'),
-(4, 'porsche', '2017-10-31 18:06:54', '0000-00-00 00:00:00'),
-(4, 'singhis', '2017-10-31 05:56:50', '0000-00-00 00:00:00'),
-(4, 'topsecret', '2017-10-31 18:06:54', '0000-00-00 00:00:00'),
-(5, 'admin', '2017-11-10 19:38:42', '0000-00-00 00:00:00'),
-(5, 'mater', '2017-10-31 05:57:50', '0000-00-00 00:00:00'),
-(5, 'topsecret', '2017-10-31 18:08:49', '0000-00-00 00:00:00'),
-(6, 'mater', '2017-10-31 06:00:56', '0000-00-00 00:00:00'),
-(17, 'iamami', '2017-11-10 19:05:28', '0000-00-00 00:00:00'),
-(17, 'mater', '2017-11-10 19:05:28', '0000-00-00 00:00:00'),
-(17, 'singhis', '2017-11-10 19:06:11', '0000-00-00 00:00:00'),
-(19, 'porsche', '2017-11-11 23:12:24', '0000-00-00 00:00:00'),
-(19, 'singhis', '2017-11-11 23:42:45', '0000-00-00 00:00:00');
+(26, 'admin', '2017-11-19 07:10:21', '0000-00-00 00:00:00'),
+(26, 'mater', '2017-11-19 07:10:21', '0000-00-00 00:00:00'),
+(27, 'admin', '2017-11-19 07:11:01', '0000-00-00 00:00:00'),
+(27, 'mater', '2017-11-19 07:11:01', '0000-00-00 00:00:00'),
+(27, 'porsche', '2017-11-19 07:11:01', '0000-00-00 00:00:00'),
+(27, 'singhis', '2017-11-20 01:55:56', '0000-00-00 00:00:00'),
+(28, 'admin', '2017-11-20 01:58:22', '0000-00-00 00:00:00'),
+(28, 'chinga', '2017-11-20 01:58:22', '0000-00-00 00:00:00'),
+(28, 'porsche', '2017-11-20 01:58:22', '0000-00-00 00:00:00'),
+(29, 'admin', '2017-11-21 00:38:57', '0000-00-00 00:00:00'),
+(29, 'singhis', '2017-11-21 00:38:57', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -157,17 +148,13 @@ CREATE TABLE `reactions` (
 --
 
 INSERT INTO `reactions` (`msg_id`, `emo_id`, `users`, `count`) VALUES
-(1, 1, '', 0),
-(1, 2, ';porsche;', 1),
-(2, 1, ';porsche;', 1),
-(3, 1, ';porsche;', 1),
-(4, 2, ';porsche;', 1),
-(5, 2, ';porsche;', 1),
-(6, 1, '', 0),
-(6, 2, ';porsche;', 1),
-(7, 1, ';mater;porsche;', 2),
-(8, 1, ';mater;porsche;', 2),
-(9, 1, ';mater;', 1),
+(6, 1, ';mater;', 1),
+(6, 2, '', 0),
+(8, 1, ';mater;', 1),
+(8, 2, '', 0),
+(9, 1, '', 0),
+(9, 2, ';mater;', 1),
+(10, 1, '', 0),
 (10, 2, ';mater;', 1);
 
 -- --------------------------------------------------------
@@ -193,6 +180,7 @@ CREATE TABLE `user_info` (
   `first_name` varchar(20) NOT NULL,
   `last_name` varchar(20) NOT NULL,
   `display_name` varchar(20) NOT NULL,
+  `role` varchar(10) NOT NULL DEFAULT 'user',
   `what_i_do` varchar(128) DEFAULT NULL,
   `status` varchar(128) NOT NULL,
   `phone_number` varchar(20) NOT NULL,
@@ -206,16 +194,16 @@ CREATE TABLE `user_info` (
 -- Dumping data for table `user_info`
 --
 
-INSERT INTO `user_info` (`user_id`, `password`, `first_name`, `last_name`, `display_name`, `what_i_do`, `status`, `phone_number`, `email`, `time_zone`, `skype`, `avatar`) VALUES
-('admin', 'M0n@rch$', 'admin', '', 'admin', NULL, '', '', '', '2017-10-24 13:35:17', '', ''),
-('chinga', '@chick', 'Chick', 'Hicks', 'Chick Hicks', NULL, '', '', 'chinga@cars.com', '2017-11-14 15:44:25', '', ''),
-('hornet', '@doc', 'Doc', ' Hudson', 'Doc  Hudson', NULL, '', '', 'hornet@rsprings.gov', '2017-11-14 15:44:29', '', ''),
-('iamami', '12345678Aa!', 'Amitabh', 'Bachan', '', NULL, '', '', 'amitab@ac.in', '2017-10-31 18:32:59', '', ''),
-('kachow', '@mcqueen', 'Lightning', 'McQueen', 'Lightning McQueen', NULL, '', '', 'kachow@rusteze.com', '2017-11-14 15:44:33', '', ''),
-('mater', '@mater', 'Tow', 'Mater', 'Tow Mater', NULL, '', '', 'mater@rsprings.gov', '2017-11-14 17:37:59', '', 'images/users/mater.jpg'),
-('porsche', '@sally', 'Sally', 'Carrera', 'Sally Carrera', NULL, '', '', 'porsche@rsprings.gov', '2017-11-14 17:29:31', '', 'images/users/porsche.jpg'),
-('singhis', '123', 'okay', 'singh', '', NULL, '', '', 'singh@s.com', '2017-10-29 23:35:42', '', ''),
-('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', NULL, '', '', 'topsecret@agent.org', '2017-11-14 15:44:49', '', '');
+INSERT INTO `user_info` (`user_id`, `password`, `first_name`, `last_name`, `display_name`, `role`, `what_i_do`, `status`, `phone_number`, `email`, `time_zone`, `skype`, `avatar`) VALUES
+('admin', 'M0n@rch$', 'admin', '', 'admin', 'admin', NULL, '', '', '', '2017-11-17 22:47:59', '', ''),
+('chinga', '@chick', 'Chick', 'Hicks', 'Chick Hicks', 'user', NULL, '', '', 'chinga@cars.com', '2017-11-14 15:44:25', '', ''),
+('hornet', '@doc', 'Doc', ' Hudson', 'Doc  Hudson', 'user', NULL, '', '', 'hornet@rsprings.gov', '2017-11-14 15:44:29', '', ''),
+('iamami', '12345678Aa!', 'Amitabh', 'Bachan', '', 'user', NULL, '', '', 'amitab@ac.in', '2017-10-31 18:32:59', '', ''),
+('kachow', '@mcqueen', 'Lightning', 'McQueen', 'Lightning McQueen', 'user', NULL, '', '', 'kachow@rusteze.com', '2017-11-14 15:44:33', '', ''),
+('mater', '@mater', 'Tow', 'Mater', 'Tow Mater', 'user', NULL, '', '', 'mater@rsprings.gov', '2017-11-14 17:37:59', '', 'images/users/mater.jpg'),
+('porsche', '@sally', 'Sally', 'Carrera', 'Sally Carrera', 'user', NULL, '', '', 'porsche@rsprings.gov', '2017-11-14 17:29:31', '', 'images/users/porsche.jpg'),
+('singhis', '123', 'okay', 'singh', '', 'user', NULL, '', '', 'singh@s.com', '2017-10-29 23:35:42', '', ''),
+('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', 'user', NULL, '', '', 'topsecret@agent.org', '2017-11-14 15:44:49', '', '');
 
 -- --------------------------------------------------------
 
@@ -256,21 +244,19 @@ CREATE TABLE `workspace_channels` (
   `url` varchar(20) NOT NULL,
   `user_id` varchar(20) NOT NULL,
   `purpose` varchar(50) NOT NULL,
-  `type` varchar(10) NOT NULL
+  `type` varchar(10) NOT NULL,
+  `status` varchar(30) NOT NULL DEFAULT 'unarchived'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `workspace_channels`
 --
 
-INSERT INTO `workspace_channels` (`channel_id`, `channel_name`, `url`, `user_id`, `purpose`, `type`) VALUES
-(3, 'general', 'musicf17.slack.com', 'mater', '', 'Public'),
-(4, 'jazz', 'musicf17.slack.com', 'mater', '', 'Private'),
-(5, 'folk', 'musicf17.slack.com', 'mater', '', 'Public'),
-(6, 'country', 'musicf17.slack.com', 'mater', '', 'Private'),
-(7, 'random', 'musicf17.slack.com', 'porsche', 'talk anything', 'Private'),
-(17, 'classical', 'musicf17.slack.com', 'mater', 'traditional', 'Public'),
-(19, 'instrumental', 'musicf17.slack.com', 'porsche', 'sweet', 'Public');
+INSERT INTO `workspace_channels` (`channel_id`, `channel_name`, `url`, `user_id`, `purpose`, `type`, `status`) VALUES
+(26, 'general', 'musicf17.slack.com', 'mater', 'casual discussion', 'Public', 'unarchived'),
+(27, 'jazz', 'musicf17.slack.com', 'mater', 'jazz news', 'Private', 'unarchived'),
+(28, 'trial', 'musicf17.slack.com', 'porsche', '', 'Public', 'archived'),
+(29, 'test1', 'musicf17.slack.com', 'admin', 'for you', 'Private', 'unarchived');
 
 --
 -- Indexes for dumped tables
@@ -369,7 +355,7 @@ ALTER TABLE `emoticons`
 -- AUTO_INCREMENT for table `workspace_channels`
 --
 ALTER TABLE `workspace_channels`
-  MODIFY `channel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `channel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- Constraints for dumped tables
 --

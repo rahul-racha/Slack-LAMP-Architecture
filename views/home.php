@@ -4,6 +4,10 @@
   //session_write_close();
   //require_once $_SESSION['basePath'].'controllers/home.php';
   require 'homepage.php';
+  echo '<script>'.
+       'var userID = '.json_encode($_SESSION['userid']).';'.
+       'var userRole = '.json_encode($_SESSION['userRole']).';'.
+       '</script>';
 ?>
 
 <!DOCTYPE html>
@@ -17,6 +21,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="js/home.js"></script>
+  <script type="text/javascript" src="js/typeahead.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -25,53 +30,111 @@
     <div class="row client_main_row">
       <div class="col-xs-2 client_navbar row change_row_prop">
       <!-- side nav bar -->
-        <div class="client_navbar_header">
-          <span>Musicf17.slack.com</span>
-          <a href='<?php echo "profile.php?userid=".$_SESSION['userid']; ?>'>
-            <span style="color:white;"><?php echo $_SESSION['userid']; ?></span>
-          </a>
+        <div class="client_navbar_header col-xs-12 row">
+          <div class="dropdown col-xs-12">
+            <button class="btn btn-default dropdown-toggle client_navbar_dropdown_button" type="button" data-toggle="dropdown">Musicf17.slack.com
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu client_navbar_dropdown_ul">
+              <li class="dropdown-header">
+                <img style="width: 20%;" src='<?php echo "images/users/".$_SESSION['userid'].".jpg" ?>'> &nbsp
+                <?php echo $_SESSION['userid']; ?>
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href='<?php echo "profile.php?userid=".$_SESSION['userid']; ?>'>
+                  <span style="color:black;">Profile & Account</span>
+                </a>
+              </li>
+              <li><a href="help.html">Help</a></li>
+              <!-- <li><a href="#">JavaScript</a></li> -->
+              <!-- <form method="post" action="<?php //echo htmlspecialchars("router.php"); ?>">
+                <input type="submit" name="logout" value="logout">
+              </form> -->
+              <li class="divider"></li>
+                <form method="post" action="<?php echo htmlspecialchars("router.php"); ?>">
+                  <li>
+                    <input type="submit" name="logout" value="logout" style="border:0;margin-left:5%;">
+                  </li>
+                </form>
+                <!-- <a href="#">logout</a></li> -->
+            </ul>
+          </div>
         </div>
-        <div class="client_channel_header row">
+        <div class="client_channel_header col-xs-12 row">
           <h4>Channels
             <a href="#" class="client_new_chanenl" data-toggle="modal" data-target="#NewChannel">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </a>
           </h4>
         </div>
-				<div class="client_channel_display row">
+				<div class="client_channel_display col-xs-12 row">
         	<?php displayChannels(); ?>
 				</div>
       </div>
-      <div class="col-xs-10 client_main_continer">
-        <div class="client_message_header row change_row_prop">
+      <div id="msg-cont" class="client_main_continer col-xs-10 row change_row_prop">
+        <div class="client_message_header col-xs-12 row change_row_prop">
           <!-- header -->
           <div class="client_channel_title col-xs-8">
             <h5 class="client_channel_title_view"><strong><?php echo $channelHeading;?></strong></h5>
           </div>
-          <div class="serch_users_in_workspace col-xs-3">
-            <i class="fa fa-search" aria-hidden="true"></i>
-            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+          <div class="right-inner-addon serch_users_in_workspace col-xs-3">
+            <!-- <i class="fa fa-search" aria-hidden="true"></i> -->
+            <input type="text" class="client_user_search" autocomplete="off" spellcheck="false" id="wrkspace_user_search" placeholder="Search for names..">
           </div>
+
           <div class="col-xs-1">
           </div>
           <div class="client_invite_users col-xs-12">
-            <a class="client_invite_users_link" href="#" data-toggle="modal" data-target = "#inviteUsers">
+            <a class="client_invite_users_link" href="#" data-toggle="modal" id="inviteUserLink" data-target = "#inviteUsers">
               <i class="fa fa-user-o" aria-hidden="true"></i>
             </a>
+            <a class="client_invite_users_link" href="#" data-toggle="modal" id="removeUserLink" data-target = "#removeUsers">
+              <i class="fa fa fa-trash-o" aria-hidden="true"></i>
+            </a>
+            <button type="button" id="archiveButton" value="<?php echo $_POST["channel"]; ?>" class="btn btn-primary"><?php echo $chStatus; ?></button>
           </div>
         </div>
-        <div class="client_message_display row change_row_pro">
-          <?php displayMessages(); ?>
+        <div class="client_user_search_suggestions">
+          <ul class="justList">
+
+          </ul>
+        </div>
+        <div class="client_message_display col-xs-12 row change_row_prop">
+          <?php
+            $retChannel=0;
+            $_SESSION['loadCount'] = 5;
+            $channel_name = $_POST["channel"];
+            // echo $channel_name;
+            displayMessages($retChannel,$channel_name);
+          ?>
         </div>
           <!-- messge container -->
-        	<div class="client_message_entry col-xs-12">
-						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
-              <input id="textArea" class="client_message_entry_textarea" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required>
-              <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-              <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
-              <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-              <input id="SubmitButton" type="hidden" name="submit"/>
-            </form>
+        	<div class="client_message_entry col-xs-12 row change_row_prop">
+            <div class="input-group">
+              <span class="input-group-addon">
+                <div class="dropup">
+                  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-plus" aria-hidden="true"></i></a>
+                  <!-- <span class="caret"></span> -->
+                  <ul class="dropdown-menu">
+                    <li><a class="client_code_snippet_button" data-toggle="modal" data-target="#client_code_snippet">Code snippet</a></li>
+                    <li><a class="client_code_snippet_button" data-toggle="modal" data-target="#client_Add_image_to_post">Add image</a></li>
+                    <!-- <li><span><a>Add images</a><input type="file"></span></li> -->
+                    <!-- <li><a href="#">JavaScript</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">About Us</a></li>($_POST["channelHeading"]) ? $_POST["channelHeading"]: NULL -->
+                  </ul>
+                </div>
+              </span>
+  						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
+                <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
+                <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+                <input type="hidden" name="channelHeading" value="<?php echo $channelHeading; ?>"/>
+                <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+                <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+                <input id="SubmitButton" class="col-xs-1 client_messsage_entry_submit_button" type="submit" name="submit"/>
+              </form>
+          </div>
           </div>
       </div>
       <div class="client_thread_display_main" >
@@ -97,9 +160,7 @@
         </div>
       </div>
     </div>
-    <!-- <form method="post" action="<?php //echo htmlspecialchars("router.php"); ?>">
-      <input type="submit" name="logout" value="logout">
-    </form> -->
+
   </div> <!--end of main container -->
 
   <!-- modal for user profile -->
@@ -187,6 +248,7 @@
                     <input type="text" class="form-control" name="newUserSearch[]">
                   </div>
                   <input type="hidden" name="newChannel" value="newChannel">
+                  <input type="hidden" name="chStatus" value="unarchived">
                   <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
                 </form>
             </div>
@@ -208,14 +270,17 @@
         </div>
         <div class="modal-body">
           <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
-            <div class="form-group">
-              <label for="invitingNewUsers">Invite members</label>
-              <input type="text" class="form-control" name="addUserExistingChannel[]">
+            <label for="invitingNewUsers">Invite member</label>
+            <div id="inviteUsersSearchBox" class="form-group inviteUserClass">
+              <input type="text" class="form-control typeahead" name="addUserExistingChannel[]">
             </div>
+            <div class = "inviteUserClass">
               <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
-              <input type="hidden" name="channelHeading" value="<?php echo $_POST["channelHeading"]; ?>"/>
+              <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
               <input type="hidden" name="inviteUsersExistingChannel" value = "inviteUser">
               <input type="submit" value="Invite" class="btn btn-primary btn-sm">
+            </div>
           </form>
         </div>
         <div class="modal-footer">
@@ -224,5 +289,90 @@
       </div>
     </div>
   </div>
+  <!-- Remove Users -->
+  <div class="modal fade" id="removeUsers" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Cancel Membership</h4>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
+            <label for="removingNewUsers">Remove member</label>
+            <div id="delUsersSearchBox" class="form-group delUserClass">
+              <input type="text" class="form-control typeahead" name="removeUserExistingChannel[]">
+            </div>
+            <div class = "delUserClass">
+              <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
+              <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+              <input type="hidden" name="removeUsersExistingChannel" value = "removeUser">
+              <input type="submit" value="Remove" class="btn btn-primary btn-sm">
+            </div>
+          </form>
+      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Code snippet -->
+  <div class="modal fade" id="client_code_snippet" role="dialog">
+    <div class="modal-dialog modal-lg client_code_snippet_modal_body">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+          <textarea class="client_code_snippet_textarea" rows="9"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default client_snippet_submit" data-dismiss="modal">Create Snippet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add image -->
+  <div class="modal fade" id="client_Add_image_to_post" role="dialog">
+    <div class="modal-dialog modal-lg client_code_snippet_modal_body">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body client_add_image_modal_body">
+
+          <div class="form-group">
+            <label>Upload Image</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <span class="btn btn-default btn-file">
+                  Browse… <input type="file" name="image_uploaded_post" id="imgInp">
+                </span>
+              </span>
+              <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+              <input type="text" class="form-control client_image_upload_read" readonly>
+            </div>
+            <img id='img-upload'/>
+          </div>
+          <center><p>or</p></center>
+          <div>
+            <span>Images from web</span>
+            <input style="width:100%" class="client_image_upload_from_url"></input>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default client_add_image_submit_button" data-dismiss="modal">Add image</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </body>
 </html>

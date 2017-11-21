@@ -1,0 +1,8 @@
+.help_list_group{
+  overflow-y: scroll;
+  height: 300px;
+}
+.help_description_col{
+  overflow-y: scroll;
+  height: 300px;
+}
