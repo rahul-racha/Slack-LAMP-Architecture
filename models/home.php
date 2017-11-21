@@ -103,7 +103,7 @@
        return $affectedRows;
      }
 
-     public function updateChannelStatus($channelName, $workspace, $status) {
+     public function updateChannelStatus($channelName, $workspaceUrl, $status) {
        $dbConVar = new dbConnect();
        $conn = $dbConVar->createConnectionObject();
        $affectedRows = NULL;
@@ -433,7 +433,7 @@
       $this->channels = array();//('apple','baana'); //array(array("channel"=> NULL, "type"=>NULL));
       $channelType = array();//('Public','Private');
       $combinedArray = array();
-      $retChannels = "SELECT channel_name, type
+      $retChannels = "SELECT channel_name, type, status
                       FROM workspace_channels
                       WHERE url = '$workspaceUrl' AND channel_id IN (
                       SELECT DISTINCT channel_id
@@ -446,7 +446,8 @@
         {
             //array_push($this->channels, $this->validateInputs($row['channel_name']));
             //array_push($this->channelType, $this->validateInputs($row['type']));
-            $temp = array("channel"=>$this->validateInputs($row['channel_name']), "type"=>$this->validateInputs($row['type']));
+            $temp = array("channel"=>$this->validateInputs($row['channel_name']), "type"=>$this->validateInputs($row['type']),
+                          "status"=>$this->validateInputs($row['status']));
             array_push($combinedArray, $temp);
         }
 

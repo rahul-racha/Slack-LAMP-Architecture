@@ -1,12 +1,66 @@
-
+// var archBtnName = ("#archiveButton").text();
+// if (archBtnName == "archived") {
+// 	("#archiveButton").html("Unarchive");
+// } else {
+// 	("#archiveButton").html("Archive");
+// }
 $(document).ready(function(){
 		if (userRole == "admin") {
 			$(".delPost").show();
 			$(".fa-trash-o").show();
+			$("#archiveButton").show();
 		} else {
 			$(".delPost").hide();
 			$(".fa-trash-o").hide();
+			$("#archiveButton").hide();
 		}
+
+		var archBtnName = $("#archiveButton").text();
+		if (archBtnName == "Archive") {
+			$("#archiveButton").removeClass("btn btn-danger").addClass("btn btn-primary");
+			$('#msg-cont').css('background-color', 'white');
+		} else {
+			$("#archiveButton").removeClass("btn btn-primary").addClass("btn btn-danger");
+			$('#msg-cont').css('background-color', 'darkseagreen');
+		}
+
+		$("#archiveButton").on("click",function(e) {
+			var status = $("#archiveButton").text();
+			var channel = $("#archiveButton").attr("value");
+			if (status == "Archive") {
+				status = "archived";
+			} else {
+				status = "unarchived";
+			}
+			$.ajax({
+				method: 'post',
+				url: './router.php',
+				data: {'channel_status': {'status': status, 'channel': channel}},
+				dataType: 'text',
+				success: function(data) {
+					if (data == "true") {
+						var str = null;
+						if (status == "archived") {
+							str = "Unarchive";
+						} else {
+							str = "Archive";
+						}
+						$("#archiveButton").html(str);
+						if (str == "Archive") {
+							$("#archiveButton").removeClass("btn btn-danger").addClass("btn btn-primary");
+							$('#msg-cont').css('background-color', 'white');
+						} else {
+							$("#archiveButton").removeClass("btn btn-primary").addClass("btn btn-danger");
+							$('#msg-cont').css('background-color', 'darkseagreen');
+						}
+					}
+				},
+				error: function(){
+					console.log("Error");
+				}
+			});
+		});
+
 		$(".like").on("click",function(e){
 			var emoName = e.currentTarget.className;
 			var msgId = parseInt(e.currentTarget.id);

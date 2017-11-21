@@ -8,6 +8,7 @@
   $homeControlVar = new HomeController();
   $channelName = NULL;
 	$channelHeading = NULL;
+	$chStatus = NULL;
   $workspaceUrl = "musicf17.slack.com";
 	$msgId = NULL;
 
@@ -32,12 +33,41 @@
     unset($_SESSION['channelHeading']);
 	}
 
+	if (isset($_POST["chStatus"])) {
+		global $chStatus;
+		if ($_POST["chStatus"] == "archived") {
+			$chStatus = "Unarchive";
+			$_POST["chStatus"] = $chStatus;
+		} else if ($_POST["chStatus"] == "unarchived") {
+			$chStatus = "Archive";
+			$_POST["chStatus"] = $chStatus;
+		} else {
+			$chStatus = $_POST["chStatus"];
+		}
+	} else if (isset($_SESSION['chStatus'])) {
+		global $chStatus;
+		if ($_SESSION["chStatus"] == "archived") {
+			$chStatus = "Unarchive";
+			$_POST["chStatus"] = $chStatus;
+		} else if ($_SESSION["chStatus"] == "unarchived") {
+			$chStatus = "Archive";
+			$_POST["chStatus"] = $chStatus;
+		} else {
+			$_POST["chStatus"] = $_SESSION['chStatus'];
+			$chStatus = $_POST["chStatus"];
+		}
+		//$_SESSION['chStatus'];
+		//$chStatus = $_POST["chStatus"];
+		unset($_SESSION['chStatus']);
+	}
+
   function displayChannels()
   {
     global $homeControlVar;
     global $workspaceUrl;
     global $channelName;
 		global $channelHeading;
+		global $chStatus;
     $channelList = $homeControlVar->viewChannels($workspaceUrl);
     if (!isset($_SESSION['channel']) && !isset($_POST["channel"])) {
 			$symbol = NULL;
@@ -50,28 +80,46 @@
 			}
 			$channelHeading = $symbol." ".$channelName;
     }
+		if (!isset($_SESSION["chStatus"]) && !isset($_POST["chStatus"])) {
+			$temp = $channelList[0]['status'];
+			if ($temp == "archived") {
+				$chStatus = "Unarchive";
+			} else if ($temp == "unarchived") {
+				$chStatus = "Archive";
+			}
+			$_POST["chStatus"] = $chStatus;
+		}
 
      foreach ($channelList as $index) {
 			$chName = NULL;
 			$type = NULL;
 			$sym = NULL;
+			$ch_status = NULL;
 		 	foreach ($index as $key => $value) {
 				if ($key == "channel") {
 					$chName = $value;
 				} else if ($key == "type") {
 					$type = $value;
+				} else if ($key == "status") {
+					$temp = $value;
+					if ($temp == "archived") {
+						$ch_status = "Unarchive";
+					} else if ($temp == "unarchived") {
+						$ch_status = "Archive";
+					}
 				}
 				if ($type == "Public") {
 					$sym = "#";
 				} else {
 					$sym = "∆";
 				}
-				if ($type != NULL && $chName != NULL) {
+				if ($type != NULL && $chName != NULL && $ch_status != NULL) {
 					$finalName = $sym." ".$chName;
       		echo '<div class="col-xs-12">
 									<form method="post" action = "home.php">
 										<input type="hidden" name="channel" value="'.$chName.'" >
 										<input type="hidden" name="channelHeading" value="'.$finalName.'" >
+										<input type="hidden" name="chStatus" value="'.$ch_status.'" >
 										<input type="submit" class="client_channel_display" value="'.$finalName.'" >
 									</form>
 								</div>';

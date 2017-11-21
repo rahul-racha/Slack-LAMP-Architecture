@@ -124,6 +124,8 @@
           {
             $responseString = 'Query returned an error';
           }
+        } else {
+          $responseString = "Channel is archived";
         }
         return $responseString;
     }
@@ -348,12 +350,15 @@
     public function removeUsersFromChannel($userList, $channelName, $workspaceUrl) {
       $removedUsers = array('success' => array(), 'failed' => array());
       $this->homeModelVar = new HomeModel();
-      foreach ($userList as $userID) {
-        $affectedRows = $this->homeModelVar->removeUserFromChannel($userID, $channelName, $workspaceUrl);
-        if ($affectedRows > 0) {
-          array_push($removedUsers['success'], $userID);
-        } else {
-          array_push($removedUsers['failed'], $userID);
+      $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+      if ($chStatus != "archived") {
+        foreach ($userList as $userID) {
+          $affectedRows = $this->homeModelVar->removeUserFromChannel($userID, $channelName, $workspaceUrl);
+          if ($affectedRows > 0) {
+            array_push($removedUsers['success'], $userID);
+          } else {
+            array_push($removedUsers['failed'], $userID);
+          }
         }
       }
       return $removedUsers;
@@ -369,11 +374,14 @@
     public function deletePostsFromChannel($msgID, $channelName, $workspaceUrl) {
       $isSuccess = NULL;
       $this->homeModelVar = new HomeModel();
-      $affectedRows = $this->homeModelVar->deletePostsFromChannel($msgID, $channelName, $workspaceUrl);
-      if ($affectedRows > 0) {
-        $isSuccess = "true";
-      } else {
-        $isSuccess = "false";
+      $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+      if ($chStatus != "archived") {
+        $affectedRows = $this->homeModelVar->deletePostsFromChannel($msgID, $channelName, $workspaceUrl);
+        if ($affectedRows > 0) {
+          $isSuccess = "true";
+        } else {
+          $isSuccess = "false";
+        }
       }
       return $isSuccess;
     }

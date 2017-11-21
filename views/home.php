@@ -70,7 +70,7 @@
         	<?php displayChannels(); ?>
 				</div>
       </div>
-      <div class="client_main_continer col-xs-10 row change_row_prop">
+      <div id="msg-cont" class="client_main_continer col-xs-10 row change_row_prop">
         <div class="client_message_header col-xs-12 row change_row_prop">
           <!-- header -->
           <div class="client_channel_title col-xs-8">
@@ -90,6 +90,7 @@
             <a class="client_invite_users_link" href="#" data-toggle="modal" data-target = "#removeUsers">
               <i class="fa fa fa-trash-o" aria-hidden="true"></i>
             </a>
+            <button type="button" id="archiveButton" value="<?php echo $_POST["channel"]; ?>" class="btn btn-primary"><?php echo $chStatus; ?></button>
           </div>
         </div>
         <div class="client_user_search_suggestions">
@@ -122,6 +123,7 @@
                 <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
                 <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
                 <input type="hidden" name="channelHeading" value="<?php echo $channelHeading; ?>"/>
+                <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
                 <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
                 <input id="SubmitButton" class="col-xs-1 client_messsage_entry_submit_button" type="submit" name="submit"/>
               </form>
@@ -239,6 +241,7 @@
                     <input type="text" class="form-control" name="newUserSearch[]">
                   </div>
                   <input type="hidden" name="newChannel" value="newChannel">
+                  <input type="hidden" name="chStatus" value="unarchived">
                   <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
                 </form>
             </div>
@@ -266,6 +269,7 @@
             </div>
               <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
               <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
               <input type="hidden" name="inviteUsersExistingChannel" value = "inviteUser">
               <input type="submit" value="Invite" class="btn btn-primary btn-sm">
           </form>
@@ -292,6 +296,7 @@
             </div>
               <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
               <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
               <input type="hidden" name="removeUsersExistingChannel" value = "removeUser">
               <input type="submit" value="Remove" class="btn btn-primary btn-sm">
           </form>
