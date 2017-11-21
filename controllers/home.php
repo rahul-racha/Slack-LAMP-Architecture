@@ -36,6 +36,13 @@
       header("location:".$url);
     }
 
+    public function validateInputs($data) {
+      $data = trim($data);
+      //$data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+    }
+
     public function viewChannels($workspaceUrl)
     {
         $this->homeModelVar = new HomeModel();
@@ -124,6 +131,8 @@
           {
             $responseString = 'Query returned an error';
           }
+        } else {
+          $responseString = "Channel is archived";
         }
         return $responseString;
     }
@@ -348,15 +357,25 @@
     public function removeUsersFromChannel($userList, $channelName, $workspaceUrl) {
       $removedUsers = array('success' => array(), 'failed' => array());
       $this->homeModelVar = new HomeModel();
-      foreach ($userList as $userID) {
-        $affectedRows = $this->homeModelVar->removeUserFromChannel($userID, $channelName, $workspaceUrl);
-        if ($affectedRows > 0) {
-          array_push($removedUsers['success'], $userID);
-        } else {
-          array_push($removedUsers['failed'], $userID);
+      $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+      if ($chStatus != "archived") {
+        foreach ($userList as $userID) {
+          $affectedRows = $this->homeModelVar->removeUserFromChannel($userID, $channelName, $workspaceUrl);
+          if ($affectedRows > 0) {
+            array_push($removedUsers['success'], $userID);
+          } else {
+            array_push($removedUsers['failed'], $userID);
+          }
         }
       }
       return $removedUsers;
+    }
+
+    public function retChannelsOfUser($userID, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $channelList = array();
+      $channelList = $this->homeModelVar->retChannelsOfUser($userID, $workspaceUrl);
+      return $channelList;
     }
 
     public function retUsersFromChannel($channelName, $workspaceUrl) {
@@ -366,14 +385,24 @@
       return $userList;
     }
 
+    public function retInviteUsersForChannel($channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $userList = array();
+      $userList = $this->homeModelVar->retInviteUsersForChannel($channelName, $workspaceUrl);
+      return $userList;
+    }
+
     public function deletePostsFromChannel($msgID, $channelName, $workspaceUrl) {
       $isSuccess = NULL;
       $this->homeModelVar = new HomeModel();
-      $affectedRows = $this->homeModelVar->deletePostsFromChannel($msgID, $channelName, $workspaceUrl);
-      if ($affectedRows > 0) {
-        $isSuccess = "true";
-      } else {
-        $isSuccess = "false";
+      $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
+      if ($chStatus != "archived") {
+        $affectedRows = $this->homeModelVar->deletePostsFromChannel($msgID, $channelName, $workspaceUrl);
+        if ($affectedRows > 0) {
+          $isSuccess = "true";
+        } else {
+          $isSuccess = "false";
+        }
       }
       return $isSuccess;
     }

@@ -21,6 +21,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="js/home.js"></script>
+  <script type="text/javascript" src="js/typeahead.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -70,7 +71,7 @@
         	<?php displayChannels(); ?>
 				</div>
       </div>
-      <div class="client_main_continer col-xs-10 row change_row_prop">
+      <div id="msg-cont" class="client_main_continer col-xs-10 row change_row_prop">
         <div class="client_message_header col-xs-12 row change_row_prop">
           <!-- header -->
           <div class="client_channel_title col-xs-8">
@@ -84,12 +85,13 @@
           <div class="col-xs-1">
           </div>
           <div class="client_invite_users col-xs-12">
-            <a class="client_invite_users_link" href="#" data-toggle="modal" data-target = "#inviteUsers">
+            <a class="client_invite_users_link" href="#" data-toggle="modal" id="inviteUserLink" data-target = "#inviteUsers">
               <i class="fa fa-user-o" aria-hidden="true"></i>
             </a>
-            <a class="client_invite_users_link" href="#" data-toggle="modal" data-target = "#removeUsers">
+            <a class="client_invite_users_link" href="#" data-toggle="modal" id="removeUserLink" data-target = "#removeUsers">
               <i class="fa fa fa-trash-o" aria-hidden="true"></i>
             </a>
+            <button type="button" id="archiveButton" value="<?php echo $_POST["channel"]; ?>" class="btn btn-primary"><?php echo $chStatus; ?></button>
           </div>
         </div>
         <div class="client_user_search_suggestions">
@@ -128,6 +130,7 @@
                 <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
                 <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
                 <input type="hidden" name="channelHeading" value="<?php echo $channelHeading; ?>"/>
+                <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
                 <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
                 <input id="SubmitButton" class="col-xs-1 client_messsage_entry_submit_button" type="submit" name="submit"/>
               </form>
@@ -245,6 +248,7 @@
                     <input type="text" class="form-control" name="newUserSearch[]">
                   </div>
                   <input type="hidden" name="newChannel" value="newChannel">
+                  <input type="hidden" name="chStatus" value="unarchived">
                   <input type="submit" value="Create Channel" class="btn btn-primary btn-sm">
                 </form>
             </div>
@@ -266,14 +270,17 @@
         </div>
         <div class="modal-body">
           <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
-            <div class="form-group">
-              <label for="invitingNewUsers">Invite members</label>
-              <input type="text" class="form-control" name="addUserExistingChannel[]">
+            <label for="invitingNewUsers">Invite member</label>
+            <div id="inviteUsersSearchBox" class="form-group inviteUserClass">
+              <input type="text" class="form-control typeahead" name="addUserExistingChannel[]">
             </div>
+            <div class = "inviteUserClass">
               <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
               <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
               <input type="hidden" name="inviteUsersExistingChannel" value = "inviteUser">
               <input type="submit" value="Invite" class="btn btn-primary btn-sm">
+            </div>
           </form>
         </div>
         <div class="modal-footer">
@@ -292,16 +299,19 @@
         </div>
         <div class="modal-body">
           <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
-            <div class="form-group">
-              <label for="removingNewUsers">Remove members</label>
-              <input type="text" class="form-control" name="removeUserExistingChannel[]">
+            <label for="removingNewUsers">Remove member</label>
+            <div id="delUsersSearchBox" class="form-group delUserClass">
+              <input type="text" class="form-control typeahead" name="removeUserExistingChannel[]">
             </div>
+            <div class = "delUserClass">
               <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
               <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
               <input type="hidden" name="removeUsersExistingChannel" value = "removeUser">
               <input type="submit" value="Remove" class="btn btn-primary btn-sm">
+            </div>
           </form>
-        </div>
+      </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>

@@ -221,3 +221,7 @@ html, body{
 #img-upload{
     width: 100%;
 }
+
+.delUserClass, .inviteUserClass {
+  display: inline-block;
+}

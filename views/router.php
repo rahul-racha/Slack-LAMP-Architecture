@@ -8,6 +8,7 @@
   $textArea = NULL;
   $channelResponse = NULL;
   $channelHeading = NULL;
+  $chStatus = NULL;
   $channelCreator = array();
   $newInviteUserResponse = array();
   $workspaceUrl = "musicf17.slack.com";
@@ -39,6 +40,19 @@
 		$channelHeading = $_POST["channelHeading"];
 	}
 
+  if (isset($_POST["chStatus"])) {
+		global $chStatus;
+    if ($_POST["chStatus"] == "archived") {
+			$chStatus = "Unarchive";
+			$_POST["chStatus"] = $chStatus;
+		} else if ($_POST["chStatus"] == "unarchived") {
+			$chStatus = "Archive";
+			$_POST["chStatus"] = $chStatus;
+		} else {
+			$chStatus = $_POST["chStatus"];
+		}
+	}
+
   if (isset($_POST["textarea"])) {
     global $textArea;
     $textArea = $_POST["textarea"];
@@ -46,9 +60,21 @@
   }
 
   if (isset($_POST['newChannel']) && $_POST['newChannel'] == "newChannel") {
+    global $channelName;
+    global $chStatus;
     $channelName = $_POST['channel'];
     $purpose = $_POST['purpose'];
     $channeltype = $_POST['channelType'];
+
+    if ($_POST["chStatus"] == "archived") {
+			$chStatus = "Unarchive";
+			$_POST["chStatus"] = $chStatus;
+		} else if ($_POST["chStatus"] == "unarchived") {
+			$chStatus = "Archive";
+			$_POST["chStatus"] = $chStatus;
+		} else {
+			$chStatus = $_POST["chStatus"];
+		}
     createChannel($channelName, $purpose, $channeltype, $_POST["newUserSearch"]);
   }
 
@@ -56,6 +82,7 @@
     global $newInviteUserResponse;
     global $channelName;
     global $channelHeading;
+    global $chStatus;
     global $workspaceUrl;
     global $homeControlVar;
     $temp = array();
@@ -76,6 +103,7 @@
     }
     $_SESSION['channel'] = $channelName;
     $_SESSION['channelHeading'] = $channelHeading;
+    $_SESSION['chStatus'] = $chStatus;
     unset($_POST['inviteUsersExistingChannel']);
     unset($_POST["channel"]);
     unset($_POST['addUserExistingChannel']);
@@ -85,6 +113,7 @@
   if (isset($_POST['removeUsersExistingChannel']) && $_POST['removeUsersExistingChannel'] == 'removeUser') {
     global $channelName;
     global $channelHeading;
+    global $chStatus;
     global $workspaceUrl;
     $userList = array();
     $removedUserResponse = array();
@@ -102,6 +131,7 @@
     }
     $_SESSION['channel'] = $channelName;
     $_SESSION['channelHeading'] = $channelHeading;
+    $_SESSION['chStatus'] = $chStatus;
     unset($_POST['removeUsersExistingChannel']);
     unset($_POST["channel"]);
     unset($_POST['removeUserExistingChannel']);
@@ -113,15 +143,19 @@
     global $channelName;
     global $channelHeading;
     global $workspaceUrl;
+    global $chStatus;
     $threadId = NULL;
     $messageType = 'post';
     unset($_POST["textarea"]);
     $image_path = NULL;
     $snippet = NULL;
     $message = $homeControlVar->insertMessage($channelName,$textArea,$image_path,$snippet,$threadId,$messageType, $workspaceUrl);
-    $_SESSION['channel'] = $channelName;
-    $_SESSION['channelHeading'] = $channelHeading;
-    $homeControlVar->redirectToHome();
+    //if ($message != 'false') {
+      $_SESSION['channel'] = $channelName;
+      $_SESSION['channelHeading'] = $channelHeading;
+      $_SESSION['chStatus'] = $chStatus;
+      $homeControlVar->redirectToHome();
+    //}
   }
 
   function createChannel($channelName, $purpose, $channeltype, $invitedUsers) {
@@ -131,6 +165,7 @@
     global $channelResponse;
     global $channelCreator;
     global $channelHeading;
+    global $chStatus;
 
     $channelResponse = $homeControlVar->createNewChannel($channelName, $purpose, $channeltype, $workspaceUrl);
     if ($channelResponse == "true") {
@@ -154,6 +189,7 @@
       $channelHeading = "∆"." ".$channelName;
     }
     $_SESSION['channelHeading'] = $channelHeading;
+    $_SESSION['chStatus'] = $chStatus;
     }
     unset($_POST['newChannel']);
     unset($_POST["channel"]);
@@ -211,10 +247,12 @@
       if ($emoName == "like" || $emoName == "dislike") {
         $infoLike = array();
         $infoLike = $homeControlVar->getReactionInfoForMsg($msgId, "like");
-        $isLikeExists = $homeControlVar->isUserExistsForReaction($infoLike['users']);
+        $likedUsers = isset($infoLike['users']) ? $infoLike['users'] : NULL;
+        $isLikeExists = $homeControlVar->isUserExistsForReaction($likedUsers);
         $infoDislike = array();
         $infoDislike = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
-        $isDislikeExists = $homeControlVar->isUserExistsForReaction($infoDislike['users']);
+        $disLikedUsers = isset($infoDislike['users']) ? $infoDislike['users'] : NULL;
+        $isDislikeExists = $homeControlVar->isUserExistsForReaction($disLikedUsers);
         $responseArray = array();
 
         if($emoName == "like" && $isLikeExists == "true") {
@@ -242,6 +280,7 @@
 
       $computedResp = array('emoResp'=>$reactionResponse, 'likeCount'=>$likeCount, 'dislikeCount'=>$dislikeCount);
       echo json_encode($computedResp);//$reactionResponse['count'];//json_encode($reactionResponse); $reactionHandling["message"];
+      //echo json_encode($reactionResponse);
     }
     // image insertion
     if(isset($_POST["image_insertion"])){
@@ -282,4 +321,33 @@
       $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
       echo $message;
     }
+
+    if (isset($_POST["channel_status"])) {
+      global $homeControlVar;
+      global $workspaceUrl;
+      global $channelName;
+      $status = $_POST["channel_status"]["status"];
+      $channelName = $_POST["channel_status"]["channel"];
+      $isSuccess = $homeControlVar->updateChannelStatus($channelName, $workspaceUrl, $status);
+      echo $isSuccess;
+    }
+
+    if (isset($_POST["getUsersForChannel"])) {
+      global $homeControlVar;
+      global $workspaceUrl;
+      global $channelName;
+      $channelName = $_POST["getUsersForChannel"];
+      $userList = $homeControlVar->retUsersFromChannel($channelName, $workspaceUrl);
+      echo json_encode($userList);
+    }
+
+  if (isset($_POST["inviteUsersForChannel"])) {
+    global $homeControlVar;
+    global $workspaceUrl;
+    global $channelName;
+    $channelName = $_POST["inviteUsersForChannel"];
+    $userList = $homeControlVar->retInviteUsersForChannel($channelName, $workspaceUrl);
+    echo json_encode($userList);
+  }
+
 ?>

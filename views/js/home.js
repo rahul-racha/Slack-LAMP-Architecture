@@ -3,17 +3,148 @@ $(document).ready(function(){
 		if (userRole == "admin") {
 			$(".delPost").show();
 			$(".fa-trash-o").show();
+			$("#archiveButton").show();
 		} else {
 			$(".delPost").hide();
 			$(".fa-trash-o").hide();
+			$("#archiveButton").hide();
 		}
+
+		var archBtnName = $("#archiveButton").text();
+		if (archBtnName == "Archive") {
+			$("#archiveButton").removeClass("btn btn-danger").addClass("btn btn-primary");
+			$('#msg-cont').css('background-color', 'white');
+		} else {
+			$("#archiveButton").removeClass("btn btn-primary").addClass("btn btn-danger");
+			$('#msg-cont').css('background-color', 'darkseagreen');
+		}
+
+		$("#archiveButton").on("click",function(e) {
+			var status = $("#archiveButton").text();
+			var channel = $("#archiveButton").attr("value");
+			if (status == "Archive") {
+				status = "archived";
+			} else {
+				status = "unarchived";
+			}
+			$.ajax({
+				method: 'post',
+				url: './router.php',
+				data: {'channel_status': {'status': status, 'channel': channel}},
+				dataType: 'text',
+				success: function(data) {
+					if (data == "true") {
+						var str = null;
+						if (status == "archived") {
+							str = "Unarchive";
+						} else {
+							str = "Archive";
+						}
+						$("#archiveButton").html(str);
+						if (str == "Archive") {
+							$("#archiveButton").removeClass("btn btn-danger").addClass("btn btn-primary");
+							$('#msg-cont').css('background-color', 'white');
+						} else {
+							$("#archiveButton").removeClass("btn btn-primary").addClass("btn btn-danger");
+							$('#msg-cont').css('background-color', 'darkseagreen');
+						}
+					}
+				},
+				error: function(){
+					console.log("Error");
+				}
+			});
+		});
+
+
+		var substringMatcher = function(strs) {
+		  return function findMatches(q, cb) {
+		    var matches, substringRegex;
+
+		    // an array that will be populated with substring matches
+		    matches = [];
+
+		    // regex used to determine if a string contains the substring `q`
+		    substrRegex = new RegExp(q, 'i');
+
+		    // iterate through the pool of strings and for any string that
+		    // contains the substring `q`, add it to the `matches` array
+		    $.each(strs, function(i, str) {
+		      if (substrRegex.test(str)) {
+		        matches.push(str);
+		      }
+		    });
+
+		    cb(matches);
+		  };
+		};
+
+		$(document).on("click","#removeUserLink",function(e){
+			var channel = $(".delUserClass > :input[name=channel]").val();
+			var userList = null;
+			$.ajax({
+				method: 'post',
+				url: './router.php',
+				data: {'getUsersForChannel': channel},
+				dataType: 'json',
+				success: function(data) {
+					//$.parseJSON(data);
+					console.log(data);
+					var userList = data;
+					$('#delUsersSearchBox .typeahead').typeahead({
+					  hint: true,
+					  highlight: true,
+					  minLength: 1
+					},
+					{
+					  name: 'userList',
+					  source: substringMatcher(userList)
+					});
+				},
+				error: function() {
+					console.log("Error");
+				}
+			});
+
+		});
+
+		$(document).on("click","#inviteUserLink",function(e){
+			var channel = $(".inviteUserClass > :input[name=channel]").val();
+			var userList = null;
+			$.ajax({
+				method: 'post',
+				url: './router.php',
+				data: {'inviteUsersForChannel': channel},
+				dataType: 'json',
+				success: function(data) {
+					//$.parseJSON(data);
+					console.log(data);
+					var userList = data;
+					$('#inviteUsersSearchBox .typeahead').typeahead({
+					  hint: true,
+					  highlight: true,
+					  minLength: 1
+					},
+					{
+					  name: 'userList',
+					  source: substringMatcher(userList)
+					});
+				},
+				error: function() {
+					console.log("Error");
+				}
+			});
+
+		});
+
+
 		$(document).on("click",".like",function(e){
-		// $(".like").on("click",function(e){
 			var emoName = e.currentTarget.className;
 			var msgId = parseInt(e.currentTarget.id);
 			$.ajax({
 				method: 'post',
 				url: './router.php',
+				//cache: false,
 				data: {'insertReaction': {'msgId':msgId, 'emoName':emoName}},
 				dataType: 'json',
 				success: function(data){
@@ -36,6 +167,7 @@ $(document).ready(function(){
 			$.ajax({
 				method: 'post',
 				url: './router.php',
+				//cache: false,
 				data: {'insertReaction': {'msgId':msgId, 'emoName':emoName, 'isInsert': "true"}},
 				dataType: 'json',
 				success: function(data){
