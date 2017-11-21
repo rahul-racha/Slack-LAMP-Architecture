@@ -219,12 +219,62 @@
       return $userList;
     }
 
+    public function retInviteUsersForChannel($channelName, $workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $userList = array();
+      $chId = $this->getChannelId($channelName, $workspaceUrl);
+      if ($chId != NULL && $chId > 0) {
+        $getUsersFromCh = "SELECT U.user_id AS user_id
+                           FROM user_info AS U INNER JOIN workspace AS W
+                           WHERE U.user_id = W.user_id AND W.url = '$workspaceUrl'
+                           AND U.user_id NOT IN (
+                             SELECT user_id
+                             FROM inside_channel
+                             WHERE channel_id = $chId
+                           )";
+        $result = mysqli_query($conn, $getUsersFromCh);
+       if (mysqli_num_rows($result) > 0)
+       {
+         while ($row = $result->fetch_assoc())
+         {
+           array_push($userList, $row["user_id"]);
+         }
+       }
+        mysqli_free_result($result);
+      }
+
+      $dbConVar->closeConnectionObject($conn);
+      return $userList;
+    }
+
+    public function retChannelsOfUser($userID, $workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $channelList = array();
+      $getChannels = "SELECT channel_name
+                      FROM inside_channel AS I INNER JOIN workspace_channels AS W
+                      ON I.channel_id = W.channel_id
+                      WHERE I.user_id = '$userID' AND W.url = '$workspaceUrl'";
+      $result = mysqli_query($conn, $getChannels);
+      if (mysqli_num_rows($result) > 0)
+      {
+       while ($row = $result->fetch_assoc())
+       {
+         array_push($channelList, $row['channel_name']);
+       }
+      }
+      mysqli_free_result($result);
+      $dbConVar->closeConnectionObject($conn);
+      return $channelList;
+    }
+
     public function retrieveRxnMetrics($userID, $workspace) {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $rxnMetrics = array();
       $pattern = ";".$userID.";"; // ";".$_SESSION['userid'].";";
-      $getRxnMetrics = "SELECT channel_name, B.emo_name AS emo_name, COUNT(B.emo_name) emo_count
+      $getRxnMetrics = "SELECT channel_name, B.emo_name AS emo_name, COUNT(B.emo_name) AS emo_count
                      FROM (
                      SELECT C.channel_id, C.user_id, C.msg_id, R.emo_id, emo_name
                      FROM emoticons INNER JOIN reactions AS R ON emoticons.emo_id = R.emo_id
@@ -232,7 +282,7 @@
                      WHERE R.users LIKE '%{$pattern}%'
                      ) B INNER JOIN workspace_channels AS W ON B.channel_id = W.channel_id
                      AND W.url = '$workspace'
-                     GROUP BY B.channel_id, B.emo_name";
+                     GROUP BY channel_name, B.emo_name";
       $result = mysqli_query($conn, $getRxnMetrics);
      if (mysqli_num_rows($result) > 0)
      {
@@ -250,7 +300,7 @@
      $dbConVar = new dbConnect();
      $conn = $dbConVar->createConnectionObject();
      $postMetrics = array();
-     $getPostMetrics = "SELECT channel_name, COUNT(G.msg_id) msg_count
+     $getPostMetrics = "SELECT channel_name, COUNT(G.msg_id) AS msg_count
                         FROM (
                         SELECT channel_name, M.channel_id, M.msg_id
                         FROM channel_messages AS M INNER JOIN workspace_channels AS W

@@ -364,10 +364,24 @@
       return $removedUsers;
     }
 
+    public function retChannelsOfUser($userID, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $channelList = array();
+      $channelList = $this->homeModelVar->retChannelsOfUser($userID, $workspaceUrl);
+      return $channelList;
+    }
+
     public function retUsersFromChannel($channelName, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $userList = array();
       $userList = $this->homeModelVar->retUsersFromChannel($channelName, $workspaceUrl);
+      return $userList;
+    }
+
+    public function retInviteUsersForChannel($channelName, $workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $userList = array();
+      $userList = $this->homeModelVar->retInviteUsersForChannel($channelName, $workspaceUrl);
       return $userList;
     }
 

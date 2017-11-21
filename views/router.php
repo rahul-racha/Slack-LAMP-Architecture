@@ -247,10 +247,12 @@
       if ($emoName == "like" || $emoName == "dislike") {
         $infoLike = array();
         $infoLike = $homeControlVar->getReactionInfoForMsg($msgId, "like");
-        $isLikeExists = $homeControlVar->isUserExistsForReaction($infoLike['users']);
+        $likedUsers = isset($infoLike['users']) ? $infoLike['users'] : NULL;
+        $isLikeExists = $homeControlVar->isUserExistsForReaction($likedUsers);
         $infoDislike = array();
         $infoDislike = $homeControlVar->getReactionInfoForMsg($msgId, "dislike");
-        $isDislikeExists = $homeControlVar->isUserExistsForReaction($infoDislike['users']);
+        $disLikedUsers = isset($infoDislike['users']) ? $infoDislike['users'] : NULL;
+        $isDislikeExists = $homeControlVar->isUserExistsForReaction($disLikedUsers);
         $responseArray = array();
 
         if($emoName == "like" && $isLikeExists == "true") {
@@ -278,6 +280,7 @@
 
       $computedResp = array('emoResp'=>$reactionResponse, 'likeCount'=>$likeCount, 'dislikeCount'=>$dislikeCount);
       echo json_encode($computedResp);//$reactionResponse['count'];//json_encode($reactionResponse); $reactionHandling["message"];
+      //echo json_encode($reactionResponse);
     }
     // image insertion
     if(isset($_POST["image_insertion"])){
@@ -328,4 +331,23 @@
       $isSuccess = $homeControlVar->updateChannelStatus($channelName, $workspaceUrl, $status);
       echo $isSuccess;
     }
+
+    if (isset($_POST["getUsersForChannel"])) {
+      global $homeControlVar;
+      global $workspaceUrl;
+      global $channelName;
+      $channelName = $_POST["getUsersForChannel"];
+      $userList = $homeControlVar->retUsersFromChannel($channelName, $workspaceUrl);
+      echo json_encode($userList);
+    }
+
+  if (isset($_POST["inviteUsersForChannel"])) {
+    global $homeControlVar;
+    global $workspaceUrl;
+    global $channelName;
+    $channelName = $_POST["inviteUsersForChannel"];
+    $userList = $homeControlVar->retInviteUsersForChannel($channelName, $workspaceUrl);
+    echo json_encode($userList);
+  }
+
 ?>

@@ -11,16 +11,118 @@ $t_rxn_count = NULL;
 $t_post_count = NULL;
 $user_profile = array();
 $metrics = array();
+$postRating = NULL;
+$rxnRating = NULL;
+$emoCount = array("likes"=>0,"dislikes"=>0);
 
-if(isset($_GET['userid'])) {
+if (isset($_GET['userid'])) {
     global $homeControlVar;
     global $workspaceUrl;
     global $user_profile;
     global $metrics;
+    global $postRating;
+    global $rxnRating;
+    global $emoCount;
+
     $user_id = $_GET['userid'];
 		$user_profile = $homeControlVar->getProfile($user_id, $workspaceUrl);
     $metrics = $homeControlVar->getUserMetrics($user_id, $workspaceUrl);
-    // print_r($metrics);
+    $channelList = array();
+    $channelList = $homeControlVar->retChannelsOfUser($user_id, $workspaceUrl);
+    $metricRxArray = array();
+    if (isset($metrics['reaction']) && !empty($metrics['reaction']) && $metrics['reaction'] != NULL) {
+      $metricRxArray = $metrics['reaction'];
+    }
+    $postRating = computePostRatings($metrics['post'], $metrics['relPost']);
+    $rxnRating = computeRxnRatings($metricRxArray, $channelList);
+    $emoCount = computeEmoRating($metricRxArray);
+}
+
+function computeEmoRating($rxnInfo) {
+  global $homeControlVar;
+  global $workspaceUrl;
+
+  $tlikes = 0;
+  $tdislikes = 0;
+  $total = array("likes"=>0,"dislikes"=>0);
+  foreach ($rxnInfo as $valuePrime) {
+    $tempKey = NULL;
+    foreach ($valuePrime as $key=>$value) {
+
+      if ($key != "channel_name") {
+      if ($value == "like") {
+        $tempKey = "like";
+      } else if ($value == "dislike") {
+        $tempKey = "dislike";
+      }
+      if ($tempKey == "dislike" && $key == "emo_count") {
+        $tdislikes = $tdislikes + $value;
+        $tempKey = NULL;
+      } else if ($tempKey == "like" && $key == "emo_count") {
+        $tlikes = $tlikes + $value;
+        $tempKey = NULL;
+      }
+      //print_r($value);
+    // if ($value['emo_name'] == "like") {
+    //   $tlikes = $tlikes + $value['emo_count'];
+    // } else if ($value['emo_name'] == "dislike") {
+    //   $tdislikes = $tdislikes + $value['emo_count'];
+    // }
+  }
+  }
+  }
+
+  $total["likes"] = $tlikes;
+  $total["dislikes"] = $tdislikes;
+  return $total;
+}
+
+function computeRxnRatings($rxnInfo, $channelList) {
+  global $homeControlVar;
+  global $workspaceUrl;
+  $rxnRelCount = 0;
+  $rxnCount = 0;
+  $rating = 0;
+  foreach ($rxnInfo as $value) {
+    $rxnCount = $rxnCount + $value['emo_count'];
+  }
+
+  foreach ($channelList as $channel) {
+    $userList = array();
+    $userRxnCountList = array();
+    $userList = $homeControlVar->retUsersFromChannel($channel, $workspaceUrl);
+    foreach ($userList as $user) {
+       $temp = $homeControlVar->getChMetricsForUser($user, $channel, $workspaceUrl);
+       array_push($userRxnCountList, $temp);
+    }
+      $rxnRelCount = $rxnRelCount + max($userRxnCountList);
+    }
+   if ($rxnCount != 0 && $rxnRelCount != 0) {
+     $rating = ($rxnCount/$rxnRelCount)*100;
+   }
+  return $rating;
+}
+
+function computePostRatings($postInfo, $relPostInfo) {
+  $postCount = 0;
+  $postRelCount = 0;
+  $rating = 0;
+  //if (count($postInfo) == count($relPostInfo)) {
+    foreach($postInfo as $value) {
+      $postCount = $postCount + $value["msg_count"];
+    }
+    foreach($relPostInfo as $value) {
+      $postRelCount = $postRelCount + $value["max_count"];
+    }
+    // for ($x = 0; $x < count($postInfo); $x++) {
+    //   $postCount = $postCount + $postInfo[$x]["msg_count"];
+    //   $postRelCount = $postRelCount + $relPostInfo[$x]["max_count"];
+    // }
+    if ($postCount != 0 && $postRelCount != 0) {
+      $rating = ($postCount/$postRelCount)*100;
+    }
+  //}
+  return $rating;
 }
 
 ?>
@@ -130,9 +232,9 @@ if(isset($_GET['userid'])) {
               $post_percentage = ($user_messages_count / $r_post_count) * 100;
               echo "<h6>Post Metrics: </h6>";
               echo "<div class='star-ratings-sprite'>
-                      <span style='width:".$post_percentage."%' class='star-ratings-sprite-rating'></span>
+                      <span style='width:".$postRating."%' class='star-ratings-sprite-rating'></span>
                     </div>
-                    <span style='margin-left:2%;'>".$post_percentage."%</span>";
+                    <span style='margin-left:2%;'>".$postRating."%</span>";
               // if($rxn_percentage <= 20){
               //   echo "<button type='button' class='btn btn-danger'>Poor <span class='badge'></span></button>";
               // }
@@ -144,13 +246,13 @@ if(isset($_GET['userid'])) {
               // }
               echo "<h6>Reaction Metrics:</h6>";
               echo "<div class='star-ratings-sprite'>
-                      <span style='width:".$rxn_percentage."%' class='star-ratings-sprite-rating'></span>
+                      <span style='width:".$rxnRating."%' class='star-ratings-sprite-rating'></span>
                     </div>
-                    <span style='margin-left:2%;'>".$rxn_percentage."%</span>
+                    <span style='margin-left:2%;'>".$rxnRating."%</span>
                     <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-                    <span>".$like_count."</span>
+                    <span>".$emoCount["likes"]."</span>
                     <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
-                    <span>".$dislike_count."</span>";
+                    <span>".$emoCount["dislikes"]."</span>";
 
               // echo $rxn_percentage."<br />";
               // echo "<h6>Reaction Metrics:</h6>";

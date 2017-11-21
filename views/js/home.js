@@ -1,9 +1,4 @@
-// var archBtnName = ("#archiveButton").text();
-// if (archBtnName == "archived") {
-// 	("#archiveButton").html("Unarchive");
-// } else {
-// 	("#archiveButton").html("Archive");
-// }
+
 $(document).ready(function(){
 		if (userRole == "admin") {
 			$(".delPost").show();
@@ -60,12 +55,96 @@ $(document).ready(function(){
 				}
 			});
 		});
+
+
+		var substringMatcher = function(strs) {
+		  return function findMatches(q, cb) {
+		    var matches, substringRegex;
+
+		    // an array that will be populated with substring matches
+		    matches = [];
+
+		    // regex used to determine if a string contains the substring `q`
+		    substrRegex = new RegExp(q, 'i');
+
+		    // iterate through the pool of strings and for any string that
+		    // contains the substring `q`, add it to the `matches` array
+		    $.each(strs, function(i, str) {
+		      if (substrRegex.test(str)) {
+		        matches.push(str);
+		      }
+		    });
+
+		    cb(matches);
+		  };
+		};
+
+		$(document).on("click","#removeUserLink",function(e){
+			var channel = $(".delUserClass > :input[name=channel]").val();
+			var userList = null;
+			$.ajax({
+				method: 'post',
+				url: './router.php',
+				data: {'getUsersForChannel': channel},
+				dataType: 'json',
+				success: function(data) {
+					//$.parseJSON(data);
+					console.log(data);
+					var userList = data;
+					$('#delUsersSearchBox .typeahead').typeahead({
+					  hint: true,
+					  highlight: true,
+					  minLength: 1
+					},
+					{
+					  name: 'userList',
+					  source: substringMatcher(userList)
+					});
+				},
+				error: function() {
+					console.log("Error");
+				}
+			});
+
+		});
+
+		$(document).on("click","#inviteUserLink",function(e){
+			var channel = $(".inviteUserClass > :input[name=channel]").val();
+			var userList = null;
+			$.ajax({
+				method: 'post',
+				url: './router.php',
+				data: {'inviteUsersForChannel': channel},
+				dataType: 'json',
+				success: function(data) {
+					//$.parseJSON(data);
+					console.log(data);
+					var userList = data;
+					$('#inviteUsersSearchBox .typeahead').typeahead({
+					  hint: true,
+					  highlight: true,
+					  minLength: 1
+					},
+					{
+					  name: 'userList',
+					  source: substringMatcher(userList)
+					});
+				},
+				error: function() {
+					console.log("Error");
+				}
+			});
+
+		});
+
+
 		$(document).on("click",".like",function(e){
 			var emoName = e.currentTarget.className;
 			var msgId = parseInt(e.currentTarget.id);
 			$.ajax({
 				method: 'post',
 				url: './router.php',
+				//cache: false,
 				data: {'insertReaction': {'msgId':msgId, 'emoName':emoName}},
 				dataType: 'json',
 				success: function(data){
@@ -88,6 +167,7 @@ $(document).ready(function(){
 			$.ajax({
 				method: 'post',
 				url: './router.php',
+				//cache: false,
 				data: {'insertReaction': {'msgId':msgId, 'emoName':emoName, 'isInsert': "true"}},
 				dataType: 'json',
 				success: function(data){
