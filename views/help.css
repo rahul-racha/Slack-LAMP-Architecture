@@ -1,23 +1,7 @@
-/*body{
-	background-color: lightgray;
-	padding-right: 50px;
-	padding-left : 50px;
+.help_list_group{
+  overflow-y: scroll;
+  height: 300px;
 }
-h1{
-	background-color: red;
-color : white;
-text-align: center;
-padding : 20px;
-}
-
-h2{
-	background-color: gray;
-	color : white;
-}
-p {
-    font-family: verdana;
-    font-size: 20px;
-}*/
 .help_description_col{
   overflow-y: scroll;
   height: 300px;
