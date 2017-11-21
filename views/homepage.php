@@ -123,21 +123,26 @@
 											$name=$name. "<li class = 'MessageLI'>".$value['message']."</li>";
 										}
 										else if($value["image_path"] != ""){
-											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											$uploadedFileName = $value["image_path"];
+											$imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
+											// echo "image file type".$imageFileType;
+											if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
+												$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											}
 										}
 										else if($value["snippet"] != ""){
 											$name=$name. "<li class = 'MessageLI'><pre><code>".$value["snippet"]."</code></pre></li>";
 										}
 										$name=$name. "</ul>
 
-	                  <label class='like' name='like' id=".$msgId.">
+	                  <label class='like' name='like' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
 	                   </label>&nbsp &nbsp
-	                  <span id = 'likeResponse".$msgId."'>   $likeCount     </span>
-	                  <label class='dislike' name='dislike' id=".$msgId.">
+	                  <span id = 'likeResponse".$msgId."'> ".$likeCount."</span>
+	                  <label class='dislike' name='dislike' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
 	                  </label> &nbsp &nbsp
-	                  <span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
+	                  <span id = 'dislikeResponse".$msgId."'>".$dislikeCount."</span>".
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
@@ -147,38 +152,43 @@
 
 				}
 			else{
-				$name = $name. "<div id='bottom' class='message_profile_pic col-xs-1'>
+				$name = $name. "<div class='message_profile_pic col-xs-1'>
 									 <img src=".$value['avatar']." class='client_pic_display'>
 								 </div>
 								 <div class='message_content_wrapper col-xs-10'>
-										<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
-										"</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
-										<ul class = 'MessageUL'>";
+								 		<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
+	                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+	                  <ul class = 'MessageUL'>";
 										if($value["message"] != "" ){
 											$name=$name. "<li class = 'MessageLI'>".$value['message']."</li>";
 										}
 										else if($value["image_path"] != ""){
-											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											$uploadedFileName = $value["image_path"];
+											$imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
+											// echo "image file type".$imageFileType;
+											if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
+												$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											}
 										}
 										else if($value["snippet"] != ""){
 											$name=$name. "<li class = 'MessageLI'><pre><code>".$value["snippet"]."</code></pre></li>";
 										}
 										$name=$name. "</ul>
 
-										<label class='like' name='like' id=".$msgId.">
-										<i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-										 </label>&nbsp &nbsp
-										<span id = 'likeResponse".$msgId."'>   $likeCount     </span>
-										<label class='dislike' name='dislike' id=".$msgId.">
-										<i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
-										</label> &nbsp &nbsp
-										<span id = 'dislikeResponse".$msgId."'>  $dislikeCount   </span>".
+	                  <label class='like' name='like' id=".$msgId." style='cursor:pointer;'>
+	                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+	                   </label>&nbsp &nbsp
+	                  <span id = 'likeResponse".$msgId."'> ".$likeCount."</span>
+	                  <label class='dislike' name='dislike' id=".$msgId." style='cursor:pointer;'>
+	                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
+	                  </label> &nbsp &nbsp
+	                  <span id = 'dislikeResponse".$msgId."'>".$dislikeCount."</span>".
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
 										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
-								</div>";
+                </div>";
 			}
 		}
 		$i++;

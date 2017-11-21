@@ -88,8 +88,30 @@ $(document).ready(function(){
 					var str="";
 					//if(data.length){
 						data.forEach(function(e){
-							if(e["message"] != ""){
-								str+="<div class='row'><div class='col-xs-2'><img src='"+e["avatar"]+"' style='width:40px;'></div><div class='col-xs-4'><b>"+e['last_name']+"</b></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
+							if(e["message"]!= "" || e["image_path"]!= "" || e["snippet"]!= ""){
+								str+="<div class='row'><div class='col-xs-2'><img src='"+e["avatar"]+"' style='width:40px;'></div>";
+								str+= "<div class='col-xs-4'><b>"+e['last_name']+"</b></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div>";
+								str+= "<div class='row' style='overflow-x:scroll;'><div class='col-xs-12'>";
+								if(e["message"] != ""){
+									str+= e["message"];
+								}
+								else if (e["image_path"]) {
+									var uploadedFileName = e["image_path"];
+									var extension = uploadedFileName.replace(/^.*\./, '');
+									if (extension == uploadedFileName) {
+					          extension = '';
+					        }
+									else {
+										extension = extension.toLowerCase();
+									}
+									if(extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif"){
+										str+= "<img src='"+e["image_path"]+"' style='width:250px;'>";
+									}
+								}
+								else {
+									str+= "<pre><code>"+e["snippet"]+"</code></pre>";
+								}
+								str+= "</div></div>";
 							}
 						});
 					//}
@@ -125,8 +147,30 @@ $(document).ready(function(){
 						dataType: 'json',
 						success: function(data){
 							data.forEach(function(e){
-								if(e["message"] != ""){
-									str+="<div class='row'><div class='col-xs-2'><img src='"+e["avatar"]+"' style='width:40px;'></div><div class='col-xs-4'><b>"+e['last_name']+"</b></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div><div class='row'><div class='col-xs-12'>"+e['message']+"</div></div>";
+								if(e["message"]!= "" || e["image_path"]!= "" || e["snippet"]!= ""){
+									str+="<div class='row'><div class='col-xs-2'><img src='"+e["avatar"]+"' style='width:40px;'></div>";
+									str+= "<div class='col-xs-4'><b>"+e['last_name']+"</b></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div>";
+									str+= "<div class='row' style='overflow-x:scroll;'><div class='col-xs-12'>";
+									if(e["message"] != ""){
+										str+= e["message"];
+									}
+									else if (e["image_path"]) {
+										var uploadedFileName = e["image_path"];
+										var extension = uploadedFileName.replace(/^.*\./, '');
+										if (extension == uploadedFileName) {
+						          extension = '';
+						        }
+										else {
+											extension = extension.toLowerCase();
+										}
+										if(extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif"){
+											str+= "<img src='"+e["image_path"]+"' style='width:250px;'>";
+										}
+									}
+									else {
+										str+= "<pre><code>"+e["snippet"]+"</code></pre>";
+									}
+									str+= "</div></div>";
 								}
 							});
 							str+="<div class='row client_thread_reply_entry_area'><div class = 'col-xs-12'><input type='text' class='client_reply_message' required><input type='submit' id="+thread_id+" class='client_reply_message_submit'></div></div>";
@@ -225,6 +269,7 @@ $(document).ready(function(){
 					data: {'image_insertion':{'image_path':image_upload_path,'retChannel':retChannel}},
 					dataType: 'text',
 					success: function(data){
+						window.location.href='./home.php';
 			    	},
 			    	error: function(){
 			    		console.log("Error");
@@ -240,6 +285,7 @@ $(document).ready(function(){
 					data: {'image_insertion_from_url':{'image_upload_from_url_path':image_upload_from_url_path,'retChannel':retChannel}},
 					dataType: 'text',
 					success: function(data){
+						window.location.href='./home.php';
 			    	},
 			    	error: function(){
 			    		console.log("Error");
@@ -257,6 +303,7 @@ $(document).ready(function(){
 				data: {'snippet_insertion':{'snippet_text':snippet_text,'retChannel':retChannel}},
 				dataType: 'text',
 				success: function(data){
+					window.location.href='./home.php';
 		    	},
 		    	error: function(){
 		    		console.log("Error");

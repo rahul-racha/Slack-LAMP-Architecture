@@ -9,6 +9,7 @@ $user_messages_count = NULL;
 $emo_count_user = NULL;
 $t_rxn_count = NULL;
 $t_post_count = NULL;
+// $ch_metrics_user = array();
 $user_profile = array();
 $metrics = array();
 
@@ -20,7 +21,8 @@ if(isset($_GET['userid'])) {
     $user_id = $_GET['userid'];
 		$user_profile = $homeControlVar->getProfile($user_id, $workspaceUrl);
     $metrics = $homeControlVar->getUserMetrics($user_id, $workspaceUrl);
-    // print_r($metrics);
+    // $ch_metrics_user = $homeModelVar->getChMetricsForUser($userID, $channelName, $workspaceUrl);
+    // print_r($ch_metrics_user);
 }
 
 ?>
@@ -74,7 +76,16 @@ if(isset($_GET['userid'])) {
               foreach ($postMetrics as $value) {
                 echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
                 $user_messages_count += $value["msg_count"];
-                // $num_channels++;
+              }
+            ?>
+          </ul>
+          <ul style="list-style: none;">
+            <?php
+              $relative_post_count = array();
+              $relative_post_count = $metrics["relPost"];
+              foreach ($relative_post_count as $value) {
+                // echo "<li>".$value["channel_name"]." -- ".$value["max_count"]."</li>";
+                $r_post_count += $value["max_count"];
               }
             ?>
           </ul>
@@ -102,22 +113,10 @@ if(isset($_GET['userid'])) {
                 // echo $emo_count_user;
             ?>
           </ul>
-          <!-- <h6><a href="#">More... </a></h6> -->
-          <ul style="list-style: none;">
-            <?php
-              $relative_post_count = array();
-              $relative_post_count = $metrics["relPost"];
-              foreach ($relative_post_count as $value) {
-                // echo "<li>".$value["channel_name"]." -- ".$value["max_count"]."</li>";
-                $r_post_count += $value["max_count"];
-              }
-            ?>
-          </ul>
           <ul style="list-style: none;">
             <?php
               $relative_reaction_count = array();
               $relative_reaction_count = $metrics["relRxn"];
-              // print_r($relative_reaction_count);
               foreach ($relative_reaction_count as $value) {
                 echo "<li>".$value["channel_name"]." -- ".$value["max_rx_count"]."</li>";
                 $r_rxn_count += $value["max_rx_count"];

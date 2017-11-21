@@ -18,23 +18,28 @@
           <div class="col-xs-6 col-xs-offset-5 root-pic-div">
             <input type="image" id="profile-pic" src="images/users/default-avatar.png">
             <div class=hover-details>
-            <span class="glyphicon glyphicon-camera profile-camera"></span>
-            <span class="profile-text">Change Image</span>
-          </div>
+              <span class="glyphicon glyphicon-camera profile-camera"></span>
+              <span class="profile-text">Change Image</span>
+            </div>
             <input type="file" name="uploaded_file" id="profile-browse" onchange="loadFile(event)" multiple accept='image/*' style="display:none;">
           </div>
         </div>
 
         <div class="row">
           <div class="col-xs-12">
-          <button type="submit" value="upload" class="btn btn-default">Submit</button>
-        </div>
+            <div class="client_profile_pic_upload_submit">
+              <a href="profile.php" class="btn btn-default">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp Back
+              </a>
+              <button type="submit" value="upload" class="btn btn-default">Submit</button>
+            </div>
+          </div>
         </div>
         <div class="row" >
           <div class="col-xs-6 col-xs-offset-5">
             <p id="message"></p>
           </div>
-        <div>
+        </div>
       </form>
     </div>
   </div>

@@ -38,7 +38,11 @@
   z-index: 2;
 }
 
-button[type="submit"] {
+/*button[type="submit"] {
   margin-top: 20px;
   margin-left: 48%;
+}*/
+.client_profile_pic_upload_submit{
+  margin-left: 49%;
+  margin-top: 2%;
 }
