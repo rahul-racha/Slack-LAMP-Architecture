@@ -184,6 +184,28 @@
 
     }
 
+    public function retrieveUsersFromWrkspace($workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $userList = array();
+      $getUsers = "SELECT U.user_id AS user_id
+                   FROM user_info AS U INNER JOIN workspace AS W
+                   WHERE U.user_id = W.user_id AND W.url = '$workspaceUrl'";
+      $result = mysqli_query($conn, $getUsers);
+      if (mysqli_num_rows($result) > 0) {
+        while ($row = $result->fetch_assoc())
+        {
+          $row['user_id'] = $this->validateInputs($row['user_id']);
+          array_push($userList, $row['user_id']);
+        }
+      }
+      if ($result) {
+        mysqli_free_result($result);
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $userList;
+    }
+
     public function retrievePatternMatchedUsers($keyword, $workspace) {
       $dbConVar = new dbConnect();
       $pattern = "%".$keyword."%";
@@ -674,6 +696,19 @@
       return $affectedRows;
     }
 
+    public function addToDirectMsgList($userID, $recipient) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $sql = "INSERT INTO inside_direct_msg (user_id, recipient)
+              VALUES (?,?)";
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("ss", $userID, $recipient);
+      $stmt->execute();
+      $affectedRows = $stmt->affected_rows;
+      $stmt->close();
+      return $affectedRows;
+    }
+    
     public function addUserToChannel($userId, $channelName, $workspaceUrl)
     {
       $dbConVar = new dbConnect();
@@ -865,6 +900,20 @@
           $stmt->close();
         }
       }
+      $dbConVar->closeConnectionObject($conn);
+      return $affectedRows;
+    }
+
+    public function insertDirectMessage($fromID, $toID, $message, $workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $insDirectMsg = "INSERT INTO direct_message (user1, user2, direct_message, url)
+                       VALUE (?,?,?,?)";
+      $stmt = $conn->prepare($insDirectMsg);
+      $stmt->bind_param("ssss", $fromID, $toID, $message, $workspaceUrl);
+      $stmt->execute();
+      $affectedRows = $stmt->affected_rows;
+      $stmt->close();
       $dbConVar->closeConnectionObject($conn);
       return $affectedRows;
     }

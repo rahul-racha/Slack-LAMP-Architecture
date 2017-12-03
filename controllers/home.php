@@ -69,6 +69,21 @@
       return $userList;
     }
 
+    public function retrieveUsersFromWrkspace($workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $userList = array();
+      $userList = $this->homeModelVar->retrieveUsersFromWrkspace($workspaceUrl);
+      return $userList;
+    }
+
+    public function addToDirectMsgList($userID, $recipientList) {
+      $this->homeModelVar = new HomeModel();
+      foreach ($recipientList as $value) {
+        $affectedRows = $this->homeModelVar->addToDirectMsgList($userID, $value);
+        $recipientRows = $this->homeModelVar->addToDirectMsgList($value, $userID);
+      }
+    }
+
     public function viewMessages($channelName, $workspaceUrl,$retChannel)
     {
         $this->homeModelVar = new HomeModel();
@@ -423,6 +438,18 @@
       $this->homeModelVar = new HomeModel();
       $statusString = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
       return $statusString;
+    }
+
+    public function insertDirectMessage($toID, $message, $workspaceUrl) {
+      $isSuccess = NULL;
+      $this->homeModelVar = new HomeModel();
+      $affectedRows = $this->homeModelVar->insertDirectMessage($_SESSION['userid'], $toID, $message, $workspaceUrl);
+      if ($affectedRows > 0) {
+        $isSuccess = "true";
+      } else {
+        $isSuccess = "false";
+      }
+      return $isSuccess;
     }
 
   }
