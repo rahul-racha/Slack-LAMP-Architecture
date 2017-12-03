@@ -171,9 +171,10 @@
 											$name=$name. "<li class = 'MessageLI'>".$value['message']."</li>";
 										}
 										else if($value["image_path"] != ""){
-											$uploadedFileName = $value["image_path"];
-											$imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
-											// echo "image file type".$imageFileType;
+											//$uploadedFileName = $value["image_path"];
+											//$imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
+											$imageFileType = exif_imagetype($value["image_path"]);
+											// echo "string";
 											if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
 												$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
 											}
@@ -185,7 +186,7 @@
 
 	                  <label class='like' name='like' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-	                   </label>&nbsp &nbsp
+	                  </label>&nbsp &nbsp
 	                  <span id = 'likeResponse".$msgId."'> ".$likeCount."</span>
 	                  <label class='dislike' name='dislike' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>

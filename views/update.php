@@ -9,6 +9,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="js/update.js"></script>
+  <link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
 </head>
 <body>
   <div class="row">

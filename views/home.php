@@ -23,6 +23,7 @@
   <script type="text/javascript" src="js/home.js"></script>
   <script type="text/javascript" src="js/typeahead.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
 </head>
 
 <body>
@@ -70,6 +71,16 @@
 				<div class="client_channel_display col-xs-12 row">
         	<?php displayChannels(); ?>
 				</div>
+        <div class="client_channel_header col-xs-12 row">
+          <h4>Direct Messages
+            <!-- <a href="#" class="client_new_chanenl" data-toggle="modal" data-target="#NewChannel"> -->
+              <!-- <i class="fa fa-plus" aria-hidden="true"></i> -->
+            <!-- </a> -->
+          </h4>
+        </div>
+        <div class="client_channel_display col-xs-12 row">
+          <?php  ?>
+        </div>
       </div>
       <div id="msg-cont" class="client_main_continer col-xs-10 row change_row_prop">
         <div class="client_message_header col-xs-12 row change_row_prop">

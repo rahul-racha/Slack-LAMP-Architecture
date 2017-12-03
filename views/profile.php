@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
+</head>
+</html>
 <?php
 session_start();
 $_SESSION['basePath'] = '../';
@@ -222,7 +228,7 @@ function computePostRatings($postInfo, $relPostInfo) {
                 echo "<li>".$value["channel_name"]." -- ".$value["max_rx_count"]."</li>";
                 $r_rxn_count += $value["max_rx_count"];
               }
-              
+
             ?>
           </ul>
             <?php

@@ -108,4 +108,8 @@ $(document).ready(function(){
 	$(".instructions").on("click",function(e){
 		$("#nameErrMsg3").show();
 	});
+
+	function reCaptchad(){
+		document.getElementById("myButton").disabled = false;
+	}
 });
