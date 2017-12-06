@@ -180,7 +180,7 @@
 											}
 										}
 										else if($value["snippet"] != ""){
-											$name=$name. "<li class = 'MessageLI'><pre><code>".$value["snippet"]."</code></pre></li>";
+											$name=$name. "<li class = 'MessageLI'><pre class='client_snippet_pre_tag'><code>".$value["snippet"]."</code></pre></li>";
 										}
 										$name=$name. "</ul>
 

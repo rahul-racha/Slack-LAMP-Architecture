@@ -16,47 +16,53 @@
 		<link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
 		<script src="js/login.js"></script>
 		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+		<!-- gmail login api -->
+		<meta name="google-signin-scope" content="profile email">
+		<meta name="google-signin-client_id" content="117682046238-p3sgmtmn79b5pjr890frj7ijgov021fv.apps.googleusercontent.com">
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
 	</head>
 	<body>
 		<div class="login-page container-fluid">
 			<div class="row">
 				<center><h3>Slack Login</h3></center>
-				<div align="center" class="form">
-					<form action="<?php echo htmlspecialchars('../index.php'); ?>" method="post">
-						<div>
+				<div class="col-xs-3"></div>
+				<div class="form col-xs-7 row">
+					<div class="col-xs-6">
+						<form action="<?php echo htmlspecialchars('../index.php'); ?>" method="post">
 							<input type="text" name="userid" placeholder="userid" autocomplete="off" /><br>
 							<input type="password" name="password" placeholder="password" autocomplete="off" /><br>
+							<!-- <form action="?" method="POST"> -->
+								<div class="g-recaptcha" data-sitekey="6Le0vAgUAAAAAH_ZWM8tw3It6jkrqLHkFFTMOW-J" data-callback="reCaptchad"></div>
+								<br/>
+								<!-- <input id="myButton" type="submit" value="Submit" disabled='true'> -->
+							<!-- </form> -->
 							<input type="submit" name="submit" value="Sign in"></input>
-						</div>
-					</form>
-					<div>
+						</form>
 						<h5> New to Slack? <button class="btn btn-primary" data-toggle="modal" data-target="#SignupModal">Sign up now >></button></h5>
 					</div>
-					<p id="formMsg">
-					<?php
-							$reason = array('password'=>'Invalid username or password',
-													'blank'=>'You have left one or more fields');
-							if (isset($_SESSION['invalidCredentials']) && $_SESSION['invalidCredentials'] == 'true') {
-								unset($_POST);
-								echo $reason[$_SESSION['reason']];
-								session_destroy();
-							} else if (isset($_SESSION['registerResponse'])) {
-								echo $_SESSION['registerResponse'];
-								unset($_POST);
-								if (isset($_SESSION)) {
-								session_destroy();
-							}
-							}
-					?>
-				</p>
-					<div>
-						<form action="?" method="POST">
-							<div class="g-recaptcha" data-sitekey="6Le0vAgUAAAAAH_ZWM8tw3It6jkrqLHkFFTMOW-J" data-callback="reCaptchad"></div>
-							<br/>
-							<input id="myButton" type="submit" value="Submit" disabled='true'>
-						</form>
+					<div class="col-xs-6 client_login_with_wrapper">
+						<h4>Login with</h4>
+						<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
 					</div>
+					<p id="formMsg">
+						<?php
+								$reason = array('password'=>'Invalid username or password',
+														'blank'=>'You have left one or more fields');
+								if (isset($_SESSION['invalidCredentials']) && $_SESSION['invalidCredentials'] == 'true') {
+									unset($_POST);
+									echo $reason[$_SESSION['reason']];
+									session_destroy();
+								} else if (isset($_SESSION['registerResponse'])) {
+									echo $_SESSION['registerResponse'];
+									unset($_POST);
+									if (isset($_SESSION)) {
+									session_destroy();
+								}
+								}
+						?>
+					</p>
 				</div>
+				<div class="col-xs-2"></div>
 			</div>
 		</div>
 			<!-- Large modal -->
@@ -163,5 +169,11 @@
 		      </div>
 		    </div>
 		  </div>
+
+	    <script>
+
+	    </script>
+
+
 	</body>
 	</html>

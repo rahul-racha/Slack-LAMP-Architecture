@@ -124,8 +124,13 @@ html, body{
 .MessageUL{
   list-style: none;
   margin-left: -4%;
-
 }
+.client_snippet_pre_tag{
+  max-height: 50%;
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
 .client_button_adding_code_snipet{
   width: 0% !important;
   padding: 1.1%;
