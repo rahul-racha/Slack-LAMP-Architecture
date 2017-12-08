@@ -188,10 +188,14 @@ $(document).ready(function(){
 		// $(".delPost").on("click", function(e) {
 			var channelName = $(".chNameForMsg").attr("value");
 			var msgID = parseInt(e.currentTarget.id);
+			var retHeading = $(".delHeading").val();
+			var retStatus = $(".delStatus").val();
+
 			$.ajax({
 				method: 'post',
 				url: './router.php',
-				data: { 'deletePost' : {'msgID': msgID, 'ch_name': channelName}},
+				data: { 'deletePostID': msgID, 'channel': channelName, 'channelHeading':
+								retHeading, 'chStatus': retStatus},
 				dataType: 'text',
 				success: function(data) {
 					if (data == "true") {
@@ -220,7 +224,7 @@ $(document).ready(function(){
 					var str="";
 					//if(data.length){
 						data.forEach(function(e){
-							if(e["message"]!= "" || e["image_path"]!= "" || e["snippet"]!= ""){
+							if(e["message"] != "" || e["image_path"] != "" || e["snippet"] != ""){
 								str+="<div class='row'><div class='col-xs-2'><img src='"+e["avatar"]+"' style='width:40px;'></div>";
 								str+= "<div class='col-xs-4'><b>"+e['last_name']+"</b></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div>";
 								str+= "<div class='row' style='overflow-x:scroll;'><div class='col-xs-12'>";
@@ -228,17 +232,17 @@ $(document).ready(function(){
 									str+= e["message"];
 								}
 								else if (e["image_path"]) {
-									var uploadedFileName = e["image_path"];
-									var extension = uploadedFileName.replace(/^.*\./, '');
-									if (extension == uploadedFileName) {
-					          extension = '';
-					        }
-									else {
-										extension = extension.toLowerCase();
-									}
-									if(extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif"){
+									// var uploadedFileName = e["image_path"];
+									// var extension = uploadedFileName.replace(/^.*\./, '');
+									// if (extension == uploadedFileName) {
+					        //   extension = '';
+					        // }
+									// else {
+									// 	extension = extension.toLowerCase();
+									// }
+									// if(extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif"){
 										str+= "<img src='"+e["image_path"]+"' style='width:250px;'>";
-									}
+									//}
 								}
 								else {
 									str+= "<pre><code>"+e["snippet"]+"</code></pre>";
@@ -287,17 +291,17 @@ $(document).ready(function(){
 										str+= e["message"];
 									}
 									else if (e["image_path"]) {
-										var uploadedFileName = e["image_path"];
-										var extension = uploadedFileName.replace(/^.*\./, '');
-										if (extension == uploadedFileName) {
-						          extension = '';
-						        }
-										else {
-											extension = extension.toLowerCase();
-										}
-										if(extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif"){
+										// var uploadedFileName = e["image_path"];
+										// var extension = uploadedFileName.replace(/^.*\./, '');
+										// if (extension == uploadedFileName) {
+						        //   extension = '';
+						        // }
+										// else {
+										// 	extension = extension.toLowerCase();
+										// }
+										// if(extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif"){
 											str+= "<img src='"+e["image_path"]+"' style='width:250px;'>";
-										}
+										//}
 									}
 									else {
 										str+= "<pre><code>"+e["snippet"]+"</code></pre>";
@@ -374,6 +378,7 @@ $(document).ready(function(){
 		    }
 
 		});
+
 		function readURL(input) {
 		    if (input.files && input.files[0]) {
 		        var reader = new FileReader();
@@ -388,51 +393,95 @@ $(document).ready(function(){
 		    readURL(this);
 		});
 
-		//image upload ajax
-		$(".client_add_image_submit_button").on("click",function(e){
-			var image_upload_path = $(".client_image_upload_read").val();
+		//web image - ajax
+		$(document).on("click",".client_web_image_submit_button",function(e) {
+		//$(".client_web_image_submit_button").on("click",function(e) {
+			$("#client_web_image_to_post #msg-log").html();
 			var image_upload_from_url_path = $(".client_image_upload_from_url").val();
-			if(image_upload_path != "")
-			{
-				var retChannel = $("#retChannel").val();
+			if ($.trim(image_upload_from_url_path) != "") {
+				var retChannel = $("#client_web_image_to_post #retChannel").val();
+				var retHeading = $("#client_web_image_to_post #retHeading").val();
+				var retStatus = $("#client_web_image_to_post #retStatus").val();
+
 				$.ajax({
 					method: 'post',
 					url: './router.php',
-					data: {'image_insertion':{'image_path':image_upload_path,'retChannel':retChannel}},
+					//data: {'image_insertion_from_url':{'image_upload_from_url_path':image_upload_from_url_path,'retChannel':retChannel}},
+					data: {'image_upload_from_url_path': image_upload_from_url_path,'channel':retChannel, 'channelHeading': retHeading,
+								'chStatus': retStatus},
 					dataType: 'text',
 					success: function(data){
-						window.location.href='./home.php';
+						if (data != null && data != "") {
+							window.location.href='./home.php';
+						} else {
+							//to do: display error msg
+						}
 			    	},
 			    	error: function(){
 			    		console.log("Error");
-			    	}
-				});
-			}
-			else if (image_upload_from_url_path != "")
-			{
-				var retChannel = $("#retChannel").val();
-				$.ajax({
-					method: 'post',
-					url: './router.php',
-					data: {'image_insertion_from_url':{'image_upload_from_url_path':image_upload_from_url_path,'retChannel':retChannel}},
-					dataType: 'text',
-					success: function(data){
-						window.location.href='./home.php';
-			    	},
-			    	error: function(){
-			    		console.log("Error");
+							//$("#client_web_image_to_post #msg-log").html("file type invalid");
 			    	}
 				});
 			}
 		});
+
+		$("#uploadImageForm").submit(function(event) {
+			event.preventDefault();
+		});
+
+		//upload image
+		$(".client_upload_image_submit_button").on("click",function(e) {
+			var image_upload_path = $(".client_image_upload_read").val();
+			if($.trim(image_upload_path) != "")
+			{
+				var retChannel = $("#client_upload_image_to_post #retChannel").val();
+				var retHeading = $("#client_upload_image_to_post #retHeading").val();
+				var retStatus = $("#client_upload_image_to_post #retStatus").val();
+
+				//var file_data = $('#client_upload_image_to_post #imgInp').files[0];
+				var form_data = new FormData($('#uploadImageForm')[0]);
+
+				// form_data.append("localfile", file_data);
+				// form_data.append("channel", retChannel);
+				// form_data.append("channelHeading", retHeading);
+				// form_data.append("chStatus", retStatus);
+
+				$.ajax({
+					method: 'post',
+					url: './router.php',
+					data: form_data,
+					//data: {'image_insertion':{'image_path':image_upload_path,'retChannel':retChannel}},
+					cache: false,
+					contentType: false,
+					processData: false,
+					dataType: 'json',
+					success: function(data) {
+						if (data['result'] == "true") {
+							window.location.href='./home.php';
+						} else {
+							console.log(data["message"]);
+						}
+						},
+						error: function(){
+							console.log("Error");
+						}
+				});
+			}
+		});
+
 		// code snippet ajax
 		$(".client_snippet_submit").on("click",function(e){
 			var snippet_text = $(".client_code_snippet_textarea").val();
-			var retChannel = $("#retChannel").val();
+
+			var retChannel = $("#client_code_snippet #retChannel").val();
+			var retHeading = $("#client_code_snippet #retHeading").val();
+			var retStatus = $("#client_code_snippet #retStatus").val();
+
 			$.ajax({
 				method: 'post',
 				url: './router.php',
-				data: {'snippet_insertion':{'snippet_text':snippet_text,'retChannel':retChannel}},
+				data: {'snippet_text':snippet_text,'channel':retChannel, 'channelHeading': retHeading,
+							'chStatus': retStatus},
 				dataType: 'text',
 				success: function(data){
 					window.location.href='./home.php';
@@ -459,9 +508,11 @@ $(document).ready(function(){
 					if (userRole == "admin") {
 						$(".delPost").show();
 						$(".fa-trash-o").show();
+						$("#archiveButton").show();
 					} else {
 						$(".delPost").hide();
 						$(".fa-trash-o").hide();
+						$("#archiveButton").hide();
 					}
 		    },
 		    error: function(){

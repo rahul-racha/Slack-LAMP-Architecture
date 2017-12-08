@@ -22,6 +22,13 @@
       }
       return $responseString;
     }
+
+    public function checkImageType($mediaPath) {
+      //$mimeType = "false";
+      //if (function_exists('getimagesize')) {
+      $check = getimagesize($mediaPath);
+      return $check['mime'];
+    }
   }
 
 

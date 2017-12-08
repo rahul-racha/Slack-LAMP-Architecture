@@ -156,8 +156,8 @@
       $dislikeCount = getReactionCount($msgId, $dislikeEmo);
       $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgIdRef);
 
-      if($value["message"] || $value["image_path"] || $value["snippet"] != "")
-			{
+      //if($value["message"] || $value["image_path"] || $value["snippet"] != "")
+			//{
 				if(count($channelMessages != $i))
 				{
         $name = $name. "<div class='message_profile_pic col-xs-1'>
@@ -167,19 +167,19 @@
 								 		<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
 	                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
 	                  <ul class = 'MessageUL'>";
-										if($value["message"] != "" ){
+
+										if ($value["message"] != NULL && !empty($value["message"])){
 											$name=$name. "<li class = 'MessageLI'>".$value['message']."</li>";
-										}
-										else if($value["image_path"] != ""){
+										} else if ($value["image_path"] != NULL && !empty($value["image_path"])) {
 											//$uploadedFileName = $value["image_path"];
 											//$imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
-											$imageFileType = exif_imagetype($value["image_path"]);
-											// echo "string";
-											if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
-												$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
-											}
+											//$imageFileType = exif_imagetype($value["image_path"]);
+											// echo $imageFileType;
+											// if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
+											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											// }
 										}
-										else if($value["snippet"] != ""){
+										else if($value["snippet"] != NULL && !empty($value["snippet"])){
 											$name=$name. "<li class = 'MessageLI'><pre class='client_snippet_pre_tag'><code>".$value["snippet"]."</code></pre></li>";
 										}
 										$name=$name. "</ul>
@@ -195,6 +195,10 @@
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+
+			              <input type='hidden' class='delHeading' name='channelHeading' value=".$channelHeading.">
+			              <input type='hidden' class='delStatus' name='chStatus' value=".$chStatus.">
+
 										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
                 </div>";
@@ -208,18 +212,19 @@
 								 		<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
 	                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
 	                  <ul class = 'MessageUL'>";
-										if($value["message"] != "" ){
+										$value["image_path"];
+										if($value["message"] != NULL && !empty($value["message"])){
 											$name=$name. "<li class = 'MessageLI'>".$value['message']."</li>";
 										}
-										else if($value["image_path"] != ""){
-											$uploadedFileName = $value["image_path"];
-											$imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
-											// echo "image file type".$imageFileType;
-											if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
-												$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
-											}
+
+										else if($value["image_path"] != NULL && !empty($value["image_path"])){
+											// $uploadedFileName = $value["image_path"];
+											// $imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
+											//if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
+											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											//}
 										}
-										else if($value["snippet"] != ""){
+										else if($value["snippet"] != NULL && !empty($value["snippet"])) {
 											$name=$name. "<li class = 'MessageLI'><pre><code>".$value["snippet"]."</code></pre></li>";
 										}
 										$name=$name. "</ul>
@@ -235,11 +240,15 @@
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+
+										<input type='hidden' class='delHeading' name='channelHeading' value=".$channelHeading.">
+			              <input type='hidden' class='delStatus' name='chStatus' value=".$chStatus.">
+
 										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
                 </div>";
 			}
-		}
+		//}
 		$i++;
     }
 		$loadMore = "<div class='col-xs-12 loadMoreButton'>

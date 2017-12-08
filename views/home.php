@@ -129,7 +129,8 @@
                   <!-- <span class="caret"></span> -->
                   <ul class="dropdown-menu">
                     <li><a class="client_code_snippet_button" data-toggle="modal" data-target="#client_code_snippet">Code snippet</a></li>
-                    <li><a class="client_code_snippet_button" data-toggle="modal" data-target="#client_Add_image_to_post">Add image</a></li>
+                    <li><a class="client_code_snippet_button" data-toggle="modal" data-target="#client_web_image_to_post">Web image</a></li>
+                    <li><a class="client_code_snippet_button" data-toggle="modal" data-target="#client_upload_image_to_post">Upload image</a></li>
                     <!-- <li><span><a>Add images</a><input type="file"></span></li> -->
                     <!-- <li><a href="#">JavaScript</a></li>
                     <li class="divider"></li>
@@ -338,7 +339,9 @@
           <h4 class="modal-title">Modal Header</h4>
         </div>
         <div class="modal-body">
-          <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+          <input id="retchannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+          <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+          <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
           <textarea class="client_code_snippet_textarea" rows="9"></textarea>
         </div>
         <div class="modal-footer">
@@ -347,13 +350,42 @@
       </div>
     </div>
   </div>
-  <!-- Add image -->
-  <div class="modal fade" id="client_Add_image_to_post" role="dialog">
+  <!-- Web image -->
+  <div class="modal fade" id="client_web_image_to_post" role="dialog">
     <div class="modal-dialog modal-lg client_code_snippet_modal_body">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
+          <h4 class="modal-title">Web Image</h4>
+        </div>
+        <div class="modal-body client_add_image_modal_body">
+          <div>
+            <span>Images from web</span>
+            <div>
+              <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>">
+              <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+              <input style="width:100%" class="client_image_upload_from_url">
+            </div>
+            <div>
+              <p id="msg-log"></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default client_web_image_submit_button" data-dismiss="modal">Insert image</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Upload Image -->
+  <div class="modal fade" id="client_upload_image_to_post" role="dialog">
+    <div class="modal-dialog modal-lg client_code_snippet_modal_body">
+      <form enctype="multipart/form-data" id="uploadImageForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Web Image</h4>
         </div>
         <div class="modal-body client_add_image_modal_body">
           <div class="form-group">
@@ -361,24 +393,23 @@
             <div class="input-group">
               <span class="input-group-btn">
                 <span class="btn btn-default btn-file">
-                  Browse… <input type="file" name="image_uploaded_post" id="imgInp">
+                  Browse… <input type="file" name="image_uploaded_post" id="imgInp" multiple accept='image/*'>
                 </span>
               </span>
-              <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
               <input type="text" class="form-control client_image_upload_read" readonly>
+              <input id="retchannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+              <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
             </div>
             <img id='img-upload'/>
           </div>
-          <center><p>or</p></center>
-          <div>
-            <span>Images from web</span>
-            <input style="width:100%" class="client_image_upload_from_url"></input>
-          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default client_add_image_submit_button" data-dismiss="modal">Add image</button>
+          <input type="button" class="client_upload_image_submit_button" value="Upload">
+          <!--<button type="button" class="btn btn-default client_upload_image_submit_button" data-dismiss="modal">Upload image</button>-->
         </div>
       </div>
+    </form>
     </div>
   </div>
 

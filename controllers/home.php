@@ -452,5 +452,40 @@
       return $isSuccess;
     }
 
+    public function uploadFile($fileObject, $channelName, $thread_message, $image_path,
+    $snippet, $thread_id, $messageType, $workspaceUrl) {
+      $uploadOk = 1;
+      $response = array("result"=>NULL, "message"=>"");
+      // if ($fileObject["size"] > 500000) {
+      //     $response["result"] = "false";
+      //     $response["message"] = "Your file is too large.";
+      //     $uploadOk = 0;
+      // }
+      if ($uploadOk == 0) {
+          $response["result"] = "false";
+          $response["message"] = $response["message"]."Your file was not uploaded.";
+      } else {
+          if (move_uploaded_file($fileObject["tmp_name"], $image_path)) {
+
+            $verifyResult = $this->insertMessage($channelName,$thread_message,$image_path,
+                       $snippet,$thread_id,$messageType,$workspaceUrl);
+            if ($verifyResult == "Message is inserted") {
+              $response["result"] = "true";
+              $response["message"] = "The file ". basename( $fileObject["name"]). " has been uploaded.";
+            } else {
+              unlink($image_path);
+              $response["result"] = "false";
+              $response["message"] = "Sorry, there was an error uploading your file.";
+            }
+
+          } else {
+            $response["result"] = "false";
+            $response["message"] = "Sorry, there was an error uploading your file.";
+
+          }
+      }
+      return $response;
+    }
+
   }
 ?>
