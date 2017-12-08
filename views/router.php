@@ -151,7 +151,8 @@
     unset($_POST["textarea"]);
     $image_path = NULL;
     $snippet = NULL;
-    $message = $homeControlVar->insertMessage($channelName,$textArea,$image_path,$snippet,$threadId,$messageType, $workspaceUrl);
+    $filePath = NULL;
+    $message = $homeControlVar->insertMessage($channelName,$textArea,$image_path,$filePath,$snippet,$threadId,$messageType, $workspaceUrl);
     //if ($message != 'false') {
       $_SESSION['channel'] = $channelName;
       $_SESSION['channelHeading'] = $channelHeading;
@@ -219,7 +220,8 @@
     $messageType = 'reply';
     $image_path = NULL;
     $snippet = NULL;
-    $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
+    $filePath = NULL;
+    $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
   }
 
   if (isset($_POST['deletePostID'])) {
@@ -291,7 +293,7 @@
     }
 
     // image insertion
-    if(!empty($_FILES) && $_FILES['image_uploaded_post'] != NULL && !empty($_FILES['image_uploaded_post'])) {
+    if(!empty($_FILES) && $_FILES['file_uploaded_post'] != NULL && !empty($_FILES['file_uploaded_post'])) {
       global $homeControlVar;
       global $profileControllerVar;
       global $workspaceUrl;
@@ -304,18 +306,27 @@
       $snippet = NULL;
       $thread_id = NULL;
       $messageType = 'post';
+      $filePath = NULL;
+      $image_path = NULL;
 
       $response = array("result"=>NULL, "message"=>NULL);
-      $target_dir = "images/messages/";
-      $uploadedFileName = $_FILES["image_uploaded_post"]["name"];
-      $image_path = $target_dir.$uploadedFileName;
-      $imageType = $profileControllerVar->checkImageType($_FILES['image_uploaded_post']['tmp_name']);
+
+      $imageType = $profileControllerVar->checkImageType($_FILES['file_uploaded_post']['tmp_name']);
       if ($imageType == "" && $imageType == NULL) {
-        $response["result"] = "false";
-        $response["message"] = "File is not an image.";
+        // $response["result"] = "false";
+        // $response["message"] = "File is not an image.";
+        $target_dir = "files/";
+        $uploadedFileName = $_FILES["file_uploaded_post"]["name"];
+        $filePath = $target_dir.$uploadedFileName;
+        $response = $homeControlVar->uploadFile($_FILES["file_uploaded_post"],
+                    $channelName, $thread_message, $image_path, $filePath,
+                    $snippet, $thread_id, $messageType, $workspaceUrl);
       } else {
-        $response = $homeControlVar->uploadFile($_FILES["image_uploaded_post"],
-                    $channelName, $thread_message, $image_path,
+        $target_dir = "images/messages/";
+        $uploadedFileName = $_FILES["file_uploaded_post"]["name"];
+        $image_path = $target_dir.$uploadedFileName;
+        $response = $homeControlVar->uploadFile($_FILES["file_uploaded_post"],
+                    $channelName, $thread_message, $image_path, $filePath,
                     $snippet, $thread_id, $messageType, $workspaceUrl);
       }
       $_SESSION['channel'] = $channelName;
@@ -324,6 +335,39 @@
       echo json_encode($response);
     }
 
+    // function uploadImageFiles() {
+    //   global $homeControlVar;
+    //   global $profileControllerVar;
+    //   global $workspaceUrl;
+    //   global $channelName;
+    //   global $channelHeading;
+    //   global $chStatus;
+    //
+    //   $message = NULL;
+    //   $thread_message = NULL;
+    //   $snippet = NULL;
+    //   $thread_id = NULL;
+    //   $messageType = 'post';
+    //   $filePath = NULL;
+    //
+    //   $response = array("result"=>NULL, "message"=>NULL);
+    //   $target_dir = "images/messages/";
+    //   $uploadedFileName = $_FILES["image_uploaded_post"]["name"];
+    //   $image_path = $target_dir.$uploadedFileName;
+    //   $imageType = $profileControllerVar->checkImageType($_FILES['image_uploaded_post']['tmp_name']);
+    //   if ($imageType == "" && $imageType == NULL) {
+    //     $response["result"] = "false";
+    //     $response["message"] = "File is not an image.";
+    //   } else {
+    //     $response = $homeControlVar->uploadFile($_FILES["image_uploaded_post"],
+    //                 $channelName, $thread_message, $image_path, $filePath,
+    //                 $snippet, $thread_id, $messageType, $workspaceUrl);
+    //   }
+    //   $_SESSION['channel'] = $channelName;
+    //   $_SESSION['channelHeading'] = $channelHeading;
+    //   $_SESSION['chStatus'] = $chStatus;
+    //   echo json_encode($response);
+    // }
 
     //image from url
     if(isset($_POST["image_upload_from_url_path"])){
@@ -338,12 +382,13 @@
       $thread_message = NULL;
       $snippet = NULL;
       $thread_id = NULL;
+      $filePath = NULL;
       $messageType = 'post';
       //$channelName = $_POST["image_insertion_from_url"]["retChannel"];
       $image_path = $_POST["image_upload_from_url_path"];
       $image_type = $profileControllerVar->checkImageType($image_path);
       if ($image_type != NULL && $image_type != "") {
-        $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
+        $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
       }
       $_SESSION['channel'] = $channelName;
       $_SESSION['channelHeading'] = $channelHeading;
@@ -364,7 +409,8 @@
       $image_path = NULL;
       $threadId = NULL;
       $messageType = 'post';
-      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
+      $filePath = NULL;
+      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
 
       $_SESSION['channel'] = $channelName;
       $_SESSION['channelHeading'] = $channelHeading;

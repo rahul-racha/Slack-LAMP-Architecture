@@ -561,7 +561,7 @@
       $retMessages = "SELECT *
                       FROM (
                       SELECT channel_id, channel_messages.user_id AS userID, first_name, last_name, avatar, message,
-                      image_path, snippet, msg_id, created_time, type
+                      image_path, file_path, snippet, msg_id, created_time, type
                       FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                       WHERE (type = 1 OR type = 2) AND channel_id
                       IN (
@@ -577,6 +577,7 @@
           {
             $row['message'] = $this->validateInputs($row['message']);
             $row['image_path'] = $this->validateInputs($row['image_path']);
+            $row['file_path'] = $this->validateInputs($row['file_path']);
             $row['snippet'] = $this->validateInputs($row['snippet']);
             array_push($this->messages, $row);
           }
@@ -630,7 +631,7 @@
       return $chName;
     }
 
-    public function insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl)
+    public function insertMessage($channelName, $message, $imagePath, $filePath, $snippet, $threadId, $type, $workspaceUrl)
     {
       $temp=array();
       $dbConVar = new dbConnect();
@@ -669,9 +670,9 @@
           //$imagePath = $this->validMySQL($conn, $imagePath);
           //$snippet = $this->validMySQL($conn, $snippet);
           $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message,
-                                  image_path, snippet, type, dependency)
-                                  VALUES (?,?,?,?,?,?,?,?)");
-          $stmt->bind_param("ssssssss", $chId, $_SESSION['userid'], $msgId, $message, $imagePath, $snippet, $type, $dependency);
+                                  image_path, file_path, snippet, type, dependency)
+                                  VALUES (?,?,?,?,?,?,?,?,?)");
+          $stmt->bind_param("sssssssss", $chId, $_SESSION['userid'], $msgId, $message, $imagePath, $filePath, $snippet, $type, $dependency);
           $stmt->execute();
           //if ($stmt->affected_rows > 0) {}
           $affectedRows = $stmt->affected_rows;
@@ -708,7 +709,7 @@
       $stmt->close();
       return $affectedRows;
     }
-    
+
     public function addUserToChannel($userId, $channelName, $workspaceUrl)
     {
       $dbConVar = new dbConnect();
@@ -774,7 +775,8 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->replies = array();
-      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, avatar,image_path,snippet, msg_id, message, created_time
+      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, avatar,image_path,file_path,
+                     snippet, msg_id, message, created_time
                      FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                      WHERE dependency = $threadId
                      ORDER BY created_time ASC";
@@ -786,6 +788,7 @@
           $row['first_name'] = $this->validateInputs($row['first_name']);
           $row['last_name'] = $this->validateInputs($row['last_name']);
           $row['image_path'] = $this->validateInputs($row['image_path']);
+          $row['file_path'] = $this->validateInputs($row['file_path']);
           $row['snippet'] = $this->validateInputs($row['snippet']);
           array_push($this->replies, $row);
         }

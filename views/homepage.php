@@ -181,6 +181,8 @@
 										}
 										else if($value["snippet"] != NULL && !empty($value["snippet"])){
 											$name=$name. "<li class = 'MessageLI'><pre class='client_snippet_pre_tag'><code>".$value["snippet"]."</code></pre></li>";
+										} else if($value["file_path"] != NULL && !empty($value["file_path"])) {
+											$name=$name. "<li class = 'MessageLI'><a href=".$value["file_path"]." download>".$value["file_path"]."</a></li>";
 										}
 										$name=$name. "</ul>
 
@@ -226,6 +228,8 @@
 										}
 										else if($value["snippet"] != NULL && !empty($value["snippet"])) {
 											$name=$name. "<li class = 'MessageLI'><pre><code>".$value["snippet"]."</code></pre></li>";
+										} else if($value["file_path"] != NULL && !empty($value["file_path"])) {
+											$name=$name. "<li class = 'MessageLI'><a href=".$value["file_path"]." download>".$value["file_path"]."</a></li>";
 										}
 										$name=$name. "</ul>
 
