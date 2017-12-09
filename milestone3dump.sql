@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 21, 2017 at 08:38 PM
+-- Generation Time: Dec 09, 2017 at 07:29 AM
 -- Server version: 5.6.35
 -- PHP Version: 7.1.6
 
@@ -20,7 +20,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `channel_messages`
 --
 CREATE DATABASE `slack`;
-
 USE `slack`;
 
 CREATE TABLE `channel_messages` (
@@ -28,7 +27,8 @@ CREATE TABLE `channel_messages` (
   `user_id` varchar(20) NOT NULL,
   `msg_id` bigint(20) NOT NULL,
   `message` longtext,
-  `image_path` varchar(100) DEFAULT NULL,
+  `image_path` text,
+  `file_path` text,
   `snippet` text,
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `type` smallint(6) DEFAULT NULL,
@@ -39,11 +39,33 @@ CREATE TABLE `channel_messages` (
 -- Dumping data for table `channel_messages`
 --
 
-INSERT INTO `channel_messages` (`channel_id`, `user_id`, `msg_id`, `message`, `image_path`, `snippet`, `created_time`, `type`, `dependency`) VALUES
-(26, 'admin', 8, 'Opps', NULL, NULL, '2017-11-21 00:31:42', 1, 8),
-(27, 'admin', 6, 'heyy', NULL, NULL, '2017-11-20 22:31:04', 1, 6),
-(27, 'mater', 9, 'Hmm', NULL, NULL, '2017-11-21 07:01:43', 1, 9),
-(27, 'mater', 10, 'Fine', NULL, NULL, '2017-11-21 07:01:46', 1, 10);
+INSERT INTO `channel_messages` (`channel_id`, `user_id`, `msg_id`, `message`, `image_path`, `file_path`, `snippet`, `created_time`, `type`, `dependency`) VALUES
+(26, 'admin', 15, 'hha', NULL, NULL, NULL, '2017-11-28 23:03:08', 1, 15),
+(26, 'mater', 11, 'heyy', NULL, NULL, NULL, '2017-11-21 19:46:42', 1, 11),
+(26, 'mater', 12, 'yupp', NULL, NULL, NULL, '2017-11-21 19:46:47', 1, 12),
+(26, 'mater', 13, NULL, 'https://stocklogos.com/sites/default/files/ferrari-logo_0.jpg', NULL, NULL, '2017-11-21 19:47:17', 1, 13),
+(26, 'mater', 14, 'Hi', NULL, NULL, NULL, '2017-11-22 18:50:22', 1, 14),
+(26, 'mater', 19, NULL, 'https://www.planwallpaper.com/static/images/canberra_hero_image_JiMVvYU.jpg', NULL, NULL, '2017-12-07 02:30:14', 1, 19),
+(26, 'mater', 20, NULL, 'https://www.w3schools.com/css/css3_images.asp', NULL, NULL, '2017-12-07 02:39:13', 1, 20),
+(26, 'mater', 21, 'tom', NULL, NULL, NULL, '2017-12-07 02:47:42', 1, 21),
+(26, 'mater', 23, NULL, 'https://www.w3schools.com/css/paris.jpg', NULL, NULL, '2017-12-07 03:18:08', 1, 23),
+(26, 'mater', 24, NULL, 'https://www.w3schools.com/css/lights600x400.jpg', NULL, NULL, '2017-12-07 03:36:35', 1, 24),
+(26, 'mater', 25, NULL, 'https://vignette.wikia.nocookie.net/disney/images/c/c0/Mack.png/revision/latest?cb=20151213154902', NULL, NULL, '2017-12-07 03:48:18', 1, 25),
+(26, 'mater', 34, NULL, NULL, NULL, 'char *p = NULL;\n{\n    char c;\n    p = &c;\n}\n// Now p is dangling', '2017-12-07 22:24:39', 1, 34),
+(26, 'mater', 41, NULL, NULL, 'files/Quiz 52.docx', NULL, '2017-12-08 08:54:49', 1, 41),
+(26, 'mater', 43, '\"[1]) is the basic structural, functional, and biological unit of all known living organisms. A cell is the smallest unit of life that can replicate independently, and cells are often called the \"building blocks of life\". The study of cells is called cell biology.\r\n\r\nCells consist of cytoplasm enclosed within a membrane, which contains many biomolecules such as proteins and nucleic acids.[2] Organisms can be classified as unicellular (consisting of a single cell; including bacteria) or multicellular (including plants and animals).[3] While the number of cells in plants and animals varies from species to species, humans contain more than 10 trillion (1013) cells.[4] Most plant and animal cells are visible only under a microscope, with dimensions between 1 and 100 micrometres.[5]\r\n\r\nThe cell was discovered by Robert Hooke in 1665, who named the biological units for their resemblance to cells inhabited by Christian monks in a monastery.[6][7] Cell theory, first developed in 1839 by Matthias Jakob Schleiden and Theodor Schwann, states that all organisms are composed of one or more cells, that cells are the fundamental unit of structure and function in all living organisms, that all cells come from preexisting cells, and that all cells contain the hereditary information necessary for regulating cell functions and for transmitting information to the next generation of cells.[8] Cells emerged on Earth at least 3.5 billion years ago.[9][10][11]', NULL, NULL, NULL, '2017-12-08 08:56:29', 1, 43),
+(26, 'mater', 44, 'hmm', NULL, NULL, NULL, '2017-12-08 08:56:48', 3, 43),
+(27, 'admin', 17, 'hah', NULL, NULL, NULL, '2017-11-28 23:03:22', 1, 17),
+(27, 'mater', 27, NULL, 'https://www.w3schools.com/css/lights600x400.jpg', NULL, NULL, '2017-12-07 07:16:04', 1, 27),
+(27, 'mater', 37, NULL, 'images/messages/Gal-Gadot-Wallpaper-4.jpg', NULL, NULL, '2017-12-08 08:23:41', 1, 37),
+(27, 'mater', 38, NULL, 'images/messages/jac1.jpg', NULL, NULL, '2017-12-08 08:24:59', 1, 38),
+(27, 'mater', 39, NULL, 'images/messages/jac1.jpg', NULL, NULL, '2017-12-08 08:26:10', 1, 39),
+(27, 'mater', 40, NULL, NULL, 'files/samp.json', NULL, '2017-12-08 08:28:02', 1, 40),
+(27, 'mater', 42, 'The cell (from Latin cella, meaning \"small room\"', NULL, NULL, NULL, '2017-12-08 08:55:53', 1, 42),
+(27, 'mater', 45, NULL, 'http://i1.wp.com/www.google.com/images/logo.gif', NULL, NULL, '2017-12-08 22:09:13', 1, 45),
+(27, 'porsche', 46, 'Testing', NULL, NULL, NULL, '2017-12-09 02:28:03', 1, 46),
+(29, 'admin', 35, 'happy', NULL, NULL, NULL, '2017-12-07 22:41:18', 1, 35),
+(29, 'admin', 36, 'yup', NULL, NULL, NULL, '2017-12-07 23:24:39', 3, 35);
 
 -- --------------------------------------------------------
 
@@ -55,7 +77,9 @@ CREATE TABLE `direct_message` (
   `user1` varchar(20) NOT NULL,
   `user2` varchar(20) NOT NULL,
   `direct_msg_id` int(11) NOT NULL,
-  `direct_message` longtext NOT NULL,
+  `direct_message` longtext,
+  `image_path` varchar(100) DEFAULT NULL,
+  `snippet` text,
   `url` varchar(20) NOT NULL,
   `direct_message_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -113,6 +137,19 @@ INSERT INTO `inside_channel` (`channel_id`, `user_id`, `joined_date`, `left_date
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `inside_direct_msg`
+--
+
+CREATE TABLE `inside_direct_msg` (
+  `user_id` varchar(20) NOT NULL,
+  `recipient` varchar(20) NOT NULL,
+  `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `message_type`
 --
 
@@ -148,14 +185,11 @@ CREATE TABLE `reactions` (
 --
 
 INSERT INTO `reactions` (`msg_id`, `emo_id`, `users`, `count`) VALUES
-(6, 1, ';mater;', 1),
-(6, 2, '', 0),
-(8, 1, ';mater;', 1),
-(8, 2, '', 0),
-(9, 1, '', 0),
-(9, 2, ';mater;', 1),
-(10, 1, '', 0),
-(10, 2, ';mater;', 1);
+(17, 2, ';admin;', 1),
+(35, 1, ';admin;', 1),
+(35, 2, '', 0),
+(40, 1, ';mater;', 1),
+(40, 2, '', 0);
 
 -- --------------------------------------------------------
 
@@ -184,10 +218,10 @@ CREATE TABLE `user_info` (
   `what_i_do` varchar(128) DEFAULT NULL,
   `status` varchar(128) NOT NULL,
   `phone_number` varchar(20) NOT NULL,
-  `email` varchar(20) NOT NULL,
+  `email` varchar(300) NOT NULL,
   `time_zone` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `skype` varchar(50) NOT NULL,
-  `avatar` varchar(150) NOT NULL DEFAULT 'images/users/admin.jpg'
+  `avatar` varchar(300) NOT NULL DEFAULT 'images/users/default-profile-pic.jpg'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -195,15 +229,18 @@ CREATE TABLE `user_info` (
 --
 
 INSERT INTO `user_info` (`user_id`, `password`, `first_name`, `last_name`, `display_name`, `role`, `what_i_do`, `status`, `phone_number`, `email`, `time_zone`, `skype`, `avatar`) VALUES
-('admin', 'M0n@rch$', 'admin', '', 'admin', 'admin', NULL, '', '', '', '2017-11-21 19:38:00', '', 'images/users/admin.jpg'),
-('chinga', '@chick', 'Chick', 'Hicks', 'Chick Hicks', 'user', NULL, '', '', 'chinga@cars.com', '2017-11-21 19:38:02', '', 'images/users/admin.jpg'),
-('hornet', '@doc', 'Doc', ' Hudson', 'Doc  Hudson', 'user', NULL, '', '', 'hornet@rsprings.gov', '2017-11-21 19:38:04', '', 'images/users/admin.jpg'),
-('iamami', '12345678Aa!', 'Amitabh', 'Bachan', '', 'user', NULL, '', '', 'amitab@ac.in', '2017-11-21 19:38:05', '', 'images/users/admin.jpg'),
-('kachow', '@mcqueen', 'Lightning', 'McQueen', 'Lightning McQueen', 'user', NULL, '', '', 'kachow@rusteze.com', '2017-11-21 19:38:06', '', 'images/users/admin.jpg'),
-('mater', '@mater', 'Tow', 'Mater', 'Tow Mater', 'user', NULL, '', '', 'mater@rsprings.gov', '2017-11-14 17:37:59', '', 'images/users/mater.jpg'),
-('porsche', '@sally', 'Sally', 'Carrera', 'Sally Carrera', 'user', NULL, '', '', 'porsche@rsprings.gov', '2017-11-14 17:29:31', '', 'images/users/porsche.jpg'),
-('singhis', '123', 'okay', 'singh', '', 'user', NULL, '', '', 'singh@s.com', '2017-11-21 19:38:08', '', 'images/users/admin.jpg'),
-('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', 'user', NULL, '', '', 'topsecret@agent.org', '2017-11-21 19:38:10', '', 'images/users/admin.jpg');
+('admin', 'M0n@rch$', 'admin', '', 'admin', 'admin', NULL, '', '', '', '2017-12-09 03:41:28', '', 'images/users/default-profile-pic.jpg'),
+('chinga', '@chick', 'Chick', 'Hicks', 'Chick Hicks', 'user', NULL, '', '', 'chinga@cars.com', '2017-12-09 03:41:33', '', 'images/users/default-profile-pic.jpg'),
+('dumm', '1234567Aa@2', 'dummsuper', 'dum', '', 'user', NULL, '', '', 'zeno@od.com', '2017-12-09 03:44:04', '', 'images/users/default-profile-pic.jpg'),
+('hornet', '@doc', 'Doc', ' Hudson', 'Doc  Hudson', 'user', NULL, '', '', 'hornet@rsprings.gov', '2017-12-09 03:41:39', '', 'images/users/default-profile-pic.jpg'),
+('iamami', '12345678Aa!', 'Amitabh', 'Bachan', '', 'user', NULL, '', '', 'amitab@ac.in', '2017-12-09 03:41:46', '', 'images/users/default-profile-pic.jpg'),
+('kachow', '@mcqueen', 'Lightning', 'McQueen', 'Lightning McQueen', 'user', NULL, '', '', 'kachow@rusteze.com', '2017-12-09 03:41:53', '', 'images/users/default-profile-pic.jpg'),
+('mater', '@mater', 'Tow', 'Mater', 'Tow Mater', 'user', NULL, '', '', 'sunnyracha14@gmail.com', '2017-12-09 06:29:22', '', 'https://www.gravatar.com/avatar/44ddde8657d7f5b7dfaab2745f90294f?d=404&s=500'),
+('porsche', '@sally', 'Sally', 'Carrera', 'Sally Carrera', 'user', NULL, '', '', 'porsche@rsprings.gov', '2017-12-09 02:26:09', '', 'images/users/default-profile-pic.jpg'),
+('rkand002', '1234567Aa@2', 'Rohit', 'K', '', 'user', NULL, '', '', 'rkand002@odu.edu', '2017-12-09 03:39:15', '', 'https://www.gravatar.com/avatar/a1d798da2397947120991acbd16141b9?d=404&s=500'),
+('singhis', '123', 'okay', 'singh', '', 'user', NULL, '', '', 'singh@s.com', '2017-12-09 03:42:03', '', 'images/users/default-profile-pic.jpg'),
+('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', 'user', NULL, '', '', 'topsecret@agent.org', '2017-12-09 03:42:09', '', 'images/users/default-profile-pic.jpg'),
+('yummy', '12345678Aa#3', 'yummy', 'yum', '', 'user', NULL, '', '', 'yum@odu.edu', '2017-12-09 03:42:15', '', 'images/users/default-profile-pic.jpg');
 
 -- --------------------------------------------------------
 
@@ -224,13 +261,16 @@ CREATE TABLE `workspace` (
 INSERT INTO `workspace` (`url`, `user_id`, `created_by`) VALUES
 ('musicf17.slack.com', 'admin', 0),
 ('musicf17.slack.com', 'chinga', 1),
+('musicf17.slack.com', 'dumm', 0),
 ('musicf17.slack.com', 'hornet', 0),
 ('musicf17.slack.com', 'iamami', 0),
 ('musicf17.slack.com', 'kachow', 0),
 ('musicf17.slack.com', 'mater', 0),
 ('musicf17.slack.com', 'porsche', 0),
+('musicf17.slack.com', 'rkand002', 0),
 ('musicf17.slack.com', 'singhis', 0),
-('musicf17.slack.com', 'topsecret', 0);
+('musicf17.slack.com', 'topsecret', 0),
+('musicf17.slack.com', 'yummy', 0);
 
 -- --------------------------------------------------------
 

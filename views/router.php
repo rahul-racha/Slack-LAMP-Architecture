@@ -3,6 +3,7 @@
   $_SESSION["basePath"] = "../";
   require_once $_SESSION["basePath"].'controllers/login.php';
   require_once $_SESSION['basePath'].'controllers/home.php';
+  require_once $_SESSION['basePath'].'controllers/profile.php';
 
   $channelName = NULL;
   $textArea = NULL;
@@ -14,6 +15,7 @@
   $workspaceUrl = "musicf17.slack.com";
   $homeControlVar = new HomeController();
   $loginControllerVar = new LoginController();
+  $profileControllerVar = new ProfileController();
 
   if (isset($_GET['register']) && $_GET['register'] == 'new') {
     $firstName = $_POST["firstName"];
@@ -149,7 +151,8 @@
     unset($_POST["textarea"]);
     $image_path = NULL;
     $snippet = NULL;
-    $message = $homeControlVar->insertMessage($channelName,$textArea,$image_path,$snippet,$threadId,$messageType, $workspaceUrl);
+    $filePath = NULL;
+    $message = $homeControlVar->insertMessage($channelName,$textArea,$image_path,$filePath,$snippet,$threadId,$messageType, $workspaceUrl);
     //if ($message != 'false') {
       $_SESSION['channel'] = $channelName;
       $_SESSION['channelHeading'] = $channelHeading;
@@ -217,15 +220,21 @@
     $messageType = 'reply';
     $image_path = NULL;
     $snippet = NULL;
-    $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
+    $filePath = NULL;
+    $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
   }
 
-  if (isset($_POST['deletePost'])) {
+  if (isset($_POST['deletePostID'])) {
     global $homeControlVar;
     global $workspaceUrl;
-    $msgID = $_POST['deletePost']['msgID'];
-    $channelName = $_POST['deletePost']['ch_name'];
+    global $channelName;
+
+    $msgID = $_POST['deletePostID'];
+    //$channelName = $_POST['deletePost']['ch_name'];
     $isSuccess = $homeControlVar->deletePostsFromChannel($msgID, $channelName, $workspaceUrl);
+    $_SESSION['channel'] = $channelName;
+    $_SESSION['channelHeading'] = $channelHeading;
+    $_SESSION['chStatus'] = $chStatus;
     echo $isSuccess;
   }
 
@@ -282,44 +291,135 @@
       echo json_encode($computedResp);//$reactionResponse['count'];//json_encode($reactionResponse); $reactionHandling["message"];
       //echo json_encode($reactionResponse);
     }
+
     // image insertion
-    if(isset($_POST["image_insertion"])){
-      $channelName = $_POST["image_insertion"]["retChannel"];
+    if(!empty($_FILES) && $_FILES['file_uploaded_post'] != NULL && !empty($_FILES['file_uploaded_post'])) {
+      global $homeControlVar;
+      global $profileControllerVar;
+      global $workspaceUrl;
+      global $channelName;
+      global $channelHeading;
+      global $chStatus;
+
+      $message = NULL;
       $thread_message = NULL;
       $snippet = NULL;
-      $image_path = $_POST["image_insertion"]["image_path"];
-      $threadId = NULL;
+      $thread_id = NULL;
       $messageType = 'post';
-      global $homeControlVar;
-      global $workspaceUrl;
-      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
-      echo $message;
+      $filePath = NULL;
+      $image_path = NULL;
+
+      $response = array("result"=>NULL, "message"=>NULL);
+
+      $imageType = $profileControllerVar->checkImageType($_FILES['file_uploaded_post']['tmp_name']);
+      if ($imageType == "" && $imageType == NULL) {
+        // $response["result"] = "false";
+        // $response["message"] = "File is not an image.";
+        $target_dir = "files/";
+        $uploadedFileName = $_FILES["file_uploaded_post"]["name"];
+        $filePath = $target_dir.$uploadedFileName;
+        $response = $homeControlVar->uploadFile($_FILES["file_uploaded_post"],
+                    $channelName, $thread_message, $image_path, $filePath,
+                    $snippet, $thread_id, $messageType, $workspaceUrl);
+      } else {
+        $target_dir = "images/messages/";
+        $uploadedFileName = $_FILES["file_uploaded_post"]["name"];
+        $image_path = $target_dir.$uploadedFileName;
+        $response = $homeControlVar->uploadFile($_FILES["file_uploaded_post"],
+                    $channelName, $thread_message, $image_path, $filePath,
+                    $snippet, $thread_id, $messageType, $workspaceUrl);
+      }
+      $_SESSION['channel'] = $channelName;
+      $_SESSION['channelHeading'] = $channelHeading;
+      $_SESSION['chStatus'] = $chStatus;
+      echo json_encode($response);
     }
+
+    // function uploadImageFiles() {
+    //   global $homeControlVar;
+    //   global $profileControllerVar;
+    //   global $workspaceUrl;
+    //   global $channelName;
+    //   global $channelHeading;
+    //   global $chStatus;
+    //
+    //   $message = NULL;
+    //   $thread_message = NULL;
+    //   $snippet = NULL;
+    //   $thread_id = NULL;
+    //   $messageType = 'post';
+    //   $filePath = NULL;
+    //
+    //   $response = array("result"=>NULL, "message"=>NULL);
+    //   $target_dir = "images/messages/";
+    //   $uploadedFileName = $_FILES["image_uploaded_post"]["name"];
+    //   $image_path = $target_dir.$uploadedFileName;
+    //   $imageType = $profileControllerVar->checkImageType($_FILES['image_uploaded_post']['tmp_name']);
+    //   if ($imageType == "" && $imageType == NULL) {
+    //     $response["result"] = "false";
+    //     $response["message"] = "File is not an image.";
+    //   } else {
+    //     $response = $homeControlVar->uploadFile($_FILES["image_uploaded_post"],
+    //                 $channelName, $thread_message, $image_path, $filePath,
+    //                 $snippet, $thread_id, $messageType, $workspaceUrl);
+    //   }
+    //   $_SESSION['channel'] = $channelName;
+    //   $_SESSION['channelHeading'] = $channelHeading;
+    //   $_SESSION['chStatus'] = $chStatus;
+    //   echo json_encode($response);
+    // }
+
     //image from url
-    if(isset($_POST["image_insertion_from_url"])){
-      $channelName = $_POST["image_insertion_from_url"]["retChannel"];
+    if(isset($_POST["image_upload_from_url_path"])){
+      global $homeControlVar;
+      global $profileControllerVar;
+      global $workspaceUrl;
+      global $channelName;
+      global $channelHeading;
+      global $chStatus;
+
+      $message = NULL;
       $thread_message = NULL;
       $snippet = NULL;
-      $image_path = $_POST["image_insertion_from_url"]["image_upload_from_url_path"];
-      $threadId = NULL;
+      $thread_id = NULL;
+      $filePath = NULL;
       $messageType = 'post';
-      global $homeControlVar;
-      global $workspaceUrl;
-      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
+      //$channelName = $_POST["image_insertion_from_url"]["retChannel"];
+      $image_path = $_POST["image_upload_from_url_path"];
+      $image_type = $profileControllerVar->checkImageType($image_path);
+      if ($image_type != NULL && $image_type != "") {
+        $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
+      }
+      $_SESSION['channel'] = $channelName;
+      $_SESSION['channelHeading'] = $channelHeading;
+      $_SESSION['chStatus'] = $chStatus;
       echo $message;
     }
     // code insertion
-    if(isset($_POST["snippet_insertion"])){
-      $channelName = $_POST["snippet_insertion"]["retChannel"];
+    if(isset($_POST["snippet_text"])){
+      global $homeControlVar;
+      global $profileControllerVar;
+      global $workspaceUrl;
+      global $channelName;
+      global $channelHeading;
+      global $chStatus;
+
       $thread_message = NULL;
-      $snippet = $_POST["snippet_insertion"]["snippet_text"];
+      $snippet = $_POST["snippet_text"];
       $image_path = NULL;
       $threadId = NULL;
       $messageType = 'post';
-      global $homeControlVar;
-      global $workspaceUrl;
-      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$snippet,$thread_id,$messageType,$workspaceUrl);
-      echo $message;
+      $filePath = NULL;
+      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
+
+      $_SESSION['channel'] = $channelName;
+      $_SESSION['channelHeading'] = $channelHeading;
+      $_SESSION['chStatus'] = $chStatus;
+      if ($message == "Message is inserted") {
+        echo $message;
+      } else {
+        echo "false";
+      }
     }
 
     if (isset($_POST["channel_status"])) {
@@ -348,6 +448,16 @@
     $channelName = $_POST["inviteUsersForChannel"];
     $userList = $homeControlVar->retInviteUsersForChannel($channelName, $workspaceUrl);
     echo json_encode($userList);
+  }
+
+  if (isset($_POST["default-image-reset"]) && isset($_POST["profile_id"])) {
+    global $workspaceUrl;
+    global $profileControllerVar;
+    $avatar_path = $_POST["default-image-reset"];
+    $profile_id = $_POST["profile_id"];
+    $profileObject = array("file_name"=>$avatar_path, "profile_id"=>$profile_id);
+    $response = $profileControllerVar->updateProfile($profileObject);
+    echo $response;
   }
 
 ?>

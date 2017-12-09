@@ -200,15 +200,18 @@ html, body{
   width: 100%;
   /*background-color: white;*/
 }
-.client_add_image_modal_body{
+.client_code_snippet_modal_body {
   overflow: scroll;
 }
+/*.client_add_image_modal_body{
+  overflow: scroll;
+}*/
 /*uploading image for post*/
-.btn-file {
+.btn-file, .btn-file-all {
     position: relative;
     overflow: hidden;
 }
-.btn-file input[type=file] {
+.btn-file input[type=file], .btn-file-all input[type=file] {
     position: absolute;
     top: 0;
     right: 0;
@@ -223,7 +226,7 @@ html, body{
     cursor: inherit;
     display: block;
 }
-#img-upload{
+#img-upload, #file-upload{
     width: 100%;
 }
 

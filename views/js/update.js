@@ -1,5 +1,6 @@
 $(document).ready(function(){
-  		$("#profile-pic").click(function() {
+      $(document).on("click","#profile-pic",function(e) {
+      //$("#profile-pic").click(function() {
   			$("input[id='profile-browse']").trigger("click");
   		});
 
@@ -7,7 +8,8 @@ $(document).ready(function(){
     		event.preventDefault();
   		});
 
-      $("button[type='submit']").click(function() {
+      $(document).on("click","#editForm button[type='submit']",function(e) {
+      //$("#editForm button[type='submit']").click(function() {
         //document.getElementById("editForm").submit()
         $("#message").empty();
         $("#message").html("loading");
@@ -31,6 +33,31 @@ $(document).ready(function(){
               $("#profile-pic").attr("src","images/users/default-avatar.png");
               $("#message").html(data["message"]);
             }
+          }
+        });
+      });
+
+      $("#default-pic-form").submit(function(event) {
+        event.preventDefault();
+      });
+
+      $(document).on("click","#default-pic-form button[type='submit']",function(e) {
+        $("#msg-log-default").empty();
+        $.ajax({
+          url: $("#default-pic-form").attr("action"),
+          type: $("#default-pic-form").attr("method"),
+          data: {"default-image-reset": $("#default-profile-pic").attr("src"),
+                "profile_id": $("#default-pic-form input[name='profile_id']").attr("value")},
+          dataType: 'text',
+          success: function(data) {
+            if (data == "true") {
+              $("#msg-log-default").html("default pic is set successfully!");
+            } else {
+              $("#msg-log-default").html("failed to set deafult pic :(");
+            }
+          },
+          error: function() {
+            console.log("Error");
           }
         });
       });

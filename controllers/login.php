@@ -1,6 +1,7 @@
 <?php
     include $_SESSION['basePath'].'errors.php';
     require_once $_SESSION['basePath'].'models/login.php';
+    //require_once $_SESSION['basePath'].'controllers/profile.php';
 
     class LoginController {
         private $loginModelVar;
@@ -71,13 +72,19 @@
        {
          $profile = array();
          $result = array();
+         $default_property = "404";
+         $size = "500";
          $responseString = NULL;
 
          if ($this->checkValidation($userId, $email, $password, $firstName, $lastName) == "true") {
            $profile = $this->loginModelVar->checkUserExist($userId, $email);
          if ($profile['user_id'] == NULL && $profile['email'] == NULL)
          {
-           $result = $this->loginModelVar->addNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl);
+           //$profileControllerVar = new ProfileController();
+           $profilePicPath = "images/users/default-profile-pic.jpg";
+           $profilePicPath = $this->getGravatar($email, $default_property, $size, $profilePicPath);
+           $result = $this->loginModelVar->addNewUser($userId, $email, $password, $firstName, $lastName,
+           $profilePicPath, $workspaceUrl);
            if ($result['userInsRows'] < 1 || $result['workspaceInsRows'] < 1) {
              $responseString = $userId." could not be inserted. Please try again.";
            } else {
@@ -100,6 +107,36 @@
          $_SESSION['registerResponse'] = $responseString;
          header("location:login.php", true, 303);
          return $responseString;
+       }
+
+
+       public function getResponseCode($url) {
+         $http_code = NULL;
+         $ch = curl_init();
+         curl_setopt($ch, CURLOPT_URL, $url);
+         curl_setopt($ch,  CURLOPT_RETURNTRANSFER, TRUE);
+         curl_setopt($ch, CURLOPT_ENCODING ,'identity');
+         curl_exec($ch);
+         // Check HTTP status code
+         if (!curl_errno($ch)) {
+           $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+         }
+         curl_close($ch);
+         return $http_code;
+       }
+
+       public function getGravatar($email, $default, $size, $localDefaultPic) {
+         $profilePath = NULL;
+         $url = 'https://www.gravatar.com/avatar/';
+         $url .= md5( strtolower( trim( $email ) ) );
+         $url .= "?d=$default&s=$size";
+         $http_code = $this->getResponseCode($url);
+         if ($http_code == 200) {
+           $profilePath = $url;
+         } else {
+           $profilePath = $localDefaultPic;
+         }
+         return $profilePath;
        }
     }
 
