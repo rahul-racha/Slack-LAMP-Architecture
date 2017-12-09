@@ -450,4 +450,14 @@
     echo json_encode($userList);
   }
 
+  if (isset($_POST["default-image-reset"]) && isset($_POST["profile_id"])) {
+    global $workspaceUrl;
+    global $profileControllerVar;
+    $avatar_path = $_POST["default-image-reset"];
+    $profile_id = $_POST["profile_id"];
+    $profileObject = array("file_name"=>$avatar_path, "profile_id"=>$profile_id);
+    $response = $profileControllerVar->updateProfile($profileObject);
+    echo $response;
+  }
+
 ?>

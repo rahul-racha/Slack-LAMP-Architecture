@@ -1,5 +1,5 @@
 <?php
-  //include_once $_SESSION['basePath'].'errors.php';
+  include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/connect.php';
 
   class HomeModel {
@@ -151,7 +151,8 @@
             }
           }
        }
-       if ($result) {
+       if (isset($result)) {
+       //if ($result) {
          mysqli_free_result($result);
        }
        $dbConVar->closeConnectionObject($conn);

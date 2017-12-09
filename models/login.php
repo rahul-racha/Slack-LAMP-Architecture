@@ -102,7 +102,7 @@
       return $affectedRows;
     }
 
-    public function addNewUser($userId, $email, $password, $firstName, $lastName, $workspaceUrl)
+    public function addNewUser($userId, $email, $password, $firstName, $lastName, $avatar, $workspaceUrl)
     {
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
@@ -111,11 +111,12 @@
       $password = $this->validMySQL($password);
       $firstName = $this->validMySQL($firstName);
       $lastName = $this->validMySQL($lastName);
+      $avatar = $this->validMySQL($avatar);
       $workspaceUrl = $this->validMySQL($workspaceUrl);
 
-      $stmt = $conn->prepare("INSERT INTO user_info (user_id, password, first_name, last_name, email)
-                              VALUES (?,?,?,?,?)");
-      $stmt->bind_param("sssss", $userId, $password, $firstName, $lastName, $email);
+      $stmt = $conn->prepare("INSERT INTO user_info (user_id, password, first_name, last_name, email, avatar)
+                              VALUES (?,?,?,?,?,?)");
+      $stmt->bind_param("ssssss", $userId, $password, $firstName, $lastName, $email, $avatar);
       $stmt->execute();
       $affectedRows = $stmt->affected_rows;
       $stmt->close();

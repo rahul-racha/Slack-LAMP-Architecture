@@ -37,7 +37,7 @@
             <span class="caret"></span></button>
             <ul class="dropdown-menu client_navbar_dropdown_ul">
               <li class="dropdown-header">
-                <img style="width: 20%;" src='<?php echo "images/users/".$_SESSION['userid'].".jpg" ?>'> &nbsp
+                <img style="width: 20%;" src='<?php echo $avatar_path; ?>'> &nbsp
                 <?php echo $_SESSION['userid']; ?>
               </li>
               <li class="divider"></li>
@@ -114,7 +114,7 @@
           <?php
             $retChannel=0;
             $_SESSION['loadCount'] = 5;
-            $channel_name = $_POST["channel"];
+            $channel_name = isset($_POST["channel"]) ? $_POST["channel"] : NULL;
             // echo $channel_name;
             displayMessages($retChannel,$channel_name);
           ?>
@@ -140,7 +140,10 @@
                 </div>
               </span>
   						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
-                <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="<?php echo "Message "."@".$_POST["channel"] ?>" required></textarea>
+                <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="
+                <?php
+                $chname = isset($_POST["channel"]) ? $_POST["channel"] : NULL;
+                echo "Message "."@".$chname ?>" required></textarea>
                 <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
                 <input type="hidden" name="channelHeading" value="<?php echo $channelHeading; ?>"/>
                 <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
@@ -177,6 +180,7 @@
   </div> <!--end of main container -->
 
   <!-- modal for user profile -->
+  <!--
   <div class="modal fade" id="client_profile_page" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -209,8 +213,9 @@
 
 
             </div>
+          --><!-- avatar details goes here
             <div class="col-xs-4">
-              <!-- avatar details goes here -->
+
               <input type="image" id="profile-pic" src="images/users/default-avatar-250x250.png" width="170px">
               <input type="file" id="profile-browse" onchange="loadFile(event)" multiple accept='image/*' style="display:none;">
             </div>
@@ -232,6 +237,7 @@
       </div>
     </div>
   </div>
+  -->
   <!-- create new channel -->
   <div class="modal fade" id="NewChannel" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -340,7 +346,10 @@
           <h4 class="modal-title">Add Snippet</h4>
         </div>
         <div class="modal-body">
-          <input id="retchannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+          <input id="retchannel" type="hidden" name="channel" value="
+          <?php
+          $chname = isset($_POST["channel"]) ? $_POST["channel"] : NULL;
+          echo $chname; ?>"/>
           <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
           <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
           <textarea class="client_code_snippet_textarea" rows="9"></textarea>

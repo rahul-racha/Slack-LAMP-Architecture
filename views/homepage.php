@@ -3,14 +3,20 @@
 	$_SESSION['basePath'] = '../';
 	//session_write_close();
 	require_once $_SESSION['basePath'].'controllers/home.php';
+	require_once $_SESSION['basePath'].'controllers/profile.php';
 
 
   $homeControlVar = new HomeController();
-  $channelName = NULL;
+	$profileControllerVar = new ProfileController();
+	$profile = array();
+	$channelName = NULL;
 	$channelHeading = NULL;
 	$chStatus = NULL;
   $workspaceUrl = "musicf17.slack.com";
 	$msgId = NULL;
+  $profile = $homeControlVar->getProfile($_SESSION['userid'], $workspaceUrl);
+	$avatar_path = (!empty($profile['profile']) && !empty($profile['profile'][0]['avatar']) != NULL) ? $profile['profile'][0]['avatar'] : NULL;
+
 
 
   if (isset($_POST["channel"])) {
@@ -71,23 +77,28 @@
     $channelList = $homeControlVar->viewChannels($workspaceUrl);
     if (!isset($_SESSION['channel']) && !isset($_POST["channel"])) {
 			$symbol = NULL;
-      $channelName = $channelList[0]['channel'];
-      $_POST["channel"] = $channelList[0]['channel'];
-			if ($channelList[0]['type'] == "Public") {
-				$symbol = "#";
-			} else {
-				$symbol = "∆";
+			if (!empty($channelList)) {
+      	$channelName = $channelList[0]['channel'];
+      	$_POST["channel"] = $channelList[0]['channel'];
+				if ($channelList[0]['type'] == "Public") {
+					$symbol = "#";
+				} else {
+					$symbol = "∆";
+				}
+				$channelHeading = $symbol." ".$channelName;
+				$_POST['$channelHeading'] = $channelHeading;
 			}
-			$channelHeading = $symbol." ".$channelName;
     }
 		if (!isset($_SESSION["chStatus"]) && !isset($_POST["chStatus"])) {
-			$temp = $channelList[0]['status'];
-			if ($temp == "archived") {
-				$chStatus = "Unarchive";
-			} else if ($temp == "unarchived") {
-				$chStatus = "Archive";
+			if (!empty($channelList)) {
+				$temp = $channelList[0]['status'];
+				if ($temp == "archived") {
+					$chStatus = "Unarchive";
+				} else if ($temp == "unarchived") {
+					$chStatus = "Archive";
+				}
+				$_POST["chStatus"] = $chStatus;
 			}
-			$_POST["chStatus"] = $chStatus;
 		}
 
      foreach ($channelList as $index) {
@@ -142,6 +153,8 @@
 		$msgId = NULL;
 		$firstMsgId = NULL;
 		$loadMore = "";
+		$head = isset($channelHeading)? $channelHeading: NULL;
+		$st = isset($chStatus)? $chStatus: NULL;
     foreach ($channelMessages as $key => $value) {
       $CurrentTime = new DateTime($value["created_time"]);
       $strip = $CurrentTime->format('H:i @Y-m-d');
@@ -198,8 +211,8 @@
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
 
-			              <input type='hidden' class='delHeading' name='channelHeading' value=".$channelHeading.">
-			              <input type='hidden' class='delStatus' name='chStatus' value=".$chStatus.">
+			              <input type='hidden' class='delHeading' name='channelHeading' value=".$head.">
+			              <input type='hidden' class='delStatus' name='chStatus' value=".$st.">
 
 										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
@@ -245,8 +258,8 @@
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
 
-										<input type='hidden' class='delHeading' name='channelHeading' value=".$channelHeading.">
-			              <input type='hidden' class='delStatus' name='chStatus' value=".$chStatus.">
+										<input type='hidden' class='delHeading' name='channelHeading' value=".$head.">
+			              <input type='hidden' class='delStatus' name='chStatus' value=".$st.">
 
 										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>

@@ -20,7 +20,8 @@ $(document).ready(function(){
 			$('#msg-cont').css('background-color', 'darkseagreen');
 		}
 
-		$("#archiveButton").on("click",function(e) {
+		$(document).on("click","#archiveButton",function(e) {
+		//$("#archiveButton").on("click",function(e) {
 			var status = $("#archiveButton").text();
 			var channel = $("#archiveButton").attr("value");
 			if (status == "Archive") {
