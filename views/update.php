@@ -13,6 +13,7 @@
   if (isset($_POST["g-recaptcha-response"])) {
     $response = $_POST["g-recaptcha-response"];
   }
+  $_SESSION["g-recaptcha-response"] = $_POST["g-recaptcha-response"];
   if ($response != NULL) {
     $data = array(
 		    'secret' => '6Le3TjwUAAAAADZyXnzyh4PF5AjdjLnDUUg3Duk8',
