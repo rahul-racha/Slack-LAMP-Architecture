@@ -14,9 +14,7 @@
     global $response;
     $response = $_POST["g-recaptcha-response"];
   }
-  //$_SESSION["g-recaptcha-response"] = $_POST["g-recaptcha-response"];
-  print_r("OKI");
-  print_r($response);
+
   if ($response != NULL) {
     $data = array(
 		    'secret' => '6Le3TjwUAAAAADZyXnzyh4PF5AjdjLnDUUg3Duk8',
@@ -35,11 +33,9 @@
     // foreach($captcha_success as $key=>$value) {
     //   print_r($key);print_r($value);
     // }
-    print_r("verify");
-    print_r($verify);
+
     if ($captcha_success->success==false) {
-      print_r("I AM IN FALSE");
-      //$profileControllerVar->redirectToView($redirectionURL);
+      $profileControllerVar->redirectToView($redirectionURL);
     } else if ($captcha_success->success==true) {
         $workspaceUrl = "musicf17.slack.com";
         $update_userid = isset($_SESSION['update-userid']) ? $_SESSION['update-userid'] : $_SESSION['userid'];
@@ -57,8 +53,7 @@
         }
     }
   } else {
-    print_r("I AM HERE LAST");
-    //$profileControllerVar->redirectToView($redirectionURL);
+    $profileControllerVar->redirectToView($redirectionURL);
   }
 ?>
 <!DOCTYPE html>
