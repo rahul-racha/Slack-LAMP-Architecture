@@ -3,14 +3,20 @@
 	$_SESSION['basePath'] = '../';
 	//session_write_close();
 	require_once $_SESSION['basePath'].'controllers/home.php';
+	require_once $_SESSION['basePath'].'controllers/profile.php';
 
 
   $homeControlVar = new HomeController();
-  $channelName = NULL;
+	$profileControllerVar = new ProfileController();
+	$profile = array();
+	$channelName = NULL;
 	$channelHeading = NULL;
 	$chStatus = NULL;
   $workspaceUrl = "musicf17.slack.com";
 	$msgId = NULL;
+  $profile = $homeControlVar->getProfile($_SESSION['userid'], $workspaceUrl);
+	$avatar_path = (!empty($profile['profile']) && !empty($profile['profile'][0]['avatar']) != NULL) ? $profile['profile'][0]['avatar'] : NULL;
+
 
 
   if (isset($_POST["channel"])) {
@@ -71,23 +77,28 @@
     $channelList = $homeControlVar->viewChannels($workspaceUrl);
     if (!isset($_SESSION['channel']) && !isset($_POST["channel"])) {
 			$symbol = NULL;
-      $channelName = $channelList[0]['channel'];
-      $_POST["channel"] = $channelList[0]['channel'];
-			if ($channelList[0]['type'] == "Public") {
-				$symbol = "#";
-			} else {
-				$symbol = "∆";
+			if (!empty($channelList)) {
+      	$channelName = $channelList[0]['channel'];
+      	$_POST["channel"] = $channelList[0]['channel'];
+				if ($channelList[0]['type'] == "Public") {
+					$symbol = "#";
+				} else {
+					$symbol = "∆";
+				}
+				$channelHeading = $symbol." ".$channelName;
+				$_POST['$channelHeading'] = $channelHeading;
 			}
-			$channelHeading = $symbol." ".$channelName;
     }
 		if (!isset($_SESSION["chStatus"]) && !isset($_POST["chStatus"])) {
-			$temp = $channelList[0]['status'];
-			if ($temp == "archived") {
-				$chStatus = "Unarchive";
-			} else if ($temp == "unarchived") {
-				$chStatus = "Archive";
+			if (!empty($channelList)) {
+				$temp = $channelList[0]['status'];
+				if ($temp == "archived") {
+					$chStatus = "Unarchive";
+				} else if ($temp == "unarchived") {
+					$chStatus = "Archive";
+				}
+				$_POST["chStatus"] = $chStatus;
 			}
-			$_POST["chStatus"] = $chStatus;
 		}
 
      foreach ($channelList as $index) {
@@ -142,6 +153,8 @@
 		$msgId = NULL;
 		$firstMsgId = NULL;
 		$loadMore = "";
+		$head = isset($channelHeading)? $channelHeading: NULL;
+		$st = isset($chStatus)? $chStatus: NULL;
     foreach ($channelMessages as $key => $value) {
       $CurrentTime = new DateTime($value["created_time"]);
       $strip = $CurrentTime->format('H:i @Y-m-d');
@@ -156,8 +169,8 @@
       $dislikeCount = getReactionCount($msgId, $dislikeEmo);
       $actionUrl = htmlspecialchars($_SERVER['PHP_SELF'].'#'.$msgIdRef);
 
-      if($value["message"] || $value["image_path"] || $value["snippet"] != "")
-			{
+      //if($value["message"] || $value["image_path"] || $value["snippet"] != "")
+			//{
 				if(count($channelMessages != $i))
 				{
         $name = $name. "<div class='message_profile_pic col-xs-1'>
@@ -167,25 +180,28 @@
 								 		<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
 	                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
 	                  <ul class = 'MessageUL'>";
-										if($value["message"] != "" ){
+
+										if ($value["message"] != NULL && !empty($value["message"])){
 											$name=$name. "<li class = 'MessageLI'>".$value['message']."</li>";
+										} else if ($value["image_path"] != NULL && !empty($value["image_path"])) {
+											//$uploadedFileName = $value["image_path"];
+											//$imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
+											//$imageFileType = exif_imagetype($value["image_path"]);
+											// echo $imageFileType;
+											// if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
+											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											// }
 										}
-										else if($value["image_path"] != ""){
-											$uploadedFileName = $value["image_path"];
-											$imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
-											// echo "image file type".$imageFileType;
-											if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
-												$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
-											}
-										}
-										else if($value["snippet"] != ""){
-											$name=$name. "<li class = 'MessageLI'><pre><code>".$value["snippet"]."</code></pre></li>";
+										else if($value["snippet"] != NULL && !empty($value["snippet"])){
+											$name=$name. "<li class = 'MessageLI'><pre class='client_snippet_pre_tag'><code>".$value["snippet"]."</code></pre></li>";
+										} else if($value["file_path"] != NULL && !empty($value["file_path"])) {
+											$name=$name. "<li class = 'MessageLI'><a href=".$value["file_path"]." download>".$value["file_path"]."</a></li>";
 										}
 										$name=$name. "</ul>
 
 	                  <label class='like' name='like' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-	                   </label>&nbsp &nbsp
+	                  </label>&nbsp &nbsp
 	                  <span id = 'likeResponse".$msgId."'> ".$likeCount."</span>
 	                  <label class='dislike' name='dislike' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
@@ -194,6 +210,10 @@
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+
+			              <input type='hidden' class='delHeading' name='channelHeading' value=".$head.">
+			              <input type='hidden' class='delStatus' name='chStatus' value=".$st.">
+
 										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
                 </div>";
@@ -207,19 +227,22 @@
 								 		<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
 	                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
 	                  <ul class = 'MessageUL'>";
-										if($value["message"] != "" ){
+										$value["image_path"];
+										if($value["message"] != NULL && !empty($value["message"])){
 											$name=$name. "<li class = 'MessageLI'>".$value['message']."</li>";
 										}
-										else if($value["image_path"] != ""){
-											$uploadedFileName = $value["image_path"];
-											$imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
-											// echo "image file type".$imageFileType;
-											if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
-												$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
-											}
+
+										else if($value["image_path"] != NULL && !empty($value["image_path"])){
+											// $uploadedFileName = $value["image_path"];
+											// $imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
+											//if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
+											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											//}
 										}
-										else if($value["snippet"] != ""){
+										else if($value["snippet"] != NULL && !empty($value["snippet"])) {
 											$name=$name. "<li class = 'MessageLI'><pre><code>".$value["snippet"]."</code></pre></li>";
+										} else if($value["file_path"] != NULL && !empty($value["file_path"])) {
+											$name=$name. "<li class = 'MessageLI'><a href=".$value["file_path"]." download>".$value["file_path"]."</a></li>";
 										}
 										$name=$name. "</ul>
 
@@ -234,11 +257,15 @@
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
 										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+
+										<input type='hidden' class='delHeading' name='channelHeading' value=".$head.">
+			              <input type='hidden' class='delStatus' name='chStatus' value=".$st.">
+
 										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
                 </div>";
 			}
-		}
+		//}
 		$i++;
     }
 		$loadMore = "<div class='col-xs-12 loadMoreButton'>

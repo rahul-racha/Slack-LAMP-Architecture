@@ -3,6 +3,12 @@ session_start();
 $_SESSION["basePath"] = "../";
 require_once $_SESSION["basePath"].'controllers/profile.php';
 
+$profile_id = NULL;
+
+if (isset($_POST["profile_id"])) {
+  $profile_id = $_POST["profile_id"];
+}
+
 $profileControllerVar = new ProfileController();
 $target_dir = "images/users/";
 $uploadedFileName = $_FILES["uploaded_file"]["name"];
@@ -62,10 +68,14 @@ if ($uploadOk == 0) {
 // if everything is ok, try to upload file
 } else {
     if (move_uploaded_file($_FILES["uploaded_file"]["tmp_name"], $target_file)) {
-        global $profileControllerVar;
+        //global $profileControllerVar;
+        //global $profile_id;
         $profileObject = array();
         $profileObject["file_name"] = $target_file;
+        $profileObject["profile_id"] = $profile_id;
+
         $reply = $profileControllerVar->updateProfile($profileObject);
+
         if ($reply == "true") {
           $response["result"] = "true";
           $response["message"] = $response["message"]."The file ". basename( $_FILES["uploaded_file"]["name"]). " has been uploaded.";

@@ -1,5 +1,5 @@
 <?php
-  //include_once $_SESSION['basePath'].'errors.php';
+  include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/connect.php';
 
   class HomeModel {
@@ -151,7 +151,8 @@
             }
           }
        }
-       if ($result) {
+       if (isset($result)) {
+       //if ($result) {
          mysqli_free_result($result);
        }
        $dbConVar->closeConnectionObject($conn);
@@ -182,6 +183,28 @@
       $dbConVar->closeConnectionObject($conn);
       return $userMembership;
 
+    }
+
+    public function retrieveUsersFromWrkspace($workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $userList = array();
+      $getUsers = "SELECT U.user_id AS user_id
+                   FROM user_info AS U INNER JOIN workspace AS W
+                   WHERE U.user_id = W.user_id AND W.url = '$workspaceUrl'";
+      $result = mysqli_query($conn, $getUsers);
+      if (mysqli_num_rows($result) > 0) {
+        while ($row = $result->fetch_assoc())
+        {
+          $row['user_id'] = $this->validateInputs($row['user_id']);
+          array_push($userList, $row['user_id']);
+        }
+      }
+      if ($result) {
+        mysqli_free_result($result);
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $userList;
     }
 
     public function retrievePatternMatchedUsers($keyword, $workspace) {
@@ -539,7 +562,7 @@
       $retMessages = "SELECT *
                       FROM (
                       SELECT channel_id, channel_messages.user_id AS userID, first_name, last_name, avatar, message,
-                      image_path, snippet, msg_id, created_time, type
+                      image_path, file_path, snippet, msg_id, created_time, type
                       FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                       WHERE (type = 1 OR type = 2) AND channel_id
                       IN (
@@ -555,6 +578,7 @@
           {
             $row['message'] = $this->validateInputs($row['message']);
             $row['image_path'] = $this->validateInputs($row['image_path']);
+            $row['file_path'] = $this->validateInputs($row['file_path']);
             $row['snippet'] = $this->validateInputs($row['snippet']);
             array_push($this->messages, $row);
           }
@@ -608,7 +632,7 @@
       return $chName;
     }
 
-    public function insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl)
+    public function insertMessage($channelName, $message, $imagePath, $filePath, $snippet, $threadId, $type, $workspaceUrl)
     {
       $temp=array();
       $dbConVar = new dbConnect();
@@ -647,9 +671,9 @@
           //$imagePath = $this->validMySQL($conn, $imagePath);
           //$snippet = $this->validMySQL($conn, $snippet);
           $stmt = $conn->prepare("INSERT INTO channel_messages (channel_id, user_id, msg_id, message,
-                                  image_path, snippet, type, dependency)
-                                  VALUES (?,?,?,?,?,?,?,?)");
-          $stmt->bind_param("ssssssss", $chId, $_SESSION['userid'], $msgId, $message, $imagePath, $snippet, $type, $dependency);
+                                  image_path, file_path, snippet, type, dependency)
+                                  VALUES (?,?,?,?,?,?,?,?,?)");
+          $stmt->bind_param("sssssssss", $chId, $_SESSION['userid'], $msgId, $message, $imagePath, $filePath, $snippet, $type, $dependency);
           $stmt->execute();
           //if ($stmt->affected_rows > 0) {}
           $affectedRows = $stmt->affected_rows;
@@ -668,6 +692,19 @@
                       WHERE msg_id = ?";
       $stmt = $conn->prepare($updateType);
       $stmt->bind_param("ss", $type, $threadId);
+      $stmt->execute();
+      $affectedRows = $stmt->affected_rows;
+      $stmt->close();
+      return $affectedRows;
+    }
+
+    public function addToDirectMsgList($userID, $recipient) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $sql = "INSERT INTO inside_direct_msg (user_id, recipient)
+              VALUES (?,?)";
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("ss", $userID, $recipient);
       $stmt->execute();
       $affectedRows = $stmt->affected_rows;
       $stmt->close();
@@ -739,7 +776,8 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $this->replies = array();
-      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, avatar,image_path,snippet, msg_id, message, created_time
+      $getReplies = "SELECT channel_messages.user_id, first_name, last_name, avatar,image_path,file_path,
+                     snippet, msg_id, message, created_time
                      FROM channel_messages INNER JOIN user_info on channel_messages.user_id = user_info.user_id
                      WHERE dependency = $threadId
                      ORDER BY created_time ASC";
@@ -751,6 +789,7 @@
           $row['first_name'] = $this->validateInputs($row['first_name']);
           $row['last_name'] = $this->validateInputs($row['last_name']);
           $row['image_path'] = $this->validateInputs($row['image_path']);
+          $row['file_path'] = $this->validateInputs($row['file_path']);
           $row['snippet'] = $this->validateInputs($row['snippet']);
           array_push($this->replies, $row);
         }
@@ -865,6 +904,20 @@
           $stmt->close();
         }
       }
+      $dbConVar->closeConnectionObject($conn);
+      return $affectedRows;
+    }
+
+    public function insertDirectMessage($fromID, $toID, $message, $workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $insDirectMsg = "INSERT INTO direct_message (user1, user2, direct_message, url)
+                       VALUE (?,?,?,?)";
+      $stmt = $conn->prepare($insDirectMsg);
+      $stmt->bind_param("ssss", $fromID, $toID, $message, $workspaceUrl);
+      $stmt->execute();
+      $affectedRows = $stmt->affected_rows;
+      $stmt->close();
       $dbConVar->closeConnectionObject($conn);
       return $affectedRows;
     }

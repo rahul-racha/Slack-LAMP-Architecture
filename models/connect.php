@@ -15,7 +15,6 @@
     	// 	$database,
     	// 	$port
     	// );
-
     public function &createConnectionObject()
     {
         $connection = new mysqli($this->servername, $this->username, $this->password, $this->database);

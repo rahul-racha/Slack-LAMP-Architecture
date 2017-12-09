@@ -17,7 +17,7 @@
   //check if user exists in db when inviting
 
 
-  //include_once $_SESSION['basePath'].'errors.php';
+  include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/home.php';
 
    if (!isset($_SESSION['userid']) || !isset($_SESSION['password']) || !isset($_SESSION['userRole']))
@@ -69,6 +69,21 @@
       return $userList;
     }
 
+    public function retrieveUsersFromWrkspace($workspaceUrl) {
+      $this->homeModelVar = new HomeModel();
+      $userList = array();
+      $userList = $this->homeModelVar->retrieveUsersFromWrkspace($workspaceUrl);
+      return $userList;
+    }
+
+    public function addToDirectMsgList($userID, $recipientList) {
+      $this->homeModelVar = new HomeModel();
+      foreach ($recipientList as $value) {
+        $affectedRows = $this->homeModelVar->addToDirectMsgList($userID, $value);
+        $recipientRows = $this->homeModelVar->addToDirectMsgList($value, $userID);
+      }
+    }
+
     public function viewMessages($channelName, $workspaceUrl,$retChannel)
     {
         $this->homeModelVar = new HomeModel();
@@ -114,14 +129,15 @@
     }
 
     //function is used for inserting messages and replies
-    public function insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $messageType, $workspaceUrl)
+    public function insertMessage($channelName, $message, $imagePath, $filePath, $snippet,
+                                  $threadId, $messageType, $workspaceUrl)
     {
         $responseString = NULL;
         $this->homeModelVar = new HomeModel();
         $chStatus = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
         if ($chStatus != "archived") {
           $type = $this->getMessageType($messageType);
-          $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $imagePath, $snippet, $threadId, $type, $workspaceUrl);
+          $affectedRows = $this->homeModelVar->insertMessage($channelName, $message, $imagePath, $filePath, $snippet, $threadId, $type, $workspaceUrl);
           if ($affectedRows == 1) {
             $responseString = 'Message is inserted';
           } else if ($affectedRows == 0)
@@ -423,6 +439,55 @@
       $this->homeModelVar = new HomeModel();
       $statusString = $this->homeModelVar->getChannelStatus($channelName, $workspaceUrl);
       return $statusString;
+    }
+
+    public function insertDirectMessage($toID, $message, $workspaceUrl) {
+      $isSuccess = NULL;
+      $this->homeModelVar = new HomeModel();
+      $affectedRows = $this->homeModelVar->insertDirectMessage($_SESSION['userid'], $toID, $message, $workspaceUrl);
+      if ($affectedRows > 0) {
+        $isSuccess = "true";
+      } else {
+        $isSuccess = "false";
+      }
+      return $isSuccess;
+    }
+
+    public function uploadFile($fileObject, $channelName, $thread_message, $image_path,
+    $filePath, $snippet, $thread_id, $messageType, $workspaceUrl) {
+      $uploadOk = 1;
+      $response = array("result"=>NULL, "message"=>"");
+
+      if ($filePath != NULL && $fileObject["size"] > 3000000) {
+          $response["result"] = "false";
+          $response["message"] = "Your file is too large.";
+          $uploadOk = 0;
+      }
+      if ($uploadOk == 0) {
+          $response["result"] = "false";
+          $response["message"] = $response["message"]."Your file was not uploaded.";
+      } else {
+          $object_path = ($filePath == NULL) ? $image_path : $filePath;
+          if (move_uploaded_file($fileObject["tmp_name"], $object_path)) {
+
+            $verifyResult = $this->insertMessage($channelName,$thread_message,$image_path,
+                       $filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
+            if ($verifyResult == "Message is inserted") {
+              $response["result"] = "true";
+              $response["message"] = "The file ". basename( $fileObject["name"]). " has been uploaded.";
+            } else {
+              unlink($object_path);
+              $response["result"] = "false";
+              $response["message"] = "Sorry, there was an error uploading your file.";
+            }
+
+          } else {
+            $response["result"] = "false";
+            $response["message"] = "Sorry, there was an error uploading your file.";
+
+          }
+      }
+      return $response;
     }
 
   }

@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
+</head>
+</html>
 <?php
 session_start();
 $_SESSION['basePath'] = '../';
@@ -5,10 +11,10 @@ require_once $_SESSION['basePath'].'controllers/home.php';
 
 $homeControlVar = new HomeController();
 $workspaceUrl = "musicf17.slack.com";
-$user_messages_count = NULL;
-$emo_count_user = NULL;
-$t_rxn_count = NULL;
-$t_post_count = NULL;
+//$user_messages_count = NULL;
+//$emo_count_user = NULL;
+//$t_rxn_count = NULL;
+//$t_post_count = NULL;
 // $ch_metrics_user = array();
 $user_profile = array();
 $metrics = array();
@@ -26,6 +32,7 @@ if (isset($_GET['userid'])) {
     global $emoCount;
 
     $user_id = $_GET['userid'];
+    $_SESSION['update-userid'] = $_GET['userid'];
 		$user_profile = $homeControlVar->getProfile($user_id, $workspaceUrl);
     $metrics = $homeControlVar->getUserMetrics($user_id, $workspaceUrl);
     $channelList = array();
@@ -150,10 +157,10 @@ function computePostRatings($postInfo, $relPostInfo) {
         <div class="col-xs-7">
           <h3><?php echo $user_profile["profile"][0]["first_name"]."   ".$user_profile["profile"][0]["last_name"]; ?></h3>
           <h6>Email: <?php echo $user_profile["profile"][0]["user_id"]; ?></h6>
-          <h6>Channels: </h6>
+          <h6>Public Channels </h6>
           <ul style="list-style: none;">
             <?php
-              echo "<h6>Public:</h6>";
+              //echo "<h6>Public:</h6>";
               //print_r($user_profile["membership"]);
               foreach ($user_profile["membership"] as $value) {
                 if($value["type"]== 'Public'){
@@ -176,17 +183,7 @@ function computePostRatings($postInfo, $relPostInfo) {
               echo "<li><strong>"."Channel -- #Messages"."</strong></li>";
               foreach ($postMetrics as $value) {
                 echo "<li>".$value["channel_name"]." -- ".$value["msg_count"]."</li>";
-                $user_messages_count += $value["msg_count"];
-              }
-            ?>
-          </ul>
-          <ul style="list-style: none;">
-            <?php
-              $relative_post_count = array();
-              $relative_post_count = $metrics["relPost"];
-              foreach ($relative_post_count as $value) {
-                // echo "<li>".$value["channel_name"]." -- ".$value["max_count"]."</li>";
-                $r_post_count += $value["max_count"];
+                //$user_messages_count += $value["msg_count"];
               }
             ?>
           </ul>
@@ -207,41 +204,17 @@ function computePostRatings($postInfo, $relPostInfo) {
                     $dislike_count = $value["emo_count"];
                   }
                   echo "<li>".$value["channel_name"]." -- ". $value["emo_name"]. " -- ". $value["emo_count"]. "</li>";
-                  $emo_count_user += $value["emo_count"];
                 }
-                // echo $like_count;
-                // echo $dislike_count;
-                // echo $emo_count_user;
             ?>
           </ul>
-          <ul style="list-style: none;">
+
             <?php
-              $relative_reaction_count = array();
-              $relative_reaction_count = $metrics["relRxn"];
-              foreach ($relative_reaction_count as $value) {
-                echo "<li>".$value["channel_name"]." -- ".$value["max_rx_count"]."</li>";
-                $r_rxn_count += $value["max_rx_count"];
-              }
-              
-            ?>
-          </ul>
-            <?php
-              $rxn_percentage = ($emo_count_user / $r_rxn_count)*100;
-              $post_percentage = ($user_messages_count / $r_post_count) * 100;
               echo "<h6>Post Metrics: </h6>";
               echo "<div class='star-ratings-sprite'>
                       <span style='width:".$postRating."%' class='star-ratings-sprite-rating'></span>
                     </div>
                     <span style='margin-left:2%;'>".$postRating."%</span>";
-              // if($rxn_percentage <= 20){
-              //   echo "<button type='button' class='btn btn-danger'>Poor <span class='badge'></span></button>";
-              // }
-              // elseif ($rxn_percentage <=50 && $rxn_percentage >20) {
-              //   echo "<button type='button' class='btn btn-primary'>Good <span class='badge'></span></button>";
-              // }
-              // else {
-              //   echo "<button type='button' class='btn btn-success'>Excellent <span class='badge'></span></button>";
-              // }
+
               echo "<h6>Reaction Metrics:</h6>";
               echo "<div class='star-ratings-sprite'>
                       <span style='width:".$rxnRating."%' class='star-ratings-sprite-rating'></span>
@@ -251,19 +224,6 @@ function computePostRatings($postInfo, $relPostInfo) {
                     <span>".$emoCount["likes"]."</span>
                     <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
                     <span>".$emoCount["dislikes"]."</span>";
-
-              // echo $rxn_percentage."<br />";
-              // echo "<h6>Reaction Metrics:</h6>";
-              // if($post_percentage <= 20){
-              //   echo "<button type='button' class='btn btn-danger'>Poor <span class='badge'></span></button>";
-              // }
-              // elseif ($post_percentage <=50 && $post_percentage >20) {
-              //   echo "<button type='button' class='btn btn-primary'>Good <span class='badge'></span></button>";
-              // }
-              // else {
-              //   echo "<button type='button' class='btn btn-success'>Excellent <span class='badge'></span></button>";
-              // }
-              // echo $post_percentage."<br />";
             ?>
           <!-- </ul> -->
         </div>
@@ -274,7 +234,8 @@ function computePostRatings($postInfo, $relPostInfo) {
                   <span class="icon-cog icon-white"></span><span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
-                  <li><a href="update.php"><span class="icon-wrench"></span> Modify</a></li>
+                  <li><a href="recaptcha.php"><span class="icon-wrench"></span> Modify</a></li>
+                  <!--?userid=<?php //echo $_GET['userid']; ?>
                   <!-- <li><a href="#"><span class="icon-trash"></span> Delete</a></li> -->
               </ul>
           </div>
