@@ -234,7 +234,7 @@ function computePostRatings($postInfo, $relPostInfo) {
                   <span class="icon-cog icon-white"></span><span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
-                  <li><a href="update.php"><span class="icon-wrench"></span> Modify</a></li>
+                  <li><a href="recaptcha.php"><span class="icon-wrench"></span> Modify</a></li>
                   <!--?userid=<?php //echo $_GET['userid']; ?>
                   <!-- <li><a href="#"><span class="icon-trash"></span> Delete</a></li> -->
               </ul>

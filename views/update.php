@@ -5,20 +5,52 @@
   require_once $_SESSION['basePath'].'controllers/home.php';
   require_once $_SESSION['basePath'].'controllers/profile.php';
 
-  $workspaceUrl = "musicf17.slack.com";
-  $update_userid = isset($_SESSION['update-userid']) ? $_SESSION['update-userid'] : $_SESSION['userid'];
-  unset($_SESSION['update-userid']);
-  $size = "500";
-  $default_property = "404";
-  $profile = array();
-  $profilePicPath = "images/users/default-profile-pic.jpg";
+  $response = NULL;
+  $verificationURL = "https://www.google.com/recaptcha/api/siteverify";
   $profileControllerVar = new ProfileController();
   $homeControlVar = new HomeController();
-  $profile = $homeControlVar->getProfile($_SESSION['userid'], $workspaceUrl);
-  $email = (!empty($profile['profile']) && !empty($profile['profile'][0]['email']) != NULL) ? $profile['profile'][0]['email'] : NULL;
+  $redirectionURL = "profile.php?userid=".$_SESSION['userid'];
+  if (isset($_POST["g-recaptcha-response"])) {
+    $response = $_POST["g-recaptcha-response"];
+  }
+  if ($response != NULL) {
+    $data = array(
+		    'secret' => '6Le3TjwUAAAAADZyXnzyh4PF5AjdjLnDUUg3Duk8',
+		    'response' => $response
+	  );
+    $options = array(
+      'http' => array (
+        'method' => 'POST',
+        'header' => 'Content-Type: application/x-www-form-urlencoded',
+        'content' => http_build_query($data)
+      )
+    );
+    $context  = stream_context_create($options);
+	  $verify = file_get_contents($verificationURL, false, $context);
+	  $captcha_success=json_decode($verify);
+    // foreach($captcha_success as $key=>$value) {
+    //   print_r($key);print_r($value);
+    // }
+    if ($captcha_success->success==false) {
+      $profileControllerVar->redirectToView($redirectionURL);
+    } else if ($captcha_success->success==true) {
+        $workspaceUrl = "musicf17.slack.com";
+        $update_userid = isset($_SESSION['update-userid']) ? $_SESSION['update-userid'] : $_SESSION['userid'];
+        unset($_SESSION['update-userid']);
+        $size = "500";
+        $default_property = "404";
+        $profile = array();
+        $profilePicPath = "images/users/default-profile-pic.jpg";
 
-  if ($email != NULL) {
-    $profilePicPath = $profileControllerVar->getGravatar($email, $default_property, $size, $profilePicPath);
+        $profile = $homeControlVar->getProfile($_SESSION['userid'], $workspaceUrl);
+        $email = (!empty($profile['profile']) && !empty($profile['profile'][0]['email']) != NULL) ? $profile['profile'][0]['email'] : NULL;
+
+        if ($email != NULL) {
+          $profilePicPath = $profileControllerVar->getGravatar($email, $default_property, $size, $profilePicPath);
+        }
+    }
+  } else {
+    $profileControllerVar->redirectToView($redirectionURL);
   }
 ?>
 <!DOCTYPE html>

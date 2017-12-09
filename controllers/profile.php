@@ -10,6 +10,10 @@
   class ProfileController {
     private $profileModelVar;
 
+    public function redirectToView($redirectionURL) {
+      header("location:".$redirectionURL);
+    }
+
     public function updateProfile($profileObject) {
       $this->profileModelVar = new ProfileModel();
       $filePath = $profileObject["file_name"];
