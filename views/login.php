@@ -17,9 +17,9 @@
 		<script src="js/login.js"></script>
 		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 		<!-- gmail login api -->
-		<meta name="google-signin-scope" content="profile email">
+		<!-- <meta name="google-signin-scope" content="profile email">
 		<meta name="google-signin-client_id" content="117682046238-p3sgmtmn79b5pjr890frj7ijgov021fv.apps.googleusercontent.com">
-		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script src="https://apis.google.com/js/platform.js" async defer></script> -->
 	</head>
 	<body>
 		<div class="login-page container-fluid">
@@ -42,7 +42,8 @@
 					</div>
 					<div class="col-xs-6 client_login_with_wrapper">
 						<h4>Login with</h4>
-						<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+						<!-- gmail sign in -->
+						<!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> -->
 					</div>
 					<p id="formMsg">
 						<?php
