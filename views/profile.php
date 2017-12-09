@@ -33,7 +33,7 @@ if (isset($_GET['userid'])) {
 
     $user_id = $_GET['userid'];
     $_SESSION['update-userid'] = $_GET['userid'];
-    var_dump($_SESSION["g-recaptcha-response"]);
+    //var_dump($_SESSION["g-recaptcha-response"]);
 		$user_profile = $homeControlVar->getProfile($user_id, $workspaceUrl);
     $metrics = $homeControlVar->getUserMetrics($user_id, $workspaceUrl);
     $channelList = array();
