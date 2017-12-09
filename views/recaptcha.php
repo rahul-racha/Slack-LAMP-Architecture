@@ -19,7 +19,7 @@
     <div class="row">
       <div class="col-xs-6 col-xs-offset-4">
     <form action="<?php echo htmlspecialchars('update.php'); ?>" method="POST">
-      <div class="g-recaptcha" data-sitekey="6Le0vAgUAAAAAH_ZWM8tw3It6jkrqLHkFFTMOW-J"
+      <div class="g-recaptcha" data-sitekey="6Le3TjwUAAAAADDlLXoLoJbaPmiQNWgBeehJ-hiA"
 		       data-callback="reCaptchad">
       </div>
       <br/>
