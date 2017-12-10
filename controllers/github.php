@@ -7,11 +7,10 @@ require_once $_SESSION['basePath'].'models/github.php';
     private $authorizeURL = 'https://github.com/login/oauth/authorize';
     private $tokenURL = 'https://github.com/login/oauth/access_token';
     private $apiURLBase = 'https://api.github.com/';
+    private $scope = 'user';
     private $githubModelVar;
     private $forParams;
     private $forToken;
-    private $scope = 'user';
-    //private $defaultApiReq = $apiURLBase."user";
 
     public function __construct() {
       // $this->clientID = ;
@@ -25,15 +24,16 @@ require_once $_SESSION['basePath'].'models/github.php';
     function apiRequest($url = 'https://api.github.com/user', $post=FALSE, $headers=array()) {
       $ch = curl_init($url);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-      if($post)
+      if($post) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+      }
       $headers[] = 'Accept: application/json';
-      //$headers[] = 'User-Agent: slack-lamp';
-      if(isset($_SESSION['access_token']))
+      if(isset($_SESSION['access_token'])) {
         $headers[] = 'Authorization: token ' . $_SESSION['access_token'];
+        $headers[] = 'User-Agent: slack-lamp';
+      }
       curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
       $response = curl_exec($ch);
-      $_SESSION['jsonresponse'] = json_decode($response);
       return json_decode($response);
     }
 
@@ -57,7 +57,6 @@ require_once $_SESSION['basePath'].'models/github.php';
         );
         $token = $this->apiRequest($this->tokenURL, $tokenContainer);
         $_SESSION['access_token'] = $token->access_token;
-        //header('Location: ' . $_SERVER['PHP_SELF']);
       }
     }
   }
