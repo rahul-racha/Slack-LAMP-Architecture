@@ -32,6 +32,7 @@ require_once $_SESSION['basePath'].'models/github.php';
         $headers[] = 'Authorization: token ' . $_SESSION['access_token'];
       curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
       $response = curl_exec($ch);
+      $_SESSION['jsonresponse'] = json_decode($response);
       return json_decode($response);
     }
 
