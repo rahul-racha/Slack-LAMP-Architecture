@@ -42,13 +42,16 @@
     );
     $httpReq = array('http' => $httpBody);
     $context = stream_context_create($httpReq);
-    $userDetails = file_get_contents('https://api.github.com/user',false,$context);
+    //$userDetails = file_get_contents('https://api.github.com/user',false,$context);
     //$userDetails = array();
-    //$userDetails = header('Location:https://api.github.com/user' . '?' . http_build_query($params));//;$githubControlVar->apiRequest();
-    $_SESSION['userDetails'] = json_decode($userDetails);
+    //$userDetails = header('Location:https://api.github.com/user' . '?' . http_build_query($params));//;
+
+    $_SESSION['userDetails'] = $githubControlVar->apiRequest();//$userDetails;
     echo '<h3>Logged In</h3>';
     echo '<h4>' . $userDetails->name . '</h4>';
     echo '<pre>';
+    print_r($_SESSION['userDetails']);
+    print_r("HMM");
     print_r($userDetails);
     echo '</pre>';
   }
