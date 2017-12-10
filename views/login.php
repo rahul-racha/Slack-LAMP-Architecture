@@ -13,13 +13,14 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css" />
 		<link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
 		<script src="js/login.js"></script>
-		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+		<!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
 		<!-- gmail login api -->
-		<meta name="google-signin-scope" content="profile email">
+		<!-- <meta name="google-signin-scope" content="profile email">
 		<meta name="google-signin-client_id" content="117682046238-p3sgmtmn79b5pjr890frj7ijgov021fv.apps.googleusercontent.com">
-		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script src="https://apis.google.com/js/platform.js" async defer></script> -->
 	</head>
 	<body>
 		<div class="login-page container-fluid">
@@ -32,17 +33,20 @@
 							<input type="text" name="userid" placeholder="userid" autocomplete="off" /><br>
 							<input type="password" name="password" placeholder="password" autocomplete="off" /><br>
 							<!-- <form action="?" method="POST"> -->
-								<div class="g-recaptcha" data-sitekey="6Le0vAgUAAAAAH_ZWM8tw3It6jkrqLHkFFTMOW-J" data-callback="reCaptchad"></div>
-								<br/>
+								<!-- <div class="g-recaptcha" data-sitekey="6Le0vAgUAAAAAH_ZWM8tw3It6jkrqLHkFFTMOW-J" data-callback="reCaptchad"></div> -->
+								<!-- <br/> -->
 								<!-- <input id="myButton" type="submit" value="Submit" disabled='true'> -->
 							<!-- </form> -->
 							<input type="submit" name="submit" value="Sign in"></input>
 						</form>
-						<h5> New to Slack? <button class="btn btn-primary" data-toggle="modal" data-target="#SignupModal">Sign up now >></button></h5>
+						<h5> New to Slack? </h5><button class="btn btn-primary" data-toggle="modal" data-target="#SignupModal">Sign up now</button>
 					</div>
 					<div class="col-xs-6 client_login_with_wrapper">
 						<h4>Login with</h4>
-						<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+						<!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> -->
+						<a class="btn btn-block btn-social btn-github" href="github_auth_client.php?action=git_auth">
+    					<span class="fa fa-github"></span> Sign in with GitHub
+  					</a>
 					</div>
 					<p id="formMsg">
 						<?php
