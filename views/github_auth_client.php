@@ -1,9 +1,10 @@
 <?php
 	session_start();
 	$_SESSION['basePath'] = '../';
-  require_once $_SESSION['basePath'].'controllers/login.php';
-  require_once $_SESSION['basePath'].'controllers/home.php';
-  require_once $_SESSION['basePath'].'controllers/profile.php';
+
+  // require_once $_SESSION['basePath'].'controllers/login.php';
+  // require_once $_SESSION['basePath'].'controllers/home.php';
+  // require_once $_SESSION['basePath'].'controllers/profile.php';
   require_once $_SESSION['basePath'].'controllers/github.php';
 
   $githubControlVar = new GithubAuth();
