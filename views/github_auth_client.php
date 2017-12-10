@@ -19,10 +19,10 @@
   }
 
   if (isset($_GET['code']) && !empty($_GET['code'])) {
-    if(!isset($_GET['state']) || $_SESSION['state'] != $_GET['state']) {
-      header('location:login.php');
-      die();
-    }
+    // if(!isset($_GET['state']) || $_SESSION['state'] != $_GET['state']) {
+    //   header('location:login.php');
+    //   die();
+    // }
     $githubControlVar->sendRequestParams($_SESSION['state'], $redirect_uri, $_GET['code']);
   }
 
