@@ -78,9 +78,9 @@ require_once $_SESSION['basePath'].'models/login.php';
         $result = $this->loginModelVar->addNewUser($userID, $email, $password, $firstName, $lastName,
         $avatarURL, $workspaceUrl);
         if ($result['userInsRows'] < 1 || $result['workspaceInsRows'] < 1) {
-          $responseString = "true";
-        } else {
           $responseString = "false";
+        } else {
+          $responseString = "true";
         }
       }
       return $responseString;
