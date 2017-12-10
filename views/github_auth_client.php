@@ -40,7 +40,7 @@
       //            "Authorization: token ".$_SESSION['access_token']."\r\n",
       'content' => $queryString
     );
-    $httpReq = array('http' => $httpBody);
+    $httpReq = array('https' => $httpBody);
     $context = stream_context_create($httpReq);
 
     $response = file_get_contents('https://api.github.com/user',false,$context);
