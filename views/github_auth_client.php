@@ -33,13 +33,12 @@
   if (isset($_SESSION['access_token'])) {
     $_SESSION['code'] = "IN THE USER";
     $userDetails = $githubControlVar->apiRequest();
+    $_SESSION['userDetails'] = $userDetails;
     echo '<h3>Logged In</h3>';
     echo '<h4>' . $userDetails->name . '</h4>';
     echo '<pre>';
-    print_r($user);
+    print_r($userDetails);
     echo '</pre>';
   }
-
-
 
 ?>
