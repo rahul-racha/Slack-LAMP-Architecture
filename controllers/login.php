@@ -7,7 +7,7 @@
         private $loginModelVar;
 
         public function __construct() {
-          $this->loginModelVar = new loginModel();
+          $this->loginModelVar = new LoginModel();
         }
 
         public function handleCredentials() {
