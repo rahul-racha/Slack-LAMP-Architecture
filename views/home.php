@@ -348,7 +348,7 @@
         <div class="modal-body">
           <input id="retchannel" type="hidden" name="channel" value="
           <?php
-          $chname = isset($_POST["channel"]) ? $_POST["channel"] : NULL;
+          $chname = isset($_POST['channel']) ? $_POST['channel'] : NULL;
           echo $chname; ?>"/>
           <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
           <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>

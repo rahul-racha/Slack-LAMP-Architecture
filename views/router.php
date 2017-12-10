@@ -404,13 +404,17 @@
       global $channelHeading;
       global $chStatus;
 
+      $channelName = $_SESSION['channel'];
+      $channelHeading = $_SESSION['channelHeading'];
+      $chStatus = $_SESSION['chStatus'];
+
       $thread_message = NULL;
       $snippet = $_POST["snippet_text"];
       $image_path = NULL;
       $threadId = NULL;
       $messageType = 'post';
       $filePath = NULL;
-      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
+      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$threadId,$messageType,$workspaceUrl);
 
       $_SESSION['channel'] = $channelName;
       $_SESSION['channelHeading'] = $channelHeading;
