@@ -37,12 +37,20 @@
   left:14%;
   z-index: 2;
 }
+.client_default_profile_pic_wrapper{
+  border-left-style: solid;
+  border-left-width: thin;
+}
 
 /*button[type="submit"] {
   margin-top: 20px;
   margin-left: 48%;
 }*/
+.client_profile_pic_upload_submit_1{
+  margin-left: 42%;
+  margin-top: 2%;
+}
 .client_profile_pic_upload_submit{
-  margin-left: 49%;
+  margin-left: 32%;
   margin-top: 2%;
 }
