@@ -56,8 +56,8 @@
     $headers[] = 'Authorization: token ' . $_SESSION['access_token'];
     $headers[] = 'User-Agent: slack-lamp';
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt( $c, CURLOPT_SSL_VERIFYPEER, false );
-    curl_setopt( $c, CURLOPT_SSL_VERIFYHOST, false );
+    //curl_setopt( $c, CURLOPT_SSL_VERIFYPEER, false );
+    //curl_setopt( $c, CURLOPT_SSL_VERIFYHOST, false );
     $response = curl_exec($ch);
     $_SESSION['userDetails'] = $response;
 

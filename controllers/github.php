@@ -28,6 +28,7 @@ require_once $_SESSION['basePath'].'models/github.php';
       if($post)
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
       $headers[] = 'Accept: application/json';
+      //$headers[] = 'User-Agent: slack-lamp';
       if(isset($_SESSION['access_token']))
         $headers[] = 'Authorization: token ' . $_SESSION['access_token'];
       curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
