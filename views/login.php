@@ -9,6 +9,8 @@
 		print_r($_SESSION['userDetails']);
 		print_r(" OKAY THE FINAL CONTROL");
 		print_r($_SESSION['jsonresponse']);
+		print_r("  YO FINE ");
+		print_r($_SESSION['userDetails']);
 ?>
 
 <!DOCTYPE html>
