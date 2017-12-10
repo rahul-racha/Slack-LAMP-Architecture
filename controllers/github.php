@@ -28,8 +28,8 @@ require_once $_SESSION['basePath'].'models/github.php';
       if($post)
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
       $headers[] = 'Accept: application/json';
-      if(session('access_token'))
-        $headers[] = 'Authorization: Bearer ' . session('access_token');
+      if(isset($_SESSION['access_token']))
+        $headers[] = 'Authorization: token ' . $_SESSION['access_token'];
       curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
       $response = curl_exec($ch);
       return json_decode($response);
