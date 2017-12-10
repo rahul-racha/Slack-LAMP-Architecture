@@ -32,30 +32,32 @@
 
   if (isset($_SESSION['access_token'])) {
     $_SESSION['code'] = "IN THE USER";
-    $params = array('access_token' => $_SESSION['access_token']);
-    $queryString = http_build_query($params);
-    $httpBody = array(
-      'method' => 'GET',
-      //'header' => "Accept: application/json\r\n".
-      //            "Authorization: token ".$_SESSION['access_token']."\r\n",
-      'content' => $queryString
-    );
-    $httpReq = array('https' => $httpBody);
-    $context = stream_context_create($httpReq);
-
-    $response = file_get_contents('https://api.github.com/user',false,$context);
-    $_SESSION['code'] = "HABIBI";
+    // $params = array('access_token' => $_SESSION['access_token']);
+    // $queryString = http_build_query($params);
+    // $httpBody = array(
+    //   'method' => 'GET',
+    //   //'header' => "Accept: application/json\r\n".
+    //   //            "Authorization: token ".$_SESSION['access_token']."\r\n",
+    //   'content' => $queryString
+    // );
+    // $httpReq = array('https' => $httpBody);
+    // $context = stream_context_create($httpReq);
+    //
+    // $response = file_get_contents('https://api.github.com/user',false,$context);
+    // $_SESSION['code'] = "HABIBI";
     //$userDetails = array();
     //$userDetails = header('Location:https://api.github.com/user' . '?' . http_build_query($params));//;
 
     //$_SESSION['userDetails'] = $githubControlVar->apiRequest();
-    // $url = 'https://api.github.com/user?access_token='.$_SESSION['access_token'];
-    // $ch = curl_init($url);
-    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    // $headers[] = 'Accept: application/json';
-    // //$headers[] = 'Authorization: Bearer ' . $_SESSION['access_token'];
-    // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    // $response = curl_exec($ch);
+    $url = 'https://api.github.com/user';
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    $headers[] = 'Accept: application/json';
+    $headers[] = 'Authorization: token ' . $_SESSION['access_token'];
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt( $c, CURLOPT_SSL_VERIFYPEER, false );
+    curl_setopt( $c, CURLOPT_SSL_VERIFYHOST, false );
+    $response = curl_exec($ch);
     $_SESSION['userDetails'] = $response;
 
 
