@@ -1,10 +1,6 @@
 <?php
 	session_start();
 	$_SESSION['basePath'] = '../';
-
-  // require_once $_SESSION['basePath'].'controllers/login.php';
-  // require_once $_SESSION['basePath'].'controllers/home.php';
-  // require_once $_SESSION['basePath'].'controllers/profile.php';
   require_once $_SESSION['basePath'].'controllers/github.php';
 
   $githubControlVar = new GithubAuth();
@@ -19,17 +15,33 @@
 
   if (isset($_GET['code']) && !empty($_GET['code'])) {
     if(!isset($_GET['state']) || $_SESSION['state'] != $_GET['state']) {
-      header('location:login.php');
+      $_SESSION['invalidCredentials'] = "true";
+      $_SESSION['reason'] = "github-log";
+      header("location:../index.php");
       die();
     }
     $githubControlVar->sendRequestParams($_SESSION['state'], $redirect_uri, $_GET['code']);
+  } else {
+    $_SESSION['invalidCredentials'] = "true";
+    $_SESSION['reason'] = "github-log";
+    header("location:../index.php");
   }
 
   if (isset($_SESSION['access_token'])) {
     $userDetails = $githubControlVar->apiRequest();
-    $_SESSION['userDetails'] = $userDetails;
-    echo '<h3>Logged In</h3>';
-    echo '<h4>' . $userDetails. '</h4>';
+    $workspaceUrl = "musicf17.slack.com";
+    $result = $githubControlVar->processUser($userDetails, $workspaceUrl);
+    if ($result == "true") {
+      $githubControlVar->directToHome($userDetails);
+    } else {
+      $_SESSION['invalidCredentials'] = "true";
+      $_SESSION['reason'] = "github-log";
+      header("location:../index.php");
+    }
+  } else {
+    $_SESSION['invalidCredentials'] = "true";
+    $_SESSION['reason'] = "github-log";
+    header("location:../index.php");
   }
   /* debug code
   $url = 'https://api.github.com/user';
