@@ -96,7 +96,7 @@ require_once $_SESSION['basePath'].'models/login.php';
          $_SESSION['userid'] = $userID;
          $_SESSION['password'] = $password;
          $_SESSION['userRole'] = "user";
-         header("location:views/home.php");
+         header("location:home.php");
        // } else {
        //
        //   $_SESSION['invalidCredentials'] = 'true';
