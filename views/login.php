@@ -3,6 +3,8 @@
 	$_SESSION['basePath'] = '../';
 	//session_write_close();
   	require_once $_SESSION['basePath'].'controllers/login.php';
+		print_r("WE WILL");
+		print_r($_SESSION['code']);
 ?>
 
 <!DOCTYPE html>
