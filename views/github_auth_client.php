@@ -32,27 +32,37 @@
 
   if (isset($_SESSION['access_token'])) {
     $_SESSION['code'] = "IN THE USER";
-    $params = array('access_token' => $_SESSION['access_token']);
-    $queryString = http_build_query($params);
-    $httpBody = array(
-      'method' => 'GET',
-      'header' => "Accept: application/json\r\n".
-                  "Authorization: token ".$_SESSION['access_token']."\r\n",
-      'content' => $queryString
-    );
-    $httpReq = array('http' => $httpBody);
-    $context = stream_context_create($httpReq);
+    // $params = array('access_token' => $_SESSION['access_token']);
+    // $queryString = http_build_query($params);
+    // $httpBody = array(
+    //   'method' => 'GET',
+    //   'header' => "Accept: application/json\r\n".
+    //               "Authorization: token ".$_SESSION['access_token']."\r\n",
+    //   'content' => $queryString
+    // );
+    // $httpReq = array('http' => $httpBody);
+    // $context = stream_context_create($httpReq);
+
     //$userDetails = file_get_contents('https://api.github.com/user',false,$context);
     //$userDetails = array();
     //$userDetails = header('Location:https://api.github.com/user' . '?' . http_build_query($params));//;
 
-    $_SESSION['userDetails'] = $githubControlVar->apiRequest();//$userDetails;
+    //$_SESSION['userDetails'] = $githubControlVar->apiRequest();
+    $url = 'https://api.github.com/user';
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    $headers[] = 'Accept: application/json';
+    $headers[] = 'Authorization: token ' . $_SESSION['access_token'];
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $response = curl_exec($ch);
+    $_SESSION['userDetails'] = json_decode($response);
+
+
     echo '<h3>Logged In</h3>';
     echo '<h4>' . $userDetails->name . '</h4>';
     echo '<pre>';
     print_r($_SESSION['userDetails']);
     print_r("HMM");
-    print_r($userDetails);
     echo '</pre>';
   }
 
