@@ -33,9 +33,19 @@
   if (isset($_SESSION['access_token'])) {
     $_SESSION['code'] = "IN THE USER";
     $params = array('access_token' => $_SESSION['access_token']);
-    $userDetails = array();
-    $userDetails = header('Location:https://api.github.com/user' . '?' . http_build_query($params));//;$githubControlVar->apiRequest();
-    $_SESSION['userDetails'] = $userDetails;
+    $queryString = http_build_query($params);
+    $httpBody = array(
+      'method' => 'GET',
+      'header' => "Accept: application/json\r\n".
+                  "Authorization: token ".$_SESSION['access_token']."\r\n",
+      'content' => $queryString
+    );
+    $httpReq = array('http' => $httpBody);
+    $context = stream_context_create($httpReq);
+    $userDetails = file_get_contents('https://api.github.com/user',false,$context);
+    //$userDetails = array();
+    //$userDetails = header('Location:https://api.github.com/user' . '?' . http_build_query($params));//;$githubControlVar->apiRequest();
+    $_SESSION['userDetails'] = json_decode($userDetails);
     echo '<h3>Logged In</h3>';
     echo '<h4>' . $userDetails->name . '</h4>';
     echo '<pre>';
