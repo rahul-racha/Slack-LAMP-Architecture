@@ -10,9 +10,8 @@
   $redirect_uri = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'];
 
   if (isset($_GET['action']) && $_GET['action'] == "git_auth") {
-    $params = array();
+    global $redirect_uri;
     $_SESSION['state'] = hash('sha256', microtime(TRUE).rand().$_SERVER['REMOTE_ADDR']);
-
     unset($_SESSION['access_token']);
     $_SESSION['code'] = "OOPS";
     $githubControlVar->sendRequestParams($_SESSION['state'], $redirect_uri, NULL);
@@ -20,6 +19,7 @@
   }
 
   if (isset($_GET['code']) && !empty($_GET['code'])) {
+    global $redirect_uri;
     $_SESSION['code'] = "ENTERED CODE";
     if(!isset($_GET['state']) || $_SESSION['state'] != $_GET['state']) {
       $_SESSION['code'] = "ERROR STATE";
@@ -32,7 +32,9 @@
 
   if (isset($_SESSION['access_token'])) {
     $_SESSION['code'] = "IN THE USER";
-    $userDetails = $githubControlVar->apiRequest();
+    $params = array('access_token' => $_SESSION['access_token']);
+    $userDetails = array();
+    $userDetails = header('Location:https://api.github.com/user' . '?' . http_build_query($params));//;$githubControlVar->apiRequest();
     $_SESSION['userDetails'] = $userDetails;
     echo '<h3>Logged In</h3>';
     echo '<h4>' . $userDetails->name . '</h4>';

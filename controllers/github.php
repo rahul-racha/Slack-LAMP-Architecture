@@ -41,7 +41,7 @@ require_once $_SESSION['basePath'].'models/github.php';
       if ($codeString == NULL) {
         $params = array(
           'client_id' => $this->clientID,
-          'redirect_uri' => $redirect_uri,
+          //'redirect_uri' => $redirect_uri,
           'scope' => $this->scope,
           'state' => $authState
         );
@@ -50,7 +50,7 @@ require_once $_SESSION['basePath'].'models/github.php';
         $tokenContainer = array(
           'client_id' => $this->clientID,
           'client_secret' => $this->clientSecret,
-          'redirect_uri' => $redirect_uri,
+          //'redirect_uri' => $redirect_uri,
           'state' => $authState,
           'code' => $codeString
         );
