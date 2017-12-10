@@ -1,6 +1,6 @@
 <?php
 include_once $_SESSION['basePath'].'errors.php';
-require_once $_SESSION['basePath'].'models/github.php';
+require_once $_SESSION['basePath'].'models/login.php';
   class GithubAuth {
     private $clientID = 'ce65d405e8f8a5c1c267';
     private $clientSecret = '27522caa6d424736ec1e0d875a89082184dc5142';
@@ -8,11 +8,13 @@ require_once $_SESSION['basePath'].'models/github.php';
     private $tokenURL = 'https://github.com/login/oauth/access_token';
     private $apiURLBase = 'https://api.github.com/';
     private $scope = 'user';
-    private $githubModelVar;
-    private $forParams;
-    private $forToken;
+    private $loginModelVar;
+    // private $githubModelVar;
+    // private $forParams;
+    // private $forToken;
 
     public function __construct() {
+      $this->loginModelVar = new LoginModel();
       // $this->clientID = ;
       // $this->clientSecret = ;
       // $this->authorizeURL = ;
@@ -59,5 +61,51 @@ require_once $_SESSION['basePath'].'models/github.php';
         $_SESSION['access_token'] = $token->access_token;
       }
     }
+
+    public function processUser($userDetails, $workspaceUrl) {
+      $userID = $userDetails->login;
+      $avatarURL = $userDetails->avatar_url;
+      $firstName =  $userDetails->name;
+      $lastName = NULL;
+      $password = "gituser";
+      $email = $userDetails->email;
+      $profile = array();
+      $result = array();
+      $responseString = "true";
+      $profile = $this->loginModelVar->checkUserExist($userID, $email);
+      if ($profile['user_id'] == NULL && $profile['email'] == NULL)
+      {
+        $result = $this->loginModelVar->addNewUser($userID, $email, $password, $firstName, $lastName,
+        $avatarURL, $workspaceUrl);
+        if ($result['userInsRows'] < 1 || $result['workspaceInsRows'] < 1) {
+          $responseString = "true";
+        } else {
+          $responseString = "false";
+        }
+      }
+      return $responseString;
+     }
+
+     public function directToHome($userDetails) {
+       $userID = $userDetails->login;
+       $password = "gituser";
+       // $profileInfo = array();
+       // $profileInfo = $this->loginModelVar->verifyCredentials($userID, $password);
+       // if ($profileInfo[0]["isExists"] == true)
+       // {
+         $_SESSION['userid'] = $userID;
+         $_SESSION['password'] = $password;
+         $_SESSION['userRole'] = "user";
+         header("location:views/home.php");
+       // } else {
+       //
+       //   $_SESSION['invalidCredentials'] = 'true';
+       //   $_SESSION['reason'] = 'password';
+       //   session_write_close();
+       //   header("location:views/login.php", true, 303);
+       //   //include './views/login.php';
+       // }
+     }
+
   }
 ?>

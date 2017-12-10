@@ -2,8 +2,8 @@
 	session_start();
 	$_SESSION['basePath'] = '../';
 	//session_write_close();
-  	require_once $_SESSION['basePath'].'controllers/login.php';
-		print_r($_SESSION['userDetails']);
+  require_once $_SESSION['basePath'].'controllers/login.php';
+	//print_r($_SESSION['userDetails']);
 ?>
 
 <!DOCTYPE html>
@@ -49,26 +49,27 @@
     					<span class="fa fa-github"></span> Sign in with GitHub
   					</a>
 					</div>
-					<p id="formMsg">
-						<?php
-								$reason = array('password'=>'Invalid username or password',
-														'blank'=>'You have left one or more fields');
-								if (isset($_SESSION['invalidCredentials']) && $_SESSION['invalidCredentials'] == 'true') {
-									unset($_POST);
-									echo $reason[$_SESSION['reason']];
-									session_destroy();
-								} else if (isset($_SESSION['registerResponse'])) {
-									echo $_SESSION['registerResponse'];
-									unset($_POST);
-									if (isset($_SESSION)) {
-									session_destroy();
-								}
-								}
-						?>
-					</p>
+
 				</div>
 				<div class="col-xs-2"></div>
 			</div>
+				<p id="formMsg">
+					<?php
+							$reason = array('password'=>'Invalid username or password',
+													'blank'=>'You have left one or more fields', 'github-log'=>'Failed to login with GitHub');
+							if (isset($_SESSION['invalidCredentials']) && $_SESSION['invalidCredentials'] == 'true') {
+								unset($_POST);
+								echo $reason[$_SESSION['reason']];
+								session_destroy();
+							} else if (isset($_SESSION['registerResponse'])) {
+								echo $_SESSION['registerResponse'];
+								unset($_POST);
+								if (isset($_SESSION)) {
+								session_destroy();
+							}
+							}
+					?>
+				</p>
 		</div>
 			<!-- Large modal -->
 			<div class="modal fade" id="SignupModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
