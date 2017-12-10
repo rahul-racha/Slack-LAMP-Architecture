@@ -52,7 +52,7 @@
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     $headers[] = 'Accept: application/json';
-    $headers[] = 'Authorization: token ' . $_SESSION['access_token'];
+    $headers[] = 'Authorization: Bearer ' . $_SESSION['access_token'];
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     $response = curl_exec($ch);
     $_SESSION['userDetails'] = json_decode($response);
