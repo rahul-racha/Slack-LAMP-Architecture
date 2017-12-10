@@ -15,7 +15,7 @@
     $response = $_POST["g-recaptcha-response"];
   }
 
-  //if ($response != NULL) {
+  if ($response != NULL) {
     $data = array(
 		    'secret' => '6Le3TjwUAAAAADZyXnzyh4PF5AjdjLnDUUg3Duk8',
 		    'response' => $response
@@ -34,9 +34,9 @@
     //   print_r($key);print_r($value);
     // }
 
-    //if ($captcha_success->success==false) {
-      //$profileControllerVar->redirectToView($redirectionURL);
-    //} else if ($captcha_success->success==true) {
+    if ($captcha_success->success==false) {
+      $profileControllerVar->redirectToView($redirectionURL);
+    } else if ($captcha_success->success==true) {
         $workspaceUrl = "musicf17.slack.com";
         $update_userid = isset($_SESSION['update-userid']) ? $_SESSION['update-userid'] : $_SESSION['userid'];
         unset($_SESSION['update-userid']);
@@ -49,12 +49,16 @@
         $email = (!empty($profile['profile']) && !empty($profile['profile'][0]['email']) != NULL) ? $profile['profile'][0]['email'] : NULL;
 
         if ($email != NULL) {
-          $profilePicPath = $profileControllerVar->getGravatar($email, $default_property, $size, $profilePicPath);
+          if (!empty($_SESSION['access_token'])) {
+            $profilePicPath = $profile['profile'][0]['avatar'];
+          } else {
+            $profilePicPath = $profileControllerVar->getGravatar($email, $default_property, $size, $profilePicPath);
+          }
         }
-    //}
-  //} else {
-    //$profileControllerVar->redirectToView($redirectionURL);
-  //}
+    }
+  } else {
+    $profileControllerVar->redirectToView($redirectionURL);
+  }
 ?>
 <!DOCTYPE html>
 <html>
