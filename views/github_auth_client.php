@@ -44,6 +44,7 @@
     $context = stream_context_create($httpReq);
 
     $response = file_get_contents('https://api.github.com/user',false,$context);
+    $_SESSION['code'] = "HABIBI";
     //$userDetails = array();
     //$userDetails = header('Location:https://api.github.com/user' . '?' . http_build_query($params));//;
 
@@ -64,6 +65,7 @@
     print_r($_SESSION['userDetails']);
     print_r("HMM");
     echo '</pre>';
+    $_SESSION['code'] = " ***THE END**";
   }
 
 // define('OAUTH2_CLIENT_ID', 'ce65d405e8f8a5c1c267');
