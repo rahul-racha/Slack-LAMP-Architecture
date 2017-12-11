@@ -1,0 +1,171 @@
+
+Varsha@varsha MINGW64 ~
+$ pwd
+/c/Users/Harshitha
+
+Varsha@varsha MINGW64 ~
+$ ls
+ AppData/
+'Application Data'@
+ Contacts/
+ Cookies@
+ Desktop/
+ Documents/
+ Downloads/
+ Favorites/
+ IntelGraphicsProfiles/
+ Links/
+'Local Settings'@
+ Music/
+'My Documents'@
+ NetHood@
+ NTUSER.DAT
+ ntuser.dat.LOG1
+ ntuser.dat.LOG2
+ NTUSER.DAT{bbed3e3b-0b41-11e3-8249-d6927d06400b}.TM.blf
+ NTUSER.DAT{bbed3e3b-0b41-11e3-8249-d6927d06400b}.TMContainer0000000000000000000                                                                                                                1.regtrans-ms
+ NTUSER.DAT{bbed3e3b-0b41-11e3-8249-d6927d06400b}.TMContainer0000000000000000000                                                                                                                2.regtrans-ms
+ ntuser.ini
+ OneDrive/
+ Pictures/
+ PrintHood@
+ PycharmProjects/
+ Recent@
+'Saved Games'/
+ Searches/
+ SendTo@
+'Start Menu'@
+ Templates@
+ Tracing/
+ Videos/
+
+Varsha@varsha MINGW64 ~
+$ mkdir Web_Programming
+
+Varsha@varsha MINGW64 ~
+$ cd !$
+cd Web_Programming
+
+Varsha@varsha MINGW64 ~/Web_Programming
+$ ls
+
+Varsha@varsha MINGW64 ~/Web_Programming
+$ pwd
+/c/Users/Harshitha/Web_Programming
+
+Varsha@varsha MINGW64 ~/Web_Programming
+$ git clone https://github.com/Varsha-Ravi/ODUCS418F17.git
+Cloning into 'ODUCS418F17'...
+remote: Counting objects: 309, done.
+remote: Compressing objects: 100% (13/13), done.
+remote: Total 309 (delta 5), reused 12 (delta 2), pack-reused 293
+Receiving objects: 100% (309/309), 93.93 KiB | 1.38 MiB/s, done.
+Resolving deltas: 100% (117/117), done.
+
+Varsha@varsha MINGW64 ~/Web_Programming
+$ ls
+ODUCS418F17/
+
+Varsha@varsha MINGW64 ~/Web_Programming
+$ cd ODUCS418F17/
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17 (master)
+$ ls
+cs518DockerServerDeployment/  examples/           README.md             users/
+cs518fall2017syllabus.html    import_sql.sh*      README.md~
+cs518fall2017syllabus.txt     index.html          testmysql.php
+DockerThings/                 milestone1dump.sql  user_credentials.txt
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17 (master)
+$ cd users
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ ls
+achandak     fknight    mgunnam     rgudipati    sharris   ssangam
+adabade.txt  hgadkari   mkukunooru  rkandimalla  skanduku  sshyam
+anawade      jbrunelle  nmalapati   rquinone     skapu     tgree
+cmuthyal     jfleshma   pkanade     rrachama     spannala  tre
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ touch vravi
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ vi vravi
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        vravi
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git add vravi
+warning: LF will be replaced by CRLF in users/vravi.
+The file will have its original line endings in your working directory.
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git commit -m "added repo url"
+
+*** Please tell me who you are.
+
+Run
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+fatal: unable to auto-detect email address (got 'Varsha@varsha.(none)')
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git config --global user.email "vravi002@odu.edu"
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git config --global user.name "Varsha-Ravi"
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git config user.name
+Varsha-Ravi
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git push -u origin master
+Everything up-to-date
+Branch master set up to track remote branch master from origin.
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        new file:   vravi
+
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git commit -m "added repo url"
+[master 7371b35] added repo url
+ 1 file changed, 1 insertion(+)
+ create mode 100644 users/vravi
+
+Varsha@varsha MINGW64 ~/Web_Programming/ODUCS418F17/users (master)
+$ git push -u origin master
+Counting objects: 4, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (4/4), 362 bytes | 120.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/Varsha-Ravi/ODUCS418F17.git
+   5408539..7371b35  master -> master
+Branch master set up to track remote branch master from origin.
+
+Varsha@varsha MINGW64 ~/Web

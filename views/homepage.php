@@ -269,9 +269,11 @@
 		$i++;
     }
 		$loadMore = "<div class='col-xs-12 loadMoreButton'>
-							<input type='hidden' class='post_load_ret_channel_name' value='".$Channel_name."'></input>
-							<input type='hidden' class='post_load_retChannel' value='".$_SESSION["loadCount"]."'></input>
-							<center><input type='submit' class='client_posts_load_more' value='load more'></input></center>
+							<input type='hidden' class='post_load_ret_channel_name' value='".$Channel_name."'/>
+							<input type='hidden' class='post_load_retChannel' value='".$_SESSION["loadCount"]."'/>
+							<div style='text-align:center'>
+							<input type='submit' class='client_posts_load_more' value='load more'/>
+							</div>
 					</div>";
 		$name = $loadMore.$name;
 		echo $name;
