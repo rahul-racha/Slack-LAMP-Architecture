@@ -1,3 +1,8 @@
+<?php
+  session_start();
+  $_SESSION["basePath"] = "../";
+  require_once $_SESSION['basePath'].'controllers/home.php';
+?>
 <!DOCTYPE html>
 <html>
   <head>

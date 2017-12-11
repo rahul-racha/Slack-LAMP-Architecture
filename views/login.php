@@ -59,7 +59,10 @@
 				<p id="formMsg">
 					<?php
 							$reason = array('password'=>'Invalid username or password',
-													'blank'=>'You have left one or more fields', 'github-log'=>'Failed to login with GitHub');
+													'blank'=>'You have left one or more fields',
+													'github-log'=>'Failed to login with GitHub',
+													'mail'=> 'Failed to send mail. Contact Admin <rrach001@odu.edu>',
+													'token' => 'token verification failed');
 							if (isset($_SESSION['invalidCredentials']) && $_SESSION['invalidCredentials'] == 'true') {
 								unset($_POST);
 								echo $reason[$_SESSION['reason']];

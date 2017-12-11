@@ -921,6 +921,20 @@
       $dbConVar->closeConnectionObject($conn);
       return $affectedRows;
     }
+
+    public function updateTwoFactor($userID, $isEnable) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $update = "UPDATE user_info
+                 SET two_factor = ?
+                 WHERE user_id = ?";
+      $stmt = $conn->prepare($update);
+      $stmt->bind_param("ss", $isEnable, $userID);
+      $stmt->execute();
+      $affectedRows = $stmt->affected_rows;
+      $dbConVar->closeConnectionObject($conn);
+      return $affectedRows;
+    }
   }
 
 ?>

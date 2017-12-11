@@ -62,6 +62,16 @@
       return $userData;
     }
 
+    public function updateTwoFactor($userID, $isEnable) {
+      $this->homeModelVar = new HomeModel();
+      $isSuccess = "false";
+      $affectedRows = $this->homeModelVar->updateTwoFactor($userID, $isEnable);
+      if ($affectedRows > 0) {
+        $isSuccess = "true";
+      }
+      return $isSuccess;
+    }
+
     public function getUsersForPattern($keyword, $workspaceUrl) {
       $this->homeModelVar = new HomeModel();
       $userList = array();
