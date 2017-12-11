@@ -279,12 +279,12 @@
           <h4 class="modal-title">Add Snippet</h4>
         </div>
         <div class="modal-body">
-          <input id="retchannel" type="hidden" name="channel" value="
+          <input id="retchannel_code_snippet" type="hidden" name="channel" value="
           <?php
           $chname = isset($_POST['channel']) ? $_POST['channel'] : NULL;
           echo $chname; ?>"/>
-          <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-          <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+          <input id="retHeading_code_snippet" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+          <input id="retStatus_code_snippet" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
           <textarea class="client_code_snippet_textarea" rows="9"></textarea>
         </div>
         <div class="modal-footer">
@@ -305,9 +305,9 @@
           <div>
             <span>Images from web</span>
             <div>
-              <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>">
-              <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-              <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+              <input id="retChannel_web_image" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>">
+              <input id="retHeading_web_image" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input id="retStatus_web_image" type="hidden" name="chStatus" value="<?php echo $_POST["chStatus"]; ?>"/>
               <input style="width:100%" class="client_image_upload_from_url">
             </div>
             <div>
@@ -340,9 +340,9 @@
                 </span>
               </span>
               <input type="text" class="form-control client_image_upload_read" readonly>
-              <input id="retchannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-              <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-              <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+              <input id="retchannel_upload_image" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+              <input id="retHeading_upload_image" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input id="retStatus_upload_image" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
             </div>
             <img id='img-upload' alt=""/>
           </div>
@@ -375,9 +375,9 @@
                 </span>
               </span>
               <input type="text" class="form-control client_file_upload_read" readonly>
-              <input id="retchannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-              <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-              <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+              <input id="retchannel_upload_file" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+              <input id="retHeading_upload_file" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input id="retStatus_upload_file" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
             </div>
             <img id='file-upload' alt=""/>
           </div>

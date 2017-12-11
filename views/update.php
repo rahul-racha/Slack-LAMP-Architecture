@@ -35,6 +35,7 @@
     // }
 
     if ($captcha_success->success==false) {
+      $_SESSION["captcha_failure"] = "false";
       $profileControllerVar->redirectToView($redirectionURL);
     } else if ($captcha_success->success==true) {
         $workspaceUrl = "musicf17.slack.com";

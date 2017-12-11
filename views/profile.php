@@ -220,14 +220,17 @@ function computePostRatings($postInfo, $relPostInfo) {
               </a>
               <ul class="dropdown-menu">
                   <li><a href="recaptcha.php"><span class="icon-wrench"></span> Modify</a></li>
-<<<<<<< HEAD
-                  <!-- ?userid=<?php //echo $_GET['userid']; ?>
-                  <!-- <li><a href="#"><span class="icon-trash"></span> Delete</a></li> -->
-=======
->>>>>>> 287cbfc1b247aa858ec9c2695385e1e0d6a976a0
               </ul>
           </div>
         </div>
+      </div>
+      <div class="col-xs-12" style="text-align:center;">
+        <?php
+          if(isset($_SESSION["captcha_failure"]) && ($_SESSION["captcha_failure"]) == "false" ) {
+            echo "<span>Recaptcha token verification failed</span>";
+            unset($_SESSION["lastname"]);
+          }
+        ?>
       </div>
     </div>
   </body>
