@@ -14,14 +14,15 @@
 <html lang="en">
 
 <head>
+  <title> Home Page </title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="css/homepage.css">
   <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="js/home.js"></script>
-  <script type="text/javascript" src="js/typeahead.js"></script>
+  <script src="js/home.js"></script>
+  <script src="js/typeahead.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
 </head>
@@ -37,7 +38,7 @@
             <span class="caret"></span></button>
             <ul class="dropdown-menu client_navbar_dropdown_ul">
               <li class="dropdown-header">
-                <img style="width: 20%;" src='<?php echo $avatar_path; ?>'> &nbsp
+                <img style="width: 20%;" alt="" src='<?php echo $avatar_path; ?>'> &nbsp;
                 <?php echo $_SESSION['userid']; ?>
               </li>
               <li class="divider"></li>
@@ -47,17 +48,11 @@
                 </a>
               </li>
               <li><a href="help.html">Help</a></li>
-              <!-- <li><a href="#">JavaScript</a></li> -->
-              <!-- <form method="post" action="<?php //echo htmlspecialchars("router.php"); ?>">
-                <input type="submit" name="logout" value="logout">
-              </form> -->
               <li class="divider"></li>
-                <form method="post" action="<?php echo htmlspecialchars("router.php"); ?>">
-                  <li>
+                <li><form method="post" action="<?php echo htmlspecialchars("router.php"); ?>">
                     <input type="submit" name="logout" value="logout" style="border:0;margin-left:5%;">
-                  </li>
                 </form>
-                <!-- <a href="#">logout</a></li> -->
+              </li>
             </ul>
           </div>
         </div>
@@ -73,9 +68,6 @@
 				</div>
         <div class="client_channel_header col-xs-12 row">
           <h4>Direct Messages
-            <!-- <a href="#" class="client_new_chanenl" data-toggle="modal" data-target="#NewChannel"> -->
-              <!-- <i class="fa fa-plus" aria-hidden="true"></i> -->
-            <!-- </a> -->
           </h4>
         </div>
         <div class="client_channel_display col-xs-12 row">
@@ -90,7 +82,7 @@
           </div>
           <div class="right-inner-addon serch_users_in_workspace col-xs-3">
             <!-- <i class="fa fa-search" aria-hidden="true"></i> -->
-            <input type="text" class="client_user_search" autocomplete="off" spellcheck="false" id="wrkspace_user_search" placeholder="Search for names..">
+            <input type="text" class="client_user_search" autocomplete="off" spellcheck="false" id="wrkspace_user_search" placeholder="Search for names.."/>
           </div>
 
           <div class="col-xs-1">
@@ -140,7 +132,7 @@
                 </div>
               </span>
   						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
-                <textarea id="textArea" class="client_message_entry_textarea col-xs-11" type="text" name="textarea" placeholder="
+                <textarea id="textArea" class="client_message_entry_textarea col-xs-11" name="textarea" placeholder="
                 <?php
                 $chname = isset($_POST["channel"]) ? $_POST["channel"] : NULL;
                 echo "Message "."@".$chname ?>" required></textarea>
@@ -179,65 +171,6 @@
 
   </div> <!--end of main container -->
 
-  <!-- modal for user profile -->
-  <!--
-  <div class="modal fade" id="client_profile_page" role="dialog">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Your Profile</h4>
-        </div>
-        <div class="modal-body">
-          <form id="editForm" method="post" action="profile.php" enctype="multipart/form-data">
-          <div class="row">
-
-            <div class="col-xs-8">
-
-                  <div class="form-group">
-                    <label for="FirstName">First Name</label>
-                    <input type="text" class="form-control" placeholder="First Name" name="FirstName" autocomplete="off">
-                  </div>
-                  <div class="form-group">
-                    <label for="LastName">Last Name</label>
-                    <input type="text" class="form-control" placeholder="Last Name" name="LastName" autocomplete="off">
-                  </div>
-                  <div class="form-group">
-                    <label for="Status">Status</label>
-                    <input type="text" class="form-control" placeholder="What is your status" name="Status" autocomplete="off">
-                  </div>
-                  <div class="form-group">
-                    <label for="PhoneNumber">Phone number</label>
-                    <input type="text" class="form-control" placeholder="(123) 456-7891" name="PhoneNumber" autocomplete="off">
-                  </div>
-
-
-            </div>
-          --><!-- avatar details goes here
-            <div class="col-xs-4">
-
-              <input type="image" id="profile-pic" src="images/users/default-avatar-250x250.png" width="170px">
-              <input type="file" id="profile-browse" onchange="loadFile(event)" multiple accept='image/*' style="display:none;">
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <div class="checkbox">
-                <label><input type="checkbox" name="remember"> Remember me</label>
-              </div>
-              <button type="submit" value="upload" class="btn btn-default">Submit</button>
-            </div>
-          </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  -->
   <!-- create new channel -->
   <div class="modal fade" id="NewChannel" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -252,19 +185,19 @@
                 <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>" id= "NewChannel">
                   <div class="form-group">
                     <label for="ChannelName">Channel Name</label>
-                    <input type="text" class="form-control" placeholder="Channel name" name="channel" autocomplete="off">
+                    <input type="text" class="form-control" placeholder="Channel name" name="channel" autocomplete="off" id="ChannelName">
                   </div>
                   <div class="form-group">
                     <label for="Purpose">Purpose</label>
-                    <input type="text" class="form-control" placeholder="Purpose of Channel" name="purpose" autocomplete="off">
+                    <input type="text" class="form-control" placeholder="Purpose of Channel" name="purpose" autocomplete="off" id="Purpose">
                   </div>
                   <div class="radio">
-                    <label><input type="radio" name="channelType" value="Public">Public</label>
-                    <label><input type="radio" name="channelType" value="Private">Private</label>
+                    <label><input type="radio" name="channelType" value="Public"/>Public</label>
+                    <label><input type="radio" name="channelType" value="Private"/>Private</label>
                   </div>
                   <div class="form-group">
                     <label for="invitingNewUsers">Invite members to this channel</label>
-                    <input type="text" class="form-control" name="newUserSearch[]">
+                    <input type="text" class="form-control" name="newUserSearch[]" id="invitingNewUsers">
                   </div>
                   <input type="hidden" name="newChannel" value="newChannel">
                   <input type="hidden" name="chStatus" value="unarchived">
@@ -290,8 +223,8 @@
         <div class="modal-body">
           <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
             <label for="invitingNewUsers">Invite member</label>
-            <div id="inviteUsersSearchBox" class="form-group inviteUserClass">
-              <input type="text" class="form-control typeahead" name="addUserExistingChannel[]">
+            <div id="inviteUsersSearchBox" class="form-group inviteUserClass" >
+              <input type="text" class="form-control typeahead" name="addUserExistingChannel[]" id="invitingNewUsers">
             </div>
             <div class = "inviteUserClass">
               <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
@@ -320,7 +253,7 @@
           <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
             <label for="removingNewUsers">Remove member</label>
             <div id="delUsersSearchBox" class="form-group delUserClass">
-              <input type="text" class="form-control typeahead" name="removeUserExistingChannel[]">
+              <input type="text" class="form-control typeahead" name="removeUserExistingChannel[]" id="removingNewUsers">
             </div>
             <div class = "delUserClass">
               <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
@@ -411,7 +344,7 @@
               <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
               <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
             </div>
-            <img id='img-upload'/>
+            <img id='img-upload' alt=""/>
           </div>
         </div>
         <div class="modal-footer">
@@ -446,7 +379,7 @@
               <input id="retHeading" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
               <input id="retStatus" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
             </div>
-            <img id='file-upload'/>
+            <img id='file-upload' alt=""/>
           </div>
         </div>
         <div class="modal-footer">
