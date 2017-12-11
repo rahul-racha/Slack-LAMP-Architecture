@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
-</head>
-</html>
 <?php
 session_start();
 $_SESSION['basePath'] = '../';

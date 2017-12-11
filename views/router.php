@@ -460,4 +460,31 @@
     echo $response;
   }
 
+  if (isset($_POST['token_string'])) {
+    global $loginControllerVar;
+    global $workspaceUrl;
+    $token_val = $_POST['token_string'];
+    $userID = $_POST['userID'];
+    $isSuccess = array();
+    $isSuccess = $loginControllerVar->verifyUserToken($token_val, $userID, $workspaceUrl);
+    if (isset($isSuccess['result']) && $isSuccess['result'] == "true") {
+      $_SESSION['userid'] = $_SESSION['userid_pending'];
+      $_SESSION['password'] = $_SESSION['password_pending'];
+      $_SESSION['userRole'] = $_SESSION['userRole_pending'];
+      unset($_SESSION['userid_pending']);
+      unset($_SESSION['password_pending']);
+      unset($_SESSION['userRole_pending']);
+      header("location:home.php");
+    } else {
+      unset($_SESSION['userid_pending']);
+      unset($_SESSION['password_pending']);
+      unset($_SESSION['userRole_pending']);
+
+      $_SESSION['invalidCredentials'] = 'true';
+      $_SESSION['reason'] = 'token';
+      header("location:login.php");
+    }
+
+  }
+
 ?>

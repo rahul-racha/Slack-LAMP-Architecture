@@ -29,7 +29,7 @@
         $profileInfo = array();
         $userid = mysqli_real_escape_string($conn, $userid);
         $password = mysqli_real_escape_string($conn, $password);
-        $isUserExists = "SELECT user_id, password, role
+        $isUserExists = "SELECT user_id, password, role, email, two_factor, first_name, last_name
                          FROM user_info
                          where user_id = '$userid' AND password = '$password'";
         $result = mysqli_query($conn, $isUserExists);
@@ -82,6 +82,69 @@
       }
       mysqli_free_result($result);
       return $profile;
+    }
+
+    public function updateTokenForUser($userID, $token, $expire_time, $workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $userID = $this->validMySQL($userID);
+      $stmt = NULL;
+      $affectedRows = NULL;
+      $getUser = "SELECT *
+                  FROM token_table
+                  WHERE user_id = '$userID' AND
+                  user_id IN (
+                    SELECT user_id
+                    FROM workspace
+                    WHERE user_id = '$userID' AND url='$workspaceUrl'
+                  )";
+      $result = mysqli_query($conn, $getUser);
+      if (mysqli_num_rows($result) > 0)
+      {
+        $stmt = $conn->prepare("UPDATE token_table
+                                SET token = ?, expire_time = ?
+                                WHERE user_id = ?");
+        $stmt->bind_param("sss", $token, $expire_time, $userID);
+        $stmt->execute();
+      } else {
+        $stmt = $conn->prepare("INSERT INTO token_table(user_id, token, expire_time)
+                                VALUES(?,?,?)
+                              ");
+        $stmt->bind_param("sss",$userID, $token, $expire_time);
+        $stmt->execute();
+      }
+      $affectedRows = $stmt->affected_rows;
+      $stmt->close();
+      $dbConVar->closeConnectionObject($conn);
+      return $affectedRows;
+    }
+
+    public function getTokenForUser($userID, $workspaceUrl) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $tokenDetails = array();
+      $getUser = "SELECT *
+                  FROM token_table
+                  WHERE user_id = '$userID' AND
+                  user_id IN (
+                    SELECT user_id
+                    FROM workspace
+                    WHERE user_id = '$userID' AND url='$workspaceUrl'
+                  )";
+      $result = mysqli_query($conn, $getUser);
+      if (mysqli_num_rows($result) > 0) {
+        while ($row = $result->fetch_assoc())
+        {
+          $row['token'] = $this->validateInputs($row['token']);
+          $row['expire_time'] = $this->validateInputs($row['expire_time']);
+          array_push($tokenDetails, $row);
+        }
+      }
+      if (isset($result)) {
+        mysqli_free_result($result);
+      }
+      $dbConVar->closeConnectionObject($conn);
+      return $tokenDetails;
     }
 
     public function addUserToWorkspace($userId, $workspaceUrl, $createdBy)
