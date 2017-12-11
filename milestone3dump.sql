@@ -19,8 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `channel_messages`
 --
-CREATE DATABASE `slack`;
-USE `slack`;
+-- CREATE DATABASE `slack`;
+-- USE `slack`;
 
 CREATE TABLE `channel_messages` (
   `channel_id` int(11) NOT NULL,
