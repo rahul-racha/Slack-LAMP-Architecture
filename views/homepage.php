@@ -142,6 +142,13 @@
   function displayMessages($retChannel,$Channel_name) {
     global $homeControlVar;
     global $workspaceUrl;
+		global $channelName;
+		global $channelHeading;
+		global $chStatus;
+
+		$_SESSION['channel'] = $channelName;
+		$_SESSION['channelHeading'] = $channelHeading;
+		$_SESSION['chStatus'] = $chStatus;
 		// echo $workspaceUrl;
 		// echo $retChannel;
 		// echo $Channel_name;
