@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 09, 2017 at 07:29 AM
+-- Generation Time: Dec 11, 2017 at 08:06 PM
 -- Server version: 5.6.35
 -- PHP Version: 7.1.6
 
@@ -63,9 +63,14 @@ INSERT INTO `channel_messages` (`channel_id`, `user_id`, `msg_id`, `message`, `i
 (27, 'mater', 40, NULL, NULL, 'files/samp.json', NULL, '2017-12-08 08:28:02', 1, 40),
 (27, 'mater', 42, 'The cell (from Latin cella, meaning \"small room\"', NULL, NULL, NULL, '2017-12-08 08:55:53', 1, 42),
 (27, 'mater', 45, NULL, 'http://i1.wp.com/www.google.com/images/logo.gif', NULL, NULL, '2017-12-08 22:09:13', 1, 45),
+(27, 'mater', 47, 'hmm\r\n', NULL, NULL, NULL, '2017-12-10 12:52:27', 1, 47),
 (27, 'porsche', 46, 'Testing', NULL, NULL, NULL, '2017-12-09 02:28:03', 1, 46),
+(27, 'singhis', 51, NULL, NULL, 'files/workonthis.zip', NULL, '2017-12-11 01:41:07', 1, 51),
 (29, 'admin', 35, 'happy', NULL, NULL, NULL, '2017-12-07 22:41:18', 1, 35),
-(29, 'admin', 36, 'yup', NULL, NULL, NULL, '2017-12-07 23:24:39', 3, 35);
+(29, 'admin', 36, 'yup', NULL, NULL, NULL, '2017-12-07 23:24:39', 3, 35),
+(29, 'singhis', 48, NULL, 'https://lh3.googleusercontent.com/-XJOCtfgS0o4/Vxembf_ylfI/AAAAAAAANyw/AeF7kHGi_kERgmOe8sC986_KOQOUW4omgCCo/s128-Ic42/make%2Bin%2Bindia.png', NULL, NULL, '2017-12-10 13:11:54', 1, 48),
+(29, 'singhis', 49, NULL, 'images/messages/Screenshot (20).png', NULL, NULL, '2017-12-10 13:12:15', 1, 49),
+(29, 'singhis', 50, NULL, NULL, 'files/Quiz 51.docx', NULL, '2017-12-10 13:12:27', 1, 50);
 
 -- --------------------------------------------------------
 
@@ -205,6 +210,27 @@ CREATE TABLE `threads` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `token_table`
+--
+
+CREATE TABLE `token_table` (
+  `user_id` varchar(20) CHARACTER SET latin1 NOT NULL,
+  `token` text,
+  `expire_time` timestamp NULL DEFAULT NULL,
+  `email` varchar(300) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `token_table`
+--
+
+INSERT INTO `token_table` (`user_id`, `token`, `expire_time`, `email`) VALUES
+('rkand002', 'e84c066c6e54bf921fa633f11b15c734da05881c7856ba70820b8309ee45f0be', '2017-12-11 13:34:57', NULL),
+('singhis', '657ee7f92cad5919edb8a6eef1b8db130f383c783014a84e1915811458ebf81e', '2017-12-11 14:06:56', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_info`
 --
 
@@ -219,6 +245,7 @@ CREATE TABLE `user_info` (
   `status` varchar(128) NOT NULL,
   `phone_number` varchar(20) NOT NULL,
   `email` varchar(300) NOT NULL,
+  `two_factor` tinyint(1) NOT NULL DEFAULT '0',
   `time_zone` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `skype` varchar(50) NOT NULL,
   `avatar` varchar(300) NOT NULL DEFAULT 'images/users/default-profile-pic.jpg'
@@ -228,19 +255,19 @@ CREATE TABLE `user_info` (
 -- Dumping data for table `user_info`
 --
 
-INSERT INTO `user_info` (`user_id`, `password`, `first_name`, `last_name`, `display_name`, `role`, `what_i_do`, `status`, `phone_number`, `email`, `time_zone`, `skype`, `avatar`) VALUES
-('admin', 'M0n@rch$', 'admin', '', 'admin', 'admin', NULL, '', '', '', '2017-12-09 03:41:28', '', 'images/users/default-profile-pic.jpg'),
-('chinga', '@chick', 'Chick', 'Hicks', 'Chick Hicks', 'user', NULL, '', '', 'chinga@cars.com', '2017-12-09 03:41:33', '', 'images/users/default-profile-pic.jpg'),
-('dumm', '1234567Aa@2', 'dummsuper', 'dum', '', 'user', NULL, '', '', 'zeno@od.com', '2017-12-09 03:44:04', '', 'images/users/default-profile-pic.jpg'),
-('hornet', '@doc', 'Doc', ' Hudson', 'Doc  Hudson', 'user', NULL, '', '', 'hornet@rsprings.gov', '2017-12-09 03:41:39', '', 'images/users/default-profile-pic.jpg'),
-('iamami', '12345678Aa!', 'Amitabh', 'Bachan', '', 'user', NULL, '', '', 'amitab@ac.in', '2017-12-09 03:41:46', '', 'images/users/default-profile-pic.jpg'),
-('kachow', '@mcqueen', 'Lightning', 'McQueen', 'Lightning McQueen', 'user', NULL, '', '', 'kachow@rusteze.com', '2017-12-09 03:41:53', '', 'images/users/default-profile-pic.jpg'),
-('mater', '@mater', 'Tow', 'Mater', 'Tow Mater', 'user', NULL, '', '', 'sunnyracha14@gmail.com', '2017-12-09 06:29:22', '', 'https://www.gravatar.com/avatar/44ddde8657d7f5b7dfaab2745f90294f?d=404&s=500'),
-('porsche', '@sally', 'Sally', 'Carrera', 'Sally Carrera', 'user', NULL, '', '', 'porsche@rsprings.gov', '2017-12-09 02:26:09', '', 'images/users/default-profile-pic.jpg'),
-('rkand002', '1234567Aa@2', 'Rohit', 'K', '', 'user', NULL, '', '', 'rkand002@odu.edu', '2017-12-09 03:39:15', '', 'https://www.gravatar.com/avatar/a1d798da2397947120991acbd16141b9?d=404&s=500'),
-('singhis', '123', 'okay', 'singh', '', 'user', NULL, '', '', 'singh@s.com', '2017-12-09 03:42:03', '', 'images/users/default-profile-pic.jpg'),
-('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', 'user', NULL, '', '', 'topsecret@agent.org', '2017-12-09 03:42:09', '', 'images/users/default-profile-pic.jpg'),
-('yummy', '12345678Aa#3', 'yummy', 'yum', '', 'user', NULL, '', '', 'yum@odu.edu', '2017-12-09 03:42:15', '', 'images/users/default-profile-pic.jpg');
+INSERT INTO `user_info` (`user_id`, `password`, `first_name`, `last_name`, `display_name`, `role`, `what_i_do`, `status`, `phone_number`, `email`, `two_factor`, `time_zone`, `skype`, `avatar`) VALUES
+('admin', 'M0n@rch$', 'admin', '', 'admin', 'admin', NULL, '', '', '', 0, '2017-12-09 03:41:28', '', 'images/users/default-profile-pic.jpg'),
+('chinga', '@chick', 'Chick', 'Hicks', 'Chick Hicks', 'user', NULL, '', '', 'chinga@cars.com', 0, '2017-12-09 03:41:33', '', 'images/users/default-profile-pic.jpg'),
+('dumm', '1234567Aa@2', 'dummsuper', 'dum', '', 'user', NULL, '', '', 'zeno@od.com', 0, '2017-12-09 03:44:04', '', 'images/users/default-profile-pic.jpg'),
+('hornet', '@doc', 'Doc', ' Hudson', 'Doc  Hudson', 'user', NULL, '', '', 'hornet@rsprings.gov', 0, '2017-12-09 03:41:39', '', 'images/users/default-profile-pic.jpg'),
+('iamami', '12345678Aa!', 'Amitabh', 'Bachan', '', 'user', NULL, '', '', 'amitab@ac.in', 0, '2017-12-09 03:41:46', '', 'images/users/default-profile-pic.jpg'),
+('kachow', '@mcqueen', 'Lightning', 'McQueen', 'Lightning McQueen', 'user', NULL, '', '', 'kachow@rusteze.com', 0, '2017-12-09 03:41:53', '', 'images/users/default-profile-pic.jpg'),
+('mater', '@mater', 'Tow', 'Mater', 'Tow Mater', 'user', NULL, '', '', 'sunnyracha14@gmail.com', 0, '2017-12-11 05:53:30', '', 'https://www.gravatar.com/avatar/44ddde8657d7f5b7dfaab2745f90294f?d=404&s=500'),
+('porsche', '@sally', 'Sally', 'Carrera', 'Sally Carrera', 'user', NULL, '', '', 'porsche@rsprings.gov', 0, '2017-12-09 02:26:09', '', 'images/users/default-profile-pic.jpg'),
+('rkand002', '1234567Aa@2', 'Rohit', 'K', '', 'user', NULL, '', '', 'rkand002@odu.edu', 1, '2017-12-11 07:36:22', '', 'https://www.gravatar.com/avatar/a1d798da2397947120991acbd16141b9?d=404&s=500'),
+('singhis', '123', 'okay', 'singh', '', 'user', NULL, '', '', 'rahul_rachamalla@outlook.com', 1, '2017-12-11 07:36:53', '', 'images/users/default-profile-pic.jpg'),
+('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', 'user', NULL, '', '', 'topsecret@agent.org', 0, '2017-12-09 03:42:09', '', 'images/users/default-profile-pic.jpg'),
+('yummy', '12345678Aa#3', 'yummy', 'yum', '', 'user', NULL, '', '', 'yum@odu.edu', 0, '2017-12-09 03:42:15', '', 'images/users/default-profile-pic.jpg');
 
 -- --------------------------------------------------------
 
@@ -357,6 +384,13 @@ ALTER TABLE `threads`
   ADD KEY `reply_id` (`reply_id`);
 
 --
+-- Indexes for table `token_table`
+--
+ALTER TABLE `token_table`
+  ADD PRIMARY KEY (`user_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `user_info`
 --
 ALTER TABLE `user_info`
@@ -429,6 +463,12 @@ ALTER TABLE `inside_channel`
 ALTER TABLE `reactions`
   ADD CONSTRAINT `reactions_ibfk_1` FOREIGN KEY (`emo_id`) REFERENCES `emoticons` (`emo_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `reactions_ibfk_2` FOREIGN KEY (`msg_id`) REFERENCES `channel_messages` (`msg_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `token_table`
+--
+ALTER TABLE `token_table`
+  ADD CONSTRAINT `token_table_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `workspace`
