@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+		<title> login page </title>
 		<link rel="stylesheet" type="text/css" href="css/login.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -26,7 +27,9 @@
 	<body>
 		<div class="login-page container-fluid">
 			<div class="row">
-				<center><h3>Slack Login</h3></center>
+				<div style="text-align:center">
+				<h3>Slack Login</h3>
+			</div>
 				<div class="col-xs-3"></div>
 				<div class="form col-xs-7 row">
 					<div class="col-xs-6">
@@ -38,7 +41,7 @@
 								<!-- <br/> -->
 								<!-- <input id="myButton" type="submit" value="Submit" disabled='true'> -->
 							<!-- </form> -->
-							<input type="submit" name="submit" value="Sign in"></input>
+							<input type="submit" name="submit" value="Sign in"/>
 						</form>
 						<h5> New to Slack? </h5><button class="btn btn-primary" data-toggle="modal" data-target="#SignupModal">Sign up now</button>
 					</div>
@@ -87,7 +90,7 @@
 			                    <div class="col-md-8" style="border-right: 1px dotted #C2C2C2;padding-right: 30px;">
 			                        <div class="tab-content">
 			                            <div class="tab-pane active" id="Registration">
-			                                <form role="form" class="form-horizontal" name= "registraionForm"  id="registraionForm" method="post" onsubmit = "event.preventDefault(); doClientValidation();" action="<?php echo htmlspecialchars('./router.php?register=new'); ?>">
+			                                <form class="form-horizontal" name= "registraionForm"  id="registraionForm" method="post" onsubmit = "event.preventDefault(); doClientValidation();" action="<?php echo htmlspecialchars('./router.php?register=new'); ?>">
 				                                <div class="form-group row">
 			                                    <label for="firstName" class="col-sm-3 control-label">
 			                                       First Name</label>
