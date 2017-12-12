@@ -29,6 +29,7 @@
 
   if (isset($_SESSION['access_token'])) {
     $userDetails = $githubControlVar->apiRequest();
+		$_SESSION['github_avatar'] = $userDetails->avatar_url;
     $workspaceUrl = "musicf17.slack.com";
     $result = $githubControlVar->processUser($userDetails, $workspaceUrl);
     if ($result == "true") {
