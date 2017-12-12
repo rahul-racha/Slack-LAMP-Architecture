@@ -25,6 +25,7 @@
     global $channelName;
     $channelName = $_POST["channel"];
 		$_SESSION['channel'] = $_POST["channel"];
+		$_SESSION['loadCount'] = 0;
 	}
   // } else if (isset($_SESSION['channel'])) {
   //   global $channelName;
@@ -91,6 +92,7 @@
 			$symbol = NULL;
 			if (!empty($channelList)) {
       	$channelName = $channelList[0]['channel'];
+				$_SESSION['loadCount'] = 0;
 				$_SESSION['channel'] = $channelList[0]['channel'];
       	$_POST["channel"] = $channelList[0]['channel'];
 				if ($channelList[0]['type'] == "Public") {
@@ -328,8 +330,8 @@
 	if(isset($_POST["pagination"])){
 		$retChannel = intval($_POST["pagination"]["retChannel"]);
 		//$Channel_name = NULL;//$_POST["pagination"]["Channel_name"];
-		$_SESSION["loadCount"] = $_SESSION["loadCount"] + 5;
-		displayMessages($retChannel);
+		$_SESSION['loadCount'] = $_SESSION['loadCount'] + 10;
+		displayMessages($_SESSION['loadCount']);
 		// echo $str;
 	}
 	if(isset($_POST["toggle_value"])){
