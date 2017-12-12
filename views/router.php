@@ -35,48 +35,54 @@
   if (isset($_POST["channel"])) {
     global $channelName;
     $channelName = $_POST["channel"];
-  }else if (isset($_SESSION['channel'])) {
-    global $channelName;
-    $_POST["channel"] = $_SESSION['channel'];
-    $channelName = $_POST["channel"];
-    unset($_SESSION['channel']);
+    $_SESSION['channel'] = $_POST["channel"];
   }
+  // } else if (isset($_SESSION['channel'])) {
+  //   global $channelName;
+  //   $_POST["channel"] = $_SESSION['channel'];
+  //   $channelName = $_POST["channel"];
+  //   unset($_SESSION['channel']);
+  // }
 
   if (isset($_POST["channelHeading"])) {
 		global $channelHeading;
 		$channelHeading = $_POST["channelHeading"];
-	} else if (isset($_SESSION['channelHeading'])) {
-    global $channelHeading;
-    $_POST["channelHeading"] = $_SESSION['channelHeading'];
-    $channelHeading = $_POST["channelHeading"];
-    unset($_SESSION['channelHeading']);
-	}
+    $_SESSION['channelHeading'] = $_POST["channelHeading"];
+  }
+	// } else if (isset($_SESSION['channelHeading'])) {
+  //   global $channelHeading;
+  //   $_POST["channelHeading"] = $_SESSION['channelHeading'];
+  //   $channelHeading = $_POST["channelHeading"];
+  //   unset($_SESSION['channelHeading']);
+	// }
 
   if (isset($_POST["chStatus"])) {
 		global $chStatus;
     if ($_POST["chStatus"] == "archived") {
 			$chStatus = "Unarchive";
-			$_POST["chStatus"] = $chStatus;
+			//$_POST["chStatus"] = $chStatus;
 		} else if ($_POST["chStatus"] == "unarchived") {
 			$chStatus = "Archive";
-			$_POST["chStatus"] = $chStatus;
+			//$_POST["chStatus"] = $chStatus;
 		} else {
 			$chStatus = $_POST["chStatus"];
 		}
-	}else if (isset($_SESSION['chStatus'])) {
-		global $chStatus;
-		if ($_SESSION["chStatus"] == "archived") {
-			$chStatus = "Unarchive";
-			$_POST["chStatus"] = $chStatus;
-		} else if ($_SESSION["chStatus"] == "unarchived") {
-			$chStatus = "Archive";
-			$_POST["chStatus"] = $chStatus;
-		} else {
-			$_POST["chStatus"] = $_SESSION['chStatus'];
-			$chStatus = $_POST["chStatus"];
-		}
-    unset($_SESSION['chStatus']);
-	}
+    $_SESSION['chStatus'] = $chStatus;//$_POST["chStatus"];
+  }
+	// }else if (isset($_SESSION['chStatus'])) {
+	// 	global $chStatus;
+	// 	if ($_SESSION["chStatus"] == "archived") {
+	// 		$chStatus = "Unarchive";
+	// 		$_POST["chStatus"] = $chStatus;
+	// 	} else if ($_SESSION["chStatus"] == "unarchived") {
+	// 		$chStatus = "Archive";
+	// 		$_POST["chStatus"] = $chStatus;
+	// 	} else {
+	// 		$_POST["chStatus"] = $_SESSION['chStatus'];
+	// 		$chStatus = $_POST["chStatus"];
+	// 	}
+  //   unset($_SESSION['chStatus']);
+	// }
 
   if (isset($_POST["textarea"])) {
     global $textArea;
@@ -87,23 +93,34 @@
   if (isset($_POST['newChannel']) && $_POST['newChannel'] == "newChannel") {
     global $channelName;
     global $chStatus;
-    $channelName = $_POST['channel'];
+    //$channelName = $_POST['channel'];
+    //$symbol = NULL;
     $purpose = $_POST['purpose'];
     $channeltype = $_POST['channelType'];
-    $_SESSION['channel'] = $channelName;
-		$_SESSION['channelHeading'] = $channelHeading;
-		$_SESSION['chStatus'] = $chStatus;
 
-    if ($_POST["chStatus"] == "archived") {
-			$chStatus = "Unarchive";
-			$_POST["chStatus"] = $chStatus;
-		} else if ($_POST["chStatus"] == "unarchived") {
-			$chStatus = "Archive";
-			$_POST["chStatus"] = $chStatus;
-		} else {
-			$chStatus = $_POST["chStatus"];
-		}
-    createChannel($channelName, $purpose, $channeltype, $_POST["newUserSearch"]);
+    // if ($channeltype == "Public") {
+    //   $symbol = "#";
+    // } else {
+    //   $symbol = "∆";
+    // }
+    // $_SESSION['channelHeading'] = $symbol." ".$_SESSION['channel'];
+
+
+    //$_SESSION['channel'] = $channelName;
+		//$_SESSION['channelHeading'] = $channelHeading;
+		//$_SESSION['chStatus'] = $chStatus;
+
+    // if ($_POST["chStatus"] == "archived") {
+		// 	$chStatus = "Unarchive";
+		// 	$_POST["chStatus"] = $chStatus;
+		// } else if ($_POST["chStatus"] == "unarchived") {
+		// 	$chStatus = "Archive";
+		// 	$_POST["chStatus"] = $chStatus;
+		// } else {
+		// 	$chStatus = $_POST["chStatus"];
+		// }
+    //createChannel($channelName, $purpose, $channeltype, $_POST["newUserSearch"]);
+    createChannel($_SESSION['channel'], $purpose, $channeltype, $_POST["newUserSearch"]);
   }
 
   if (isset($_POST['inviteUsersExistingChannel']) && $_POST['inviteUsersExistingChannel'] == 'inviteUser') {
@@ -119,7 +136,7 @@
       $userList = array();
       $userList = $_POST["addUserExistingChannel"];
       $isCreate = "false";
-      $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($userList, $channelName, $workspaceUrl, $isCreate);
+      $newInviteUserResponse = $homeControlVar->inviteUsersToChannel($userList, $_SESSION['channel'], $workspaceUrl, $isCreate);
       if ($newInviteUserResponse['success'] != NULL && !empty($newInviteUserResponse['success']) &&
         empty($newInviteUserResponse['failed'])) {
           $temp = $newInviteUserResponse['success'];
@@ -129,11 +146,11 @@
           //use a popup
         }
     }
-    $_SESSION['channel'] = $channelName;
-    $_SESSION['channelHeading'] = $channelHeading;
-    $_SESSION['chStatus'] = $chStatus;
+    // $_SESSION['channel'] = $channelName;
+    // $_SESSION['channelHeading'] = $channelHeading;
+    // $_SESSION['chStatus'] = $chStatus;
     unset($_POST['inviteUsersExistingChannel']);
-    unset($_POST["channel"]);
+    //unset($_POST["channel"]);
     unset($_POST['addUserExistingChannel']);
     $homeControlVar->redirectToHome();
   }
@@ -147,7 +164,7 @@
     $removedUserResponse = array();
     $userList = $_POST["removeUserExistingChannel"];
     //print_r($userList);
-    $removedUserResponse = $homeControlVar->removeUsersFromChannel($userList, $channelName, $workspaceUrl);
+    $removedUserResponse = $homeControlVar->removeUsersFromChannel($userList, $_SESSION['channel'], $workspaceUrl);
     //print_r($removedUserResponse);
     if ($removedUserResponse['success'] != NULL && !empty($removedUserResponse['success']) &&
       empty($removedUserResponse['failed'])) {
@@ -157,21 +174,22 @@
           $temp = $removedUserResponse['failed'];
         //use a popup
     }
-    $_SESSION['channel'] = $channelName;
-    $_SESSION['channelHeading'] = $channelHeading;
-    $_SESSION['chStatus'] = $chStatus;
+    // $_SESSION['channel'] = $channelName;
+    // $_SESSION['channelHeading'] = $channelHeading;
+    // $_SESSION['chStatus'] = $chStatus;
     unset($_POST['removeUsersExistingChannel']);
-    unset($_POST["channel"]);
+    //unset($_POST["channel"]);
     unset($_POST['removeUserExistingChannel']);
     $homeControlVar->redirectToHome();
   }
 
   function insertMessage($textArea) {
     global $homeControlVar;
-    global $channelName;
-    global $channelHeading;
+    //global $channelName;
+    //global $channelHeading;
     global $workspaceUrl;
-    global $chStatus;
+    //global $chStatus;
+    $channelName = $_SESSION['channel'];
     $threadId = NULL;
     $messageType = 'post';
     unset($_POST["textarea"]);
@@ -180,10 +198,10 @@
     $filePath = NULL;
     $message = $homeControlVar->insertMessage($channelName,$textArea,$image_path,$filePath,$snippet,$threadId,$messageType, $workspaceUrl);
     //if ($message != 'false') {
-      $_SESSION['channel'] = $channelName;
-      $_SESSION['channelHeading'] = $channelHeading;
-      $_SESSION['chStatus'] = $chStatus;
-      $homeControlVar->redirectToHome();
+      // $_SESSION['channel'] = $channelName;
+      // $_SESSION['channelHeading'] = $channelHeading;
+      // $_SESSION['chStatus'] = $chStatus;
+    $homeControlVar->redirectToHome();
     //}
   }
 
@@ -211,19 +229,21 @@
     //echo $users;
     $isCreate = "true";
     $channelCreator = $homeControlVar->inviteUsersToChannel($users, $channelName, $workspaceUrl, $isCreate);
-    $_SESSION['channel'] = $channelName;
+    //$_SESSION['channel'] = $channelName;
     if ($channeltype == "Public") {
-      $channelHeading = "#"." ".$channelName;
+      $_SESSION['channelHeading'] = "#"." ".$channelName;
     } else {
-      $channelHeading = "∆"." ".$channelName;
+      $_SESSION['channelHeading'] = "∆"." ".$channelName;
     }
-    $_SESSION['channelHeading'] = $channelHeading;
-    $_SESSION['chStatus'] = $chStatus;
+    //$_SESSION['channelHeading'] = $channelHeading;
+    //$_SESSION['chStatus'] = $chStatus;
     }
     unset($_POST['newChannel']);
     unset($_POST["channel"]);
     unset($_POST['purpose']);
     unset($_POST['channelType']);
+    unset($_POST["chStatus"]);
+    unset($_POST["channelHeading"]);
     $homeControlVar->redirectToHome();
     //var_dump($newInviteUserResponse);
   }
@@ -231,9 +251,9 @@
   if(isset($_POST['UserName'])){
     global $homeControlVar;
     global $workspaceUrl;
-    $_SESSION['channel'] = $channelName;
-    $_SESSION['channelHeading'] = $channelHeading;
-    $_SESSION['chStatus'] = $chStatus;
+    // $_SESSION['channel'] = $channelName;
+    // $_SESSION['channelHeading'] = $channelHeading;
+    // $_SESSION['chStatus'] = $chStatus;
     $userList =$homeControlVar->getUsersForPattern($_POST['UserName'], $workspaceUrl);
     echo json_encode($userList);
   }
@@ -241,32 +261,32 @@
   if(isset($_POST['thread_insertion'])) {
     // global $thread_message;
     global $homeControlVar;
-    global $channelName;
+    //global $channelName;
     global $workspaceUrl;
     $thread_message = $_POST['thread_insertion']['reply_message'];
     $thread_id = $_POST['thread_insertion']['thread_id'];
-    $channelName = $_POST['thread_insertion']['channel_name'];
+    $channelName = $_SESSION['channel'];//$_POST['thread_insertion']['channel_name'];
     $messageType = 'reply';
     $image_path = NULL;
     $snippet = NULL;
     $filePath = NULL;
     $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
-    $_SESSION['channel'] = $channelName;
-    $_SESSION['channelHeading'] = $channelHeading;
-    $_SESSION['chStatus'] = $chStatus;
+    // $_SESSION['channel'] = $channelName;
+    // $_SESSION['channelHeading'] = $channelHeading;
+    // $_SESSION['chStatus'] = $chStatus;
   }
 
   if (isset($_POST['deletePostID'])) {
     global $homeControlVar;
     global $workspaceUrl;
-    global $channelName;
+    //global $channelName;
 
     $msgID = $_POST['deletePostID'];
-    //$channelName = $_POST['deletePost']['ch_name'];
+    $channelName = $_SESSION['channel'];//$_POST['deletePost']['ch_name'];
     $isSuccess = $homeControlVar->deletePostsFromChannel($msgID, $channelName, $workspaceUrl);
-    $_SESSION['channel'] = $channelName;
-    $_SESSION['channelHeading'] = $channelHeading;
-    $_SESSION['chStatus'] = $chStatus;
+    // $_SESSION['channel'] = $channelName;
+    // $_SESSION['channelHeading'] = $channelHeading;
+    // $_SESSION['chStatus'] = $chStatus;
     echo $isSuccess;
   }
 
@@ -278,9 +298,11 @@
       $reactionResponse = array();
       $msgId = $_POST['insertReaction']['msgId'];
       $emoName = $_POST['insertReaction']['emoName'];
-      $_SESSION['channel'] = $channelName;
-      $_SESSION['channelHeading'] = $channelHeading;
-      $_SESSION['chStatus'] = $chStatus;
+
+      // $_SESSION['channel'] = $channelName;
+      // $_SESSION['channelHeading'] = $channelHeading;
+      // $_SESSION['chStatus'] = $chStatus;
+
       //$isInsert = $_POST['insertReaction']['isInsert'];
       //$reactionsData = array();
       //$reactionsData=json_decode(stripslashes($_POST['reactionsData']));
@@ -332,10 +354,10 @@
       global $homeControlVar;
       global $profileControllerVar;
       global $workspaceUrl;
-      global $channelName;
-      global $channelHeading;
-      global $chStatus;
-
+      // global $channelName;
+      // global $channelHeading;
+      // global $chStatus;
+      $channelName = $_SESSION['channel'];
       $message = NULL;
       $thread_message = NULL;
       $snippet = NULL;
@@ -364,9 +386,9 @@
                     $channelName, $thread_message, $image_path, $filePath,
                     $snippet, $thread_id, $messageType, $workspaceUrl);
       }
-      $_SESSION['channel'] = $channelName;
-      $_SESSION['channelHeading'] = $channelHeading;
-      $_SESSION['chStatus'] = $chStatus;
+      // $_SESSION['channel'] = $channelName;
+      // $_SESSION['channelHeading'] = $channelHeading;
+      // $_SESSION['chStatus'] = $chStatus;
       echo json_encode($response);
     }
 
@@ -409,10 +431,10 @@
       global $homeControlVar;
       global $profileControllerVar;
       global $workspaceUrl;
-      global $channelName;
-      global $channelHeading;
-      global $chStatus;
-
+      // global $channelName;
+      // global $channelHeading;
+      // global $chStatus;
+      $channelName = $_SESSION['channel'];
       $message = NULL;
       $thread_message = NULL;
       $snippet = NULL;
@@ -425,9 +447,9 @@
       if ($image_type != NULL && $image_type != "") {
         $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
       }
-      $_SESSION['channel'] = $channelName;
-      $_SESSION['channelHeading'] = $channelHeading;
-      $_SESSION['chStatus'] = $chStatus;
+      // $_SESSION['channel'] = $channelName;
+      // $_SESSION['channelHeading'] = $channelHeading;
+      // $_SESSION['chStatus'] = $chStatus;
       echo $message;
     }
     // code insertion
@@ -435,9 +457,9 @@
       global $homeControlVar;
       global $profileControllerVar;
       global $workspaceUrl;
-      global $channelName;
-      global $channelHeading;
-      global $chStatus;
+      // global $channelName;
+      // global $channelHeading;
+      // global $chStatus;
 
       $channelName = $_SESSION['channel'];
       $channelHeading = $_SESSION['channelHeading'];
@@ -451,9 +473,9 @@
       $filePath = NULL;
       $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$threadId,$messageType,$workspaceUrl);
 
-      $_SESSION['channel'] = $channelName;
-      $_SESSION['channelHeading'] = $channelHeading;
-      $_SESSION['chStatus'] = $chStatus;
+      // $_SESSION['channel'] = $channelName;
+      // $_SESSION['channelHeading'] = $channelHeading;
+      // $_SESSION['chStatus'] = $chStatus;
       if ($message == "Message is inserted") {
         echo $message;
       } else {
@@ -464,9 +486,9 @@
     if (isset($_POST["channel_status"])) {
       global $homeControlVar;
       global $workspaceUrl;
-      global $channelName;
+      //global $channelName;
       $status = $_POST["channel_status"]["status"];
-      $channelName = $_POST["channel_status"]["channel"];
+      $channelName = $_SESSION['channel'];//$_POST["channel_status"]["channel"];
       $isSuccess = $homeControlVar->updateChannelStatus($channelName, $workspaceUrl, $status);
       $_SESSION['channel'] = $channelName;
       $_SESSION['channelHeading'] = $channelHeading;
@@ -477,24 +499,24 @@
     if (isset($_POST["getUsersForChannel"])) {
       global $homeControlVar;
       global $workspaceUrl;
-      global $channelName;
-      $channelName = $_POST["getUsersForChannel"];
+      //global $channelName;
+      $channelName = $_SESSION['channel'];//$_POST["getUsersForChannel"];
       $userList = $homeControlVar->retUsersFromChannel($channelName, $workspaceUrl);
-      $_SESSION['channel'] = $channelName;
-      $_SESSION['channelHeading'] = $channelHeading;
-      $_SESSION['chStatus'] = $chStatus;
+      // $_SESSION['channel'] = $channelName;
+      // $_SESSION['channelHeading'] = $channelHeading;
+      // $_SESSION['chStatus'] = $chStatus;
       echo json_encode($userList);
     }
 
   if (isset($_POST["inviteUsersForChannel"])) {
     global $homeControlVar;
     global $workspaceUrl;
-    global $channelName;
-    $channelName = $_POST["inviteUsersForChannel"];
+    //global $channelName;
+    $channelName = $_SESSION['channel'];//$_POST["inviteUsersForChannel"];
     $userList = $homeControlVar->retInviteUsersForChannel($channelName, $workspaceUrl);
-    $_SESSION['channel'] = $channelName;
-    $_SESSION['channelHeading'] = $channelHeading;
-    $_SESSION['chStatus'] = $chStatus;
+    // $_SESSION['channel'] = $channelName;
+    // $_SESSION['channelHeading'] = $channelHeading;
+    // $_SESSION['chStatus'] = $chStatus;
     echo json_encode($userList);
   }
 
@@ -505,9 +527,9 @@
     $profile_id = $_POST["profile_id"];
     $profileObject = array("file_name"=>$avatar_path, "profile_id"=>$profile_id);
     $response = $profileControllerVar->updateProfile($profileObject);
-    $_SESSION['channel'] = $channelName;
-    $_SESSION['channelHeading'] = $channelHeading;
-    $_SESSION['chStatus'] = $chStatus;
+    // $_SESSION['channel'] = $channelName;
+    // $_SESSION['channelHeading'] = $channelHeading;
+    // $_SESSION['chStatus'] = $chStatus;
     echo $response;
   }
 
