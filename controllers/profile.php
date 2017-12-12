@@ -1,5 +1,5 @@
 <?php
-  include_once $_SESSION['basePath'].'errors.php';
+  //include_once $_SESSION['basePath'].'errors.php';
   require_once $_SESSION['basePath'].'models/profile.php';
 
   if (!isset($_SESSION['userid']) || !isset($_SESSION['password']))

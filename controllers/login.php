@@ -1,5 +1,5 @@
 <?php
-    include $_SESSION['basePath'].'errors.php';
+    //include $_SESSION['basePath'].'errors.php';
     require_once $_SESSION['basePath'].'models/login.php';
     //require_once $_SESSION['basePath'].'controllers/profile.php';
 

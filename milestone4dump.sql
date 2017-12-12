@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 11, 2017 at 08:06 PM
+-- Generation Time: Dec 12, 2017 at 08:47 PM
 -- Server version: 5.6.35
 -- PHP Version: 7.1.6
 
@@ -19,8 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `channel_messages`
 --
-CREATE DATABASE `slack`;
-USE `slack`;
+CREATE DATABASE 'slack';
+USE 'slack';
 
 CREATE TABLE `channel_messages` (
   `channel_id` int(11) NOT NULL,
@@ -40,37 +40,56 @@ CREATE TABLE `channel_messages` (
 --
 
 INSERT INTO `channel_messages` (`channel_id`, `user_id`, `msg_id`, `message`, `image_path`, `file_path`, `snippet`, `created_time`, `type`, `dependency`) VALUES
-(26, 'admin', 15, 'hha', NULL, NULL, NULL, '2017-11-28 23:03:08', 1, 15),
-(26, 'mater', 11, 'heyy', NULL, NULL, NULL, '2017-11-21 19:46:42', 1, 11),
-(26, 'mater', 12, 'yupp', NULL, NULL, NULL, '2017-11-21 19:46:47', 1, 12),
-(26, 'mater', 13, NULL, 'https://stocklogos.com/sites/default/files/ferrari-logo_0.jpg', NULL, NULL, '2017-11-21 19:47:17', 1, 13),
-(26, 'mater', 14, 'Hi', NULL, NULL, NULL, '2017-11-22 18:50:22', 1, 14),
-(26, 'mater', 19, NULL, 'https://www.planwallpaper.com/static/images/canberra_hero_image_JiMVvYU.jpg', NULL, NULL, '2017-12-07 02:30:14', 1, 19),
-(26, 'mater', 20, NULL, 'https://www.w3schools.com/css/css3_images.asp', NULL, NULL, '2017-12-07 02:39:13', 1, 20),
-(26, 'mater', 21, 'tom', NULL, NULL, NULL, '2017-12-07 02:47:42', 1, 21),
-(26, 'mater', 23, NULL, 'https://www.w3schools.com/css/paris.jpg', NULL, NULL, '2017-12-07 03:18:08', 1, 23),
-(26, 'mater', 24, NULL, 'https://www.w3schools.com/css/lights600x400.jpg', NULL, NULL, '2017-12-07 03:36:35', 1, 24),
-(26, 'mater', 25, NULL, 'https://vignette.wikia.nocookie.net/disney/images/c/c0/Mack.png/revision/latest?cb=20151213154902', NULL, NULL, '2017-12-07 03:48:18', 1, 25),
-(26, 'mater', 34, NULL, NULL, NULL, 'char *p = NULL;\n{\n    char c;\n    p = &c;\n}\n// Now p is dangling', '2017-12-07 22:24:39', 1, 34),
-(26, 'mater', 41, NULL, NULL, 'files/Quiz 52.docx', NULL, '2017-12-08 08:54:49', 1, 41),
-(26, 'mater', 43, '\"[1]) is the basic structural, functional, and biological unit of all known living organisms. A cell is the smallest unit of life that can replicate independently, and cells are often called the \"building blocks of life\". The study of cells is called cell biology.\r\n\r\nCells consist of cytoplasm enclosed within a membrane, which contains many biomolecules such as proteins and nucleic acids.[2] Organisms can be classified as unicellular (consisting of a single cell; including bacteria) or multicellular (including plants and animals).[3] While the number of cells in plants and animals varies from species to species, humans contain more than 10 trillion (1013) cells.[4] Most plant and animal cells are visible only under a microscope, with dimensions between 1 and 100 micrometres.[5]\r\n\r\nThe cell was discovered by Robert Hooke in 1665, who named the biological units for their resemblance to cells inhabited by Christian monks in a monastery.[6][7] Cell theory, first developed in 1839 by Matthias Jakob Schleiden and Theodor Schwann, states that all organisms are composed of one or more cells, that cells are the fundamental unit of structure and function in all living organisms, that all cells come from preexisting cells, and that all cells contain the hereditary information necessary for regulating cell functions and for transmitting information to the next generation of cells.[8] Cells emerged on Earth at least 3.5 billion years ago.[9][10][11]', NULL, NULL, NULL, '2017-12-08 08:56:29', 1, 43),
-(26, 'mater', 44, 'hmm', NULL, NULL, NULL, '2017-12-08 08:56:48', 3, 43),
-(27, 'admin', 17, 'hah', NULL, NULL, NULL, '2017-11-28 23:03:22', 1, 17),
-(27, 'mater', 27, NULL, 'https://www.w3schools.com/css/lights600x400.jpg', NULL, NULL, '2017-12-07 07:16:04', 1, 27),
-(27, 'mater', 37, NULL, 'images/messages/Gal-Gadot-Wallpaper-4.jpg', NULL, NULL, '2017-12-08 08:23:41', 1, 37),
-(27, 'mater', 38, NULL, 'images/messages/jac1.jpg', NULL, NULL, '2017-12-08 08:24:59', 1, 38),
-(27, 'mater', 39, NULL, 'images/messages/jac1.jpg', NULL, NULL, '2017-12-08 08:26:10', 1, 39),
-(27, 'mater', 40, NULL, NULL, 'files/samp.json', NULL, '2017-12-08 08:28:02', 1, 40),
-(27, 'mater', 42, 'The cell (from Latin cella, meaning \"small room\"', NULL, NULL, NULL, '2017-12-08 08:55:53', 1, 42),
-(27, 'mater', 45, NULL, 'http://i1.wp.com/www.google.com/images/logo.gif', NULL, NULL, '2017-12-08 22:09:13', 1, 45),
-(27, 'mater', 47, 'hmm\r\n', NULL, NULL, NULL, '2017-12-10 12:52:27', 1, 47),
-(27, 'porsche', 46, 'Testing', NULL, NULL, NULL, '2017-12-09 02:28:03', 1, 46),
-(27, 'singhis', 51, NULL, NULL, 'files/workonthis.zip', NULL, '2017-12-11 01:41:07', 1, 51),
-(29, 'admin', 35, 'happy', NULL, NULL, NULL, '2017-12-07 22:41:18', 1, 35),
-(29, 'admin', 36, 'yup', NULL, NULL, NULL, '2017-12-07 23:24:39', 3, 35),
-(29, 'singhis', 48, NULL, 'https://lh3.googleusercontent.com/-XJOCtfgS0o4/Vxembf_ylfI/AAAAAAAANyw/AeF7kHGi_kERgmOe8sC986_KOQOUW4omgCCo/s128-Ic42/make%2Bin%2Bindia.png', NULL, NULL, '2017-12-10 13:11:54', 1, 48),
-(29, 'singhis', 49, NULL, 'images/messages/Screenshot (20).png', NULL, NULL, '2017-12-10 13:12:15', 1, 49),
-(29, 'singhis', 50, NULL, NULL, 'files/Quiz 51.docx', NULL, '2017-12-10 13:12:27', 1, 50);
+(37, 'mater', 1, 'Hello', NULL, NULL, NULL, '2017-12-12 18:32:45', 1, 1),
+(37, 'porsche', 4, '1\r\n', NULL, NULL, NULL, '2017-12-12 18:34:08', 1, 4),
+(37, 'porsche', 5, '2', NULL, NULL, NULL, '2017-12-12 18:34:12', 1, 5),
+(37, 'porsche', 6, '3', NULL, NULL, NULL, '2017-12-12 18:34:15', 1, 6),
+(37, 'porsche', 7, '4', NULL, NULL, NULL, '2017-12-12 18:34:17', 1, 7),
+(37, 'porsche', 8, '5', NULL, NULL, NULL, '2017-12-12 18:34:19', 1, 8),
+(37, 'porsche', 9, '6', NULL, NULL, NULL, '2017-12-12 18:34:21', 1, 9),
+(37, 'porsche', 10, '7', NULL, NULL, NULL, '2017-12-12 18:34:23', 1, 10),
+(37, 'porsche', 11, '8', NULL, NULL, NULL, '2017-12-12 18:34:27', 1, 11),
+(37, 'porsche', 12, '9', NULL, NULL, NULL, '2017-12-12 18:34:30', 1, 12),
+(37, 'porsche', 13, '10', NULL, NULL, NULL, '2017-12-12 18:34:32', 1, 13),
+(37, 'porsche', 14, '11', NULL, NULL, NULL, '2017-12-12 18:34:35', 1, 14),
+(37, 'porsche', 15, '12', NULL, NULL, NULL, '2017-12-12 18:34:38', 1, 15),
+(37, 'porsche', 16, '13', NULL, NULL, NULL, '2017-12-12 18:34:40', 1, 16),
+(37, 'porsche', 17, '14', NULL, NULL, NULL, '2017-12-12 18:34:43', 1, 17),
+(37, 'porsche', 18, '15', NULL, NULL, NULL, '2017-12-12 18:34:46', 1, 18),
+(38, 'porsche', 19, 'hi', NULL, NULL, NULL, '2017-12-12 18:35:09', 1, 19),
+(38, 'porsche', 27, NULL, 'images/messages/disguise-1296221_1280.png', NULL, NULL, '2017-12-12 18:41:55', 1, 27),
+(38, 'porsche', 28, NULL, NULL, 'files/Syllabus.pdf', NULL, '2017-12-12 18:42:31', 1, 28),
+(38, 'porsche', 29, NULL, NULL, 'files/Test_ExportFile_201710_FALL_CS120G_20259_Exam 2- Requires Respondus LockDown Browser.zip', NULL, '2017-12-12 18:42:51', 1, 29),
+(38, 'porsche', 30, NULL, NULL, 'files/proteinstructure-online.ppt', NULL, '2017-12-12 18:43:10', 1, 30),
+(38, 'porsche', 31, NULL, NULL, 'files/cs723projectfall17.docx', NULL, '2017-12-12 18:43:27', 1, 31),
+(38, 'porsche', 32, 'hello', NULL, NULL, NULL, '2017-12-12 18:48:23', 3, 19),
+(38, 'singhis', 26, 'hello', NULL, NULL, NULL, '2017-12-12 18:39:57', 1, 26),
+(39, 'mater', 2, 'how are you people doing', NULL, NULL, NULL, '2017-12-12 18:33:08', 1, 2),
+(40, 'chinga', 49, 'hello', NULL, NULL, NULL, '2017-12-12 18:59:09', 1, 49),
+(40, 'chinga', 50, 'ok', NULL, NULL, NULL, '2017-12-12 19:00:09', 3, 24),
+(40, 'porsche', 23, NULL, 'images/messages/Screenshot (20).png', NULL, NULL, '2017-12-12 18:38:19', 1, 23),
+(40, 'porsche', 24, 'This is how we are supposed to create channels', NULL, NULL, NULL, '2017-12-12 18:38:38', 1, 24),
+(40, 'porsche', 33, 'great', NULL, NULL, NULL, '2017-12-12 18:48:46', 3, 23),
+(40, 'porsche', 34, '1', NULL, NULL, NULL, '2017-12-12 18:48:52', 3, 25),
+(40, 'porsche', 35, '2', NULL, NULL, NULL, '2017-12-12 18:48:54', 3, 25),
+(40, 'porsche', 36, '3', NULL, NULL, NULL, '2017-12-12 18:48:56', 3, 25),
+(40, 'porsche', 37, '4', NULL, NULL, NULL, '2017-12-12 18:48:59', 3, 25),
+(40, 'porsche', 38, '5', NULL, NULL, NULL, '2017-12-12 18:49:01', 3, 25),
+(40, 'porsche', 39, '6', NULL, NULL, NULL, '2017-12-12 18:49:03', 3, 25),
+(40, 'porsche', 40, '7', NULL, NULL, NULL, '2017-12-12 18:49:06', 3, 25),
+(40, 'porsche', 41, '8', NULL, NULL, NULL, '2017-12-12 18:49:08', 3, 25),
+(40, 'porsche', 42, '9', NULL, NULL, NULL, '2017-12-12 18:49:11', 3, 25),
+(40, 'porsche', 43, '10', NULL, NULL, NULL, '2017-12-12 18:49:15', 3, 25),
+(40, 'rkand002', 47, NULL, 'images/messages/Screenshot (19).png', NULL, NULL, '2017-12-12 18:52:34', 1, 47),
+(40, 'singhis', 25, 'thank you', NULL, NULL, NULL, '2017-12-12 18:39:38', 1, 25),
+(41, 'mater', 3, '1', NULL, NULL, NULL, '2017-12-12 18:33:17', 1, 3),
+(41, 'porsche', 20, '2', NULL, NULL, NULL, '2017-12-12 18:35:19', 1, 20),
+(41, 'porsche', 21, '3', NULL, NULL, NULL, '2017-12-12 18:35:22', 1, 21),
+(41, 'porsche', 22, '4', NULL, NULL, NULL, '2017-12-12 18:35:27', 1, 22),
+(41, 'porsche', 44, '5', NULL, NULL, NULL, '2017-12-12 18:49:37', 3, 22),
+(41, 'porsche', 45, NULL, NULL, NULL, '<?php\nif (!isset($_POST[\'submit\'])) {\n   echo \"<h1>Error</h1>\\n\n      <p>Accessing this page directly is not allowed.</p>\";\n   exit;\n}\n\n$email = preg_replace(\"([\\r\\n])\", \"\", $email);\n\n$find = \"/(content-type|bcc:|cc:)/i\";\nif (preg_match($find, $name) || preg_match($find, $email) || preg_match($find, $url) || preg_match($find, $comments)) {\n   echo \"<h1>Error</h1>\\n\n      <p>No meta/header injections, please.</p>\";\n   exit;\n}\n?>', '2017-12-12 18:50:24', 1, 45),
+(41, 'rkand002', 46, 'great', NULL, NULL, NULL, '2017-12-12 18:51:12', 3, 45),
+(41, 'rkand002', 48, 'hello', NULL, NULL, NULL, '2017-12-12 18:52:58', 1, 48);
 
 -- --------------------------------------------------------
 
@@ -127,17 +146,36 @@ CREATE TABLE `inside_channel` (
 --
 
 INSERT INTO `inside_channel` (`channel_id`, `user_id`, `joined_date`, `left_date`) VALUES
-(26, 'admin', '2017-11-19 07:10:21', '0000-00-00 00:00:00'),
-(26, 'mater', '2017-11-19 07:10:21', '0000-00-00 00:00:00'),
-(27, 'admin', '2017-11-19 07:11:01', '0000-00-00 00:00:00'),
-(27, 'mater', '2017-11-19 07:11:01', '0000-00-00 00:00:00'),
-(27, 'porsche', '2017-11-19 07:11:01', '0000-00-00 00:00:00'),
-(27, 'singhis', '2017-11-20 01:55:56', '0000-00-00 00:00:00'),
-(28, 'admin', '2017-11-20 01:58:22', '0000-00-00 00:00:00'),
-(28, 'chinga', '2017-11-20 01:58:22', '0000-00-00 00:00:00'),
-(28, 'porsche', '2017-11-20 01:58:22', '0000-00-00 00:00:00'),
-(29, 'admin', '2017-11-21 00:38:57', '0000-00-00 00:00:00'),
-(29, 'singhis', '2017-11-21 00:38:57', '0000-00-00 00:00:00');
+(37, 'admin', '2017-12-12 18:27:23', '0000-00-00 00:00:00'),
+(37, 'chinga', '2017-12-12 18:27:53', '0000-00-00 00:00:00'),
+(37, 'mater', '2017-12-12 18:27:23', '0000-00-00 00:00:00'),
+(37, 'porsche', '2017-12-12 18:27:31', '0000-00-00 00:00:00'),
+(37, 'rkand002', '2017-12-12 18:27:47', '0000-00-00 00:00:00'),
+(37, 'singhis ', '2017-12-12 18:27:23', '0000-00-00 00:00:00'),
+(38, 'admin', '2017-12-12 18:28:37', '0000-00-00 00:00:00'),
+(38, 'kachow', '2017-12-12 18:28:55', '0000-00-00 00:00:00'),
+(38, 'mater', '2017-12-12 18:28:37', '0000-00-00 00:00:00'),
+(38, 'porsche', '2017-12-12 18:28:46', '0000-00-00 00:00:00'),
+(38, 'singhis', '2017-12-12 18:28:37', '0000-00-00 00:00:00'),
+(38, 'topsecret', '2017-12-12 18:29:05', '0000-00-00 00:00:00'),
+(39, 'admin', '2017-12-12 18:29:31', '0000-00-00 00:00:00'),
+(39, 'hornet', '2017-12-12 18:29:43', '0000-00-00 00:00:00'),
+(39, 'mater', '2017-12-12 18:29:31', '0000-00-00 00:00:00'),
+(39, 'porsche', '2017-12-12 18:29:31', '0000-00-00 00:00:00'),
+(39, 'rkand002', '2017-12-12 18:29:37', '0000-00-00 00:00:00'),
+(40, 'admin', '2017-12-12 18:30:39', '0000-00-00 00:00:00'),
+(40, 'chinga', '2017-12-12 18:30:39', '0000-00-00 00:00:00'),
+(40, 'kachow', '2017-12-12 18:31:01', '0000-00-00 00:00:00'),
+(40, 'mater', '2017-12-12 18:30:39', '0000-00-00 00:00:00'),
+(40, 'porsche', '2017-12-12 18:30:48', '0000-00-00 00:00:00'),
+(40, 'rkand002', '2017-12-12 18:31:19', '0000-00-00 00:00:00'),
+(40, 'singhis', '2017-12-12 18:31:08', '0000-00-00 00:00:00'),
+(40, 'topsecret', '2017-12-12 18:31:14', '0000-00-00 00:00:00'),
+(41, 'admin', '2017-12-12 18:32:03', '0000-00-00 00:00:00'),
+(41, 'mater', '2017-12-12 18:32:03', '0000-00-00 00:00:00'),
+(41, 'porsche', '2017-12-12 18:32:03', '0000-00-00 00:00:00'),
+(41, 'rkand002', '2017-12-12 18:32:10', '0000-00-00 00:00:00'),
+(41, 'singhis', '2017-12-12 18:32:14', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -190,11 +228,42 @@ CREATE TABLE `reactions` (
 --
 
 INSERT INTO `reactions` (`msg_id`, `emo_id`, `users`, `count`) VALUES
-(17, 2, ';admin;', 1),
-(35, 1, ';admin;', 1),
-(35, 2, '', 0),
-(40, 1, ';mater;', 1),
-(40, 2, '', 0);
+(1, 1, '', 0),
+(3, 2, ';porsche;', 1),
+(5, 1, ';porsche;', 1),
+(5, 2, '', 0),
+(6, 1, ';porsche;', 1),
+(8, 1, ';porsche;', 1),
+(9, 1, ';singhis;rkand002;', 2),
+(10, 1, ';singhis;admin;rkand002;', 3),
+(11, 1, ';singhis;porsche;rkand002;chinga;', 4),
+(11, 2, '', 0),
+(12, 1, ';rkand002;chinga;', 2),
+(12, 2, ';singhis;', 1),
+(13, 1, ';singhis;rkand002;', 2),
+(13, 2, ';chinga;', 1),
+(14, 1, ';porsche;rkand002;', 2),
+(14, 2, ';singhis;chinga;', 2),
+(15, 1, ';singhis;rkand002;', 2),
+(15, 2, ';chinga;', 1),
+(16, 1, ';rkand002;chinga;', 2),
+(16, 2, ';singhis;', 1),
+(17, 1, ';rkand002;', 1),
+(18, 1, ';rkand002;', 1),
+(18, 2, ';porsche;', 1),
+(19, 1, ';singhis;', 1),
+(20, 1, ';singhis;', 1),
+(20, 2, ';admin;', 1),
+(21, 1, ';singhis;', 1),
+(22, 1, ';rkand002;', 1),
+(22, 2, ';admin;', 1),
+(23, 1, ';singhis;admin;', 2),
+(23, 2, ';rkand002;', 1),
+(24, 1, ';singhis;', 1),
+(24, 2, ';rkand002;', 1),
+(25, 1, ';rkand002;', 1),
+(26, 1, ';porsche;', 1),
+(45, 1, ';porsche;', 1);
 
 -- --------------------------------------------------------
 
@@ -225,8 +294,8 @@ CREATE TABLE `token_table` (
 --
 
 INSERT INTO `token_table` (`user_id`, `token`, `expire_time`, `email`) VALUES
-('rkand002', 'e84c066c6e54bf921fa633f11b15c734da05881c7856ba70820b8309ee45f0be', '2017-12-11 13:34:57', NULL),
-('singhis', '657ee7f92cad5919edb8a6eef1b8db130f383c783014a84e1915811458ebf81e', '2017-12-11 14:06:56', NULL);
+('rkand002', 'd1d2c0f5cb7e92ca6d06ba0ead8fa5a9', '2017-12-12 12:47:51', NULL),
+('singhis', '32970dd9a8e6d954f30f6c6193983302', '2017-12-12 12:55:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -256,18 +325,16 @@ CREATE TABLE `user_info` (
 --
 
 INSERT INTO `user_info` (`user_id`, `password`, `first_name`, `last_name`, `display_name`, `role`, `what_i_do`, `status`, `phone_number`, `email`, `two_factor`, `time_zone`, `skype`, `avatar`) VALUES
-('admin', 'M0n@rch$', 'admin', '', 'admin', 'admin', NULL, '', '', '', 0, '2017-12-09 03:41:28', '', 'images/users/default-profile-pic.jpg'),
+('admin', 'M0n@rch$', 'admin', '', 'admin', 'admin', NULL, '', '', 'rohithkandimalla@gmail.com', 0, '2017-12-12 18:14:53', '', 'images/users/default-profile-pic.jpg'),
 ('chinga', '@chick', 'Chick', 'Hicks', 'Chick Hicks', 'user', NULL, '', '', 'chinga@cars.com', 0, '2017-12-09 03:41:33', '', 'images/users/default-profile-pic.jpg'),
-('dumm', '1234567Aa@2', 'dummsuper', 'dum', '', 'user', NULL, '', '', 'zeno@od.com', 0, '2017-12-09 03:44:04', '', 'images/users/default-profile-pic.jpg'),
 ('hornet', '@doc', 'Doc', ' Hudson', 'Doc  Hudson', 'user', NULL, '', '', 'hornet@rsprings.gov', 0, '2017-12-09 03:41:39', '', 'images/users/default-profile-pic.jpg'),
-('iamami', '12345678Aa!', 'Amitabh', 'Bachan', '', 'user', NULL, '', '', 'amitab@ac.in', 0, '2017-12-09 03:41:46', '', 'images/users/default-profile-pic.jpg'),
+('iamami', '123', 'Amitabh', 'Bachan', '', 'user', NULL, '', '', 'amitab@ac.in', 0, '2017-12-12 18:14:25', '', 'images/users/default-profile-pic.jpg'),
 ('kachow', '@mcqueen', 'Lightning', 'McQueen', 'Lightning McQueen', 'user', NULL, '', '', 'kachow@rusteze.com', 0, '2017-12-09 03:41:53', '', 'images/users/default-profile-pic.jpg'),
-('mater', '@mater', 'Tow', 'Mater', 'Tow Mater', 'user', NULL, '', '', 'sunnyracha14@gmail.com', 0, '2017-12-11 05:53:30', '', 'https://www.gravatar.com/avatar/44ddde8657d7f5b7dfaab2745f90294f?d=404&s=500'),
+('mater', '@mater', 'Tow', 'Mater', 'Tow Mater', 'user', NULL, '', '', 'rkand002@odu.edu', 0, '2017-12-12 18:14:00', '', 'https://www.gravatar.com/avatar/44ddde8657d7f5b7dfaab2745f90294f?d=404&s=500'),
 ('porsche', '@sally', 'Sally', 'Carrera', 'Sally Carrera', 'user', NULL, '', '', 'porsche@rsprings.gov', 0, '2017-12-09 02:26:09', '', 'images/users/default-profile-pic.jpg'),
-('rkand002', '1234567Aa@2', 'Rohit', 'K', '', 'user', NULL, '', '', 'rkand002@odu.edu', 1, '2017-12-11 07:36:22', '', 'https://www.gravatar.com/avatar/a1d798da2397947120991acbd16141b9?d=404&s=500'),
-('singhis', '123', 'okay', 'singh', '', 'user', NULL, '', '', 'rahul_rachamalla@outlook.com', 1, '2017-12-11 07:36:53', '', 'images/users/default-profile-pic.jpg'),
-('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', 'user', NULL, '', '', 'topsecret@agent.org', 0, '2017-12-09 03:42:09', '', 'images/users/default-profile-pic.jpg'),
-('yummy', '12345678Aa#3', 'yummy', 'yum', '', 'user', NULL, '', '', 'yum@odu.edu', 0, '2017-12-09 03:42:15', '', 'images/users/default-profile-pic.jpg');
+('rkand002', '123', 'Rohit', 'K', '', 'user', NULL, '', '', 'rkand002@odu.edu', 0, '2017-12-12 18:14:20', '', 'https://www.gravatar.com/avatar/a1d798da2397947120991acbd16141b9?d=404&s=500'),
+('singhis', '123', 'okay', 'singh', '', 'user', NULL, '', '', 'rohithkandimalla@gmail.com', 0, '2017-12-12 18:13:49', '', 'images/users/default-profile-pic.jpg'),
+('topsecret', '@mcmissile', 'Finn', 'McMissile', 'Finn McMissile', 'user', NULL, '', '', 'topsecret@agent.org', 0, '2017-12-09 03:42:09', '', 'images/users/default-profile-pic.jpg');
 
 -- --------------------------------------------------------
 
@@ -288,7 +355,6 @@ CREATE TABLE `workspace` (
 INSERT INTO `workspace` (`url`, `user_id`, `created_by`) VALUES
 ('musicf17.slack.com', 'admin', 0),
 ('musicf17.slack.com', 'chinga', 1),
-('musicf17.slack.com', 'dumm', 0),
 ('musicf17.slack.com', 'hornet', 0),
 ('musicf17.slack.com', 'iamami', 0),
 ('musicf17.slack.com', 'kachow', 0),
@@ -296,8 +362,7 @@ INSERT INTO `workspace` (`url`, `user_id`, `created_by`) VALUES
 ('musicf17.slack.com', 'porsche', 0),
 ('musicf17.slack.com', 'rkand002', 0),
 ('musicf17.slack.com', 'singhis', 0),
-('musicf17.slack.com', 'topsecret', 0),
-('musicf17.slack.com', 'yummy', 0);
+('musicf17.slack.com', 'topsecret', 0);
 
 -- --------------------------------------------------------
 
@@ -320,10 +385,11 @@ CREATE TABLE `workspace_channels` (
 --
 
 INSERT INTO `workspace_channels` (`channel_id`, `channel_name`, `url`, `user_id`, `purpose`, `type`, `status`) VALUES
-(26, 'general', 'musicf17.slack.com', 'mater', 'casual discussion', 'Public', 'unarchived'),
-(27, 'jazz', 'musicf17.slack.com', 'mater', 'jazz news', 'Private', 'unarchived'),
-(28, 'trial', 'musicf17.slack.com', 'porsche', '', 'Public', 'archived'),
-(29, 'test1', 'musicf17.slack.com', 'admin', 'for you', 'Private', 'unarchived');
+(37, 'General', 'musicf17.slack.com', 'mater', 'General purposes', 'Public', 'unarchived'),
+(38, 'Testing', 'musicf17.slack.com', 'mater', 'this channel is for testing', 'Private', 'unarchived'),
+(39, 'Milestone 1', 'musicf17.slack.com', 'mater', '', 'Public', 'archived'),
+(40, 'Milestone 2', 'musicf17.slack.com', 'mater', '', 'Public', 'unarchived'),
+(41, 'group 12', 'musicf17.slack.com', 'mater', '', 'Private', 'unarchived');
 
 --
 -- Indexes for dumped tables
@@ -429,7 +495,7 @@ ALTER TABLE `emoticons`
 -- AUTO_INCREMENT for table `workspace_channels`
 --
 ALTER TABLE `workspace_channels`
-  MODIFY `channel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `channel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 --
 -- Constraints for dumped tables
 --
