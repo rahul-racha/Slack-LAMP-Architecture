@@ -111,11 +111,12 @@
         </div>
         <div class="client_message_display col-xs-12 row change_row_prop">
           <?php
-            $retChannel=0;
-            $_SESSION['loadCount'] = 5;
+            //$retChannel=0;
+            //$_SESSION['loadCount'] = 5;
             //$channel_name = isset($_POST["channel"]) ? $_POST["channel"] : NULL;
             // echo $channel_name;
-            displayMessages($retChannel);
+            //displayMessages($retChannel);
+            displayMessages($_SESSION['loadCount']);
           ?>
         </div>
           <!-- messge container -->
