@@ -39,7 +39,7 @@
             <span class="caret"></span></button>
             <ul class="dropdown-menu client_navbar_dropdown_ul">
               <li class="dropdown-header">
-                <img style="width: 20%;" alt="" src='<?php echo $avatar_path; ?>'> &nbsp;
+                <img style="width: 20%;" alt="" src='<?php echo $avatar_path; ?>'> &#160;
                 <?php echo $_SESSION['userid']; ?>
               </li>
               <li class="divider"></li>
@@ -118,7 +118,7 @@
           <!-- messge container -->
         	<div class="client_message_entry col-xs-12 row change_row_prop">
             <div class="input-group">
-              <span class="input-group-addon">
+              <div class="input-group-addon">
                 <div class="dropup">
                   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                   <i class="fa fa-plus" aria-hidden="true"></i></a>
@@ -134,7 +134,7 @@
                     <li><a href="#">About Us</a></li>($_POST["channelHeading"]) ? $_POST["channelHeading"]: NULL -->
                   </ul>
                 </div>
-              </span>
+              </div>
   						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
                 <textarea id="textArea" class="client_message_entry_textarea col-xs-11" name="textarea" placeholder="
                 <?php
@@ -185,7 +185,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-xs-8">
-                <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>" id= "NewChannel">
+                <form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
                   <div class="form-group">
                     <label for="ChannelName">Channel Name</label>
                     <input type="text" class="form-control" placeholder="Channel name" name="channel" autocomplete="off" id="ChannelName">
@@ -200,7 +200,7 @@
                   </div>
                   <div class="form-group">
                     <label for="invitingNewUsers">Invite members to this channel</label>
-                    <input type="text" class="form-control" name="newUserSearch[]" id="invitingNewUsers">
+                    <input type="text" class="form-control" name="newUserSearch[]">
                   </div>
                   <input type="hidden" name="newChannel" value="newChannel">
                   <input type="hidden" name="chStatus" value="unarchived">
