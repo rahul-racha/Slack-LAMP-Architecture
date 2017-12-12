@@ -47,8 +47,8 @@
         $profilePicPath = "images/users/default-profile-pic.jpg";
 
         $profile = $homeControlVar->getProfile($_SESSION['userid'], $workspaceUrl);
-        if (!empty($_SESSION['access_token']) && !empty($profile['profile']) && !empty($profile['profile'][0]['avatar'])) {
-          $profilePicPath = $profile['profile'][0]['avatar'];
+      if (!empty($_SESSION['access_token']) && isset($_SESSION['github_avatar'])/*!empty($profile['profile']) && !empty($profile['profile'][0]['avatar'])*/) {
+          $profilePicPath = $_SESSION['github_avatar'];//$profile['profile'][0]['avatar'];
         }
         else {
           $email = (!empty($profile['profile']) && !empty($profile['profile'][0]['email']) != NULL) ? $profile['profile'][0]['email'] : NULL;
