@@ -10,6 +10,7 @@
 <html>
   <head>
 		<title> login page </title>
+		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="css/login.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -79,8 +80,7 @@
 			</div>
 		</div>
 		<!-- Large modal -->
-		<div class="modal fade" id="SignupModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-		    aria-hidden="true">
+		<div class="modal fade" id="SignupModal" tabindex="-1" role="dialog" aria-hidden="true">
 	    <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
