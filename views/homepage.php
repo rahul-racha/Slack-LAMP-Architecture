@@ -197,11 +197,11 @@
 				if(count($channelMessages != $i))
 				{
         $name = $name. "<div class='message_profile_pic col-xs-1'>
-									 <img src=".$value['avatar']." class='client_pic_display'>
+									 <img src=".$value['avatar']." alt='proile pic' class='client_pic_display'>
 								 </div>
 								 <div class='message_content_wrapper col-xs-10'>
-								 		<strong class = 'UserName'>".$value["first_name"]."&#160 &#160".$value["last_name"].
-	                  "</strong> &#160 &#160 &#160 <span class = 'TimeStamp'>".$strip."</span>
+								 		<strong class = 'UserName'>".$value["first_name"]."&#160; &#160;".$value["last_name"].
+	                  "</strong> &#160; &#160; &#160; <span class = 'TimeStamp'>".$strip."</span>
 	                  <ul class = 'MessageUL'>";
 
 										if ($value["message"] != NULL && !empty($value["message"])){
@@ -212,7 +212,7 @@
 											//$imageFileType = exif_imagetype($value["image_path"]);
 											// echo $imageFileType;
 											// if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
-											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' alt = 'image cannot be displayed' style='width:400px;'></li>";
 											// }
 										}
 										else if($value["snippet"] != NULL && !empty($value["snippet"])){
@@ -222,13 +222,13 @@
 										}
 										$name=$name. "</ul>
 
-	                  <label class='like' id=".$msgId." style='cursor:pointer;'>
-	                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-	                  </label>&#160 &#160
+	                  <label class='like' id='like_".$msgId."' style='cursor:pointer;'>
+	                  	<i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
+	                  </label>&#160; &#160;
 	                  <span id = 'likeResponse".$msgId."'> ".$likeCount."</span>
-	                  <label class='dislike' id=".$msgId." style='cursor:pointer;'>
-	                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
-	                  </label> &#160 &#160
+	                  <label class='dislike' id='dislike_".$msgId."' style='cursor:pointer;'>
+	                  	<i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
+	                  </label> &#160; &#160;
 	                  <span id = 'dislikeResponse".$msgId."'>".$dislikeCount."</span>".
 
 										"<input type='hidden' name='threadId' value=".$msgId.">".
@@ -237,18 +237,18 @@
 			              //<input type='hidden' class='delHeading' name='channelHeading' value=".$head.">
 			              //<input type='hidden' class='delStatus' name='chStatus' value=".$st.">
 
-										"<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
-										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
+										"<input type='submit' id='thread_".$msgId."' class='threadIdSubmit' name='threadIdSubmit' value='reply'>
+										<input type='submit' id='delPost_".$msgId."' class='delPost' name='delPost' value='delete'>
                 </div>";
 
 				}
 			else{
 				$name = $name. "<div class='message_profile_pic col-xs-1'>
-									 <img src=".$value['avatar']." class='client_pic_display'>
+									 <img src=".$value['avatar']." alt= 'profile pic' class='client_pic_display'>
 								 </div>
 								 <div class='message_content_wrapper col-xs-10'>
-								 		<strong class = 'UserName'>".$value["first_name"]."&#160 &#160".$value["last_name"].
-	                  "</strong> &#160 &#160 &#160 <span class = 'TimeStamp'>".$strip."</span>
+								 		<strong class = 'UserName'>".$value["first_name"]."&#160; &#160;".$value["last_name"].
+	                  "</strong> &#160; &#160; &#160; <span class = 'TimeStamp'>".$strip."</span>
 	                  <ul class = 'MessageUL'>";
 										$value["image_path"];
 										if($value["message"] != NULL && !empty($value["message"])){
@@ -259,7 +259,7 @@
 											// $uploadedFileName = $value["image_path"];
 											// $imageFileType = pathinfo($uploadedFileName,PATHINFO_EXTENSION);
 											//if($imageFileType == "jpg" || $imageFileType == "jpeg" || $imageFileType == "png" || $imageFileType == "gif"){
-											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' style='width:400px;'></li>";
+											$name=$name. "<li class = 'MessageLI'><img src='".$value["image_path"]."' alt = 'image cannot be displayed' style='width:400px;'></li>";
 											//}
 										}
 										else if($value["snippet"] != NULL && !empty($value["snippet"])) {
@@ -269,13 +269,13 @@
 										}
 										$name=$name. "</ul>
 
-	                  <label class='like' name='like' id=".$msgId." style='cursor:pointer;'>
+	                  <label class='like' name='like' id='like_".$msgId."' style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-	                   </label>&#160 &#160
+	                   </label>&#160; &#160;
 	                  <span id = 'likeResponse".$msgId."'> ".$likeCount."</span>
-	                  <label class='dislike' name='dislike' id=".$msgId." style='cursor:pointer;'>
+	                  <label class='dislike' name='dislike' id='dislike_".$msgId."' style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
-	                  </label> &#160 &#160
+	                  </label> &#160; &#160;
 	                  <span id = 'dislikeResponse".$msgId."'>".$dislikeCount."</span>".
 
 										"<input type='hidden' name='threadId' value=".$msgId.">".
