@@ -39,7 +39,7 @@
             <span class="caret"></span></button>
             <ul class="dropdown-menu client_navbar_dropdown_ul">
               <li class="dropdown-header">
-                <img style="width: 20%;" alt="" src='<?php echo $avatar_path; ?>'> &#160;
+                <img style="width: 20%;" alt="profile pic" src='<?php echo $avatar_path; ?>'> &#160;
                 <?php echo $_SESSION['userid']; ?>
               </li>
               <li class="divider"></li>
@@ -350,7 +350,7 @@
               <input id="retHeading_upload_image" type="hidden" name="channelHeading" value="<?php //echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
               <input id="retStatus_upload_image" type="hidden" name="chStatus" value="<?php //echo $chStatus; ?>"/> -->
             </div>
-            <img id='img-upload' alt=""/>
+            <img id='img-upload' alt="image preview not available"/>
           </div>
         </div>
         <div class="modal-footer">
@@ -385,7 +385,7 @@
               <input id="retHeading_upload_file" type="hidden" name="channelHeading" value="<?php //echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
               <input id="retStatus_upload_file" type="hidden" name="chStatus" value="<?php //echo $chStatus; ?>"/> -->
             </div>
-            <img id='file-upload' alt=""/>
+            <img id='file-upload' alt="image preview not available"/>
           </div>
         </div>
         <div class="modal-footer">

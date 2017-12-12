@@ -115,7 +115,7 @@
       <div class="col-xs-6 root-div client_default_profile_pic_wrapper">
         <div>
           <center>
-            <img id="default-profile-pic" src="<?php echo $profilePicPath ?>">
+            <img id="default-profile-pic" alt= 'image not available' src="<?php echo $profilePicPath ?>">
           </center>
         </div>
         <div class="row">

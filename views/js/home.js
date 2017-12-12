@@ -145,7 +145,9 @@ $(document).ready(function(){
 
 		$(document).on("click",".like",function(e){
 			var emoName = e.currentTarget.className;
-			var msgId = parseInt(e.currentTarget.id);
+			var msgId_split = e.currentTarget.id;
+			var res = msgId_split.split("_");
+			var msgId = res[1];
 			$.ajax({
 				method: 'post',
 				url: './router.php',
@@ -168,7 +170,9 @@ $(document).ready(function(){
 		$(document).on("click",".dislike",function(e){
 		// $(".dislike").on("click",function(e){
 			var emoName = e.currentTarget.className;
-			var msgId = parseInt(e.currentTarget.id);
+			var msgId_split = e.currentTarget.id;
+			var res = msgId_split.split("_");
+			var msgId = res[1];
 			$.ajax({
 				method: 'post',
 				url: './router.php',
@@ -190,11 +194,10 @@ $(document).ready(function(){
 		});
 
 		$(document).on("click",".delPost",function(e){
-		// $(".delPost").on("click", function(e) {
-			//var channelName = $(".chNameForMsg").attr("value");
-			var msgID = parseInt(e.currentTarget.id);
-			// var retHeading = $(".delHeading").val();
-			// var retStatus = $(".delStatus").val();
+			// var msgID = parseInt(e.currentTarget.id);
+			var msgId_split = e.currentTarget.id;
+			var res = msgId_split.split("_");
+			var msgID = res[1];
 
 			$.ajax({
 				method: 'post',
@@ -218,7 +221,10 @@ $(document).ready(function(){
 			$(".client_main_continer").removeClass("col-xs-10").addClass("col-xs-7");
 			$(".client_thread_display_main").addClass("col-xs-3");
 			$(".client_thread_display_main").show();
-			var thread_id = parseInt(e.currentTarget.id);
+			var thread_id_spl = e.currentTarget.id;
+			var res = thread_id_spl.split("_");
+			var thread_id = res[1];
+			// var thread_id = parseInt(e.currentTarget.id);
 			e.preventDefault();
 			$.ajax({
 				method: 'post',
@@ -230,7 +236,7 @@ $(document).ready(function(){
 					//if(data.length){
 						data.forEach(function(e){
 							if(e["message"] != "" || e["image_path"] != "" || e["snippet"] != "" || e["file_path"] != "") {
-								str+="<div class='row'><div class='col-xs-2'><img src='"+e["avatar"]+"' style='width:40px;'></div>";
+								str+="<div class='row'><div class='col-xs-2'><img src='"+e["avatar"]+"'alt='profile pic' style='width:40px;'></div>";
 								str+= "<div class='col-xs-4'><b>"+e['last_name']+"</b></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div>";
 								str+= "<div class='row' style='overflow-x:scroll;'><div class='col-xs-12'>";
 								if(e["message"] != ""){
@@ -246,7 +252,7 @@ $(document).ready(function(){
 									// 	extension = extension.toLowerCase();
 									// }
 									// if(extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif"){
-										str+= "<img src='"+e["image_path"]+"' style='width:250px;'>";
+										str+= "<img src='"+e["image_path"]+"' alt = 'image cannot be displayed' style='width:250px;'>";
 									//}
 								}
 								else if (e["snippet"]) {
@@ -291,7 +297,7 @@ $(document).ready(function(){
 						success: function(data){
 							data.forEach(function(e){
 								if(e["message"]!= "" || e["image_path"]!= "" || e["snippet"]!= "" || e["file_path"] != ""){
-									str+="<div class='row'><div class='col-xs-2'><img src='"+e["avatar"]+"' style='width:40px;'></div>";
+									str+="<div class='row'><div class='col-xs-2'><img src='"+e["avatar"]+"' alt = 'profile pic' style='width:40px;'></div>";
 									str+= "<div class='col-xs-4'><b>"+e['last_name']+"</b></div><div class='col-xs-6'><span>"+e['created_time']+"</span></div></div>";
 									str+= "<div class='row' style='overflow-x:scroll;'><div class='col-xs-12'>";
 									if(e["message"] != ""){
@@ -307,7 +313,7 @@ $(document).ready(function(){
 										// 	extension = extension.toLowerCase();
 										// }
 										// if(extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif"){
-											str+= "<img src='"+e["image_path"]+"' style='width:250px;'>";
+											str+= "<img src='"+e["image_path"]+"' alt = 'image cannot be displayed' style='width:250px;'>";
 										//}
 									}
 									else if (e["snippet"]) {
