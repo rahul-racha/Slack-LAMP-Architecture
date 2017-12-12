@@ -15,6 +15,7 @@
   $workspaceUrl = "musicf17.slack.com";
 	$msgId = NULL;
   $profile = $homeControlVar->getProfile($_SESSION['userid'], $workspaceUrl);
+	$user_id_toggle = $profile["profile"][0]["user_id"];
 	$avatar_path = (!empty($profile['profile']) && !empty($profile['profile'][0]['avatar']) != NULL) ? $profile['profile'][0]['avatar'] : NULL;
 
 
@@ -66,6 +67,8 @@
 		//$chStatus = $_POST["chStatus"];
 		unset($_SESSION['chStatus']);
 	}
+
+
 
   function displayChannels()
   {
@@ -315,6 +318,17 @@
 		$_SESSION["loadCount"] = $_SESSION["loadCount"] + 5;
 		displayMessages($retChannel,$Channel_name);
 		// echo $str;
+	}
+	if(isset($_POST["toggle_value"])){
+		global $homeControlVar;
+		global $user_id_toggle;
+		$toggle_bool_value = $_POST["toggle_value"];
+		if($toggle_bool_value == "true")
+			$isEnable = 0;
+		elseif($toggle_bool_value == "false")
+			$isEnable = 1;
+		$isSuccess = $homeControlVar->updateTwoFactor($user_id_toggle, $isEnable);
+		echo $isSuccess;
 	}
 
 ?>

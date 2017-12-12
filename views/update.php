@@ -11,7 +11,7 @@
   $homeControlVar = new HomeController();
   $redirectionURL = "profile.php?userid=".$_SESSION['userid'];
   if (isset($_POST["g-recaptcha-response"])) {
-    global $response;
+    //global $response;
     $response = $_POST["g-recaptcha-response"];
   }
 
@@ -58,6 +58,7 @@
         }
     }
   } else {
+    $_SESSION["captcha_failure"] = "false";
     $profileControllerVar->redirectToView($redirectionURL);
   }
 ?>

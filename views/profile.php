@@ -5,6 +5,10 @@ require_once $_SESSION['basePath'].'controllers/home.php';
 
 $homeControlVar = new HomeController();
 $workspaceUrl = "musicf17.slack.com";
+$profile = $homeControlVar->getProfile($_SESSION['userid'], $workspaceUrl);
+$two_factor = $profile["profile"][0]["two_factor"];
+$_SESSION["userID"] = $profile["profile"][0]["user_id"];
+$user_id_toggle = $_SESSION["userID"];
 //$user_messages_count = NULL;
 //$emo_count_user = NULL;
 //$t_rxn_count = NULL;
@@ -133,11 +137,16 @@ function computePostRatings($postInfo, $relPostInfo) {
 <head>
   <title> Profile page </title>
   <link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
+
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/starRating.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="js/profile.js"></script>
+  <!-- toggle switch -->
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 </head>
   <body>
     <div class="container well">
@@ -150,7 +159,7 @@ function computePostRatings($postInfo, $relPostInfo) {
         <div class="col-xs-3" >
 		      <img src="<?php echo $user_profile['profile'][0]['avatar'] ?>" alt="Profile picture not uploaded" style="height:100px;">
         </div>
-        <div class="col-xs-7">
+        <div class="col-xs-7 row">
           <h3><?php echo $user_profile["profile"][0]["first_name"]."   ".$user_profile["profile"][0]["last_name"]; ?></h3>
           <h6>Email: <?php echo $user_profile["profile"][0]["user_id"]; ?></h6>
           <h6>Public Channels </h6>
@@ -210,7 +219,14 @@ function computePostRatings($postInfo, $relPostInfo) {
                     <span>".$emoCount["likes"]."</span>
                     <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
                     <span>".$emoCount["dislikes"]."</span>";
-            ?>
+            ?></br></br>
+          <div class="col-xs-12" id="toggle_button_id">
+            <span>Click to enable/disable token-verification</span>
+            <input id="toggle-event" type="checkbox" data-toggle="toggle">
+            <input type="hidden" id="two_factor_database_value" value="<?php echo $two_factor; ?>">
+            <input type="hidden" id="user_id_session" value="<?php echo $user_id_toggle; ?>">
+            <input type="hidden" id="user_id_get" value="<?php echo $_GET['userid']; ?>">
+          </div>
         </div>
         <div class="col-xs-2">
           <div class="btn-group">
@@ -228,7 +244,7 @@ function computePostRatings($postInfo, $relPostInfo) {
         <?php
           if(isset($_SESSION["captcha_failure"]) && ($_SESSION["captcha_failure"]) == "false" ) {
             echo "<span>Recaptcha token verification failed</span>";
-            unset($_SESSION["lastname"]);
+            unset($_SESSION["captcha_failure"]);
           }
         ?>
       </div>

@@ -1,5 +1,8 @@
 
 $(document).ready(function(){
+		var userID = $("#client_user_id_for_home").val();
+		var userRole = $("#client_user_role_for_home").val();
+
 		if (userRole == "admin") {
 			$(".delPost").show();
 			$(".fa-trash-o").show();

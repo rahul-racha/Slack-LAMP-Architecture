@@ -4,10 +4,11 @@
   //session_write_close();
   //require_once $_SESSION['basePath'].'controllers/home.php';
   require 'homepage.php';
-  echo '<script>'.
-       'var userID = '.json_encode($_SESSION['userid']).';'.
-       'var userRole = '.json_encode($_SESSION['userRole']).';'.
-       '</script>';
+
+  // echo '<script>'.
+       $userID = json_encode($_SESSION['userid']);
+       $userRole = json_encode($_SESSION['userRole']);
+  //      '</script>';
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +24,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="js/home.js"></script>
   <script src="js/typeahead.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="icon" href="./images/favicon.jpg" type="image/gif" sizes="16x16">
 </head>
 
@@ -48,6 +49,7 @@
                 </a>
               </li>
               <li><a href="help.html">Help</a></li>
+
               <li class="divider"></li>
                 <li><form method="post" action="<?php echo htmlspecialchars("router.php"); ?>">
                     <input type="submit" name="logout" value="logout" style="border:0;margin-left:5%;">
@@ -65,6 +67,8 @@
         </div>
 				<div class="client_channel_display col-xs-12 row">
         	<?php displayChannels(); ?>
+          <input type="hidden" id="client_user_id_for_home" value=<?php echo $userID; ?>>
+          <input type="hidden" id="client_user_role_for_home" value=<?php echo $userRole; ?>>
 				</div>
         <div class="client_channel_header col-xs-12 row">
           <h4>Direct Messages
@@ -168,7 +172,6 @@
         </div>
       </div>
     </div>
-
   </div> <!--end of main container -->
 
   <!-- create new channel -->
