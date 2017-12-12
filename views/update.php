@@ -47,12 +47,12 @@
         $profilePicPath = "images/users/default-profile-pic.jpg";
 
         $profile = $homeControlVar->getProfile($_SESSION['userid'], $workspaceUrl);
-        $email = (!empty($profile['profile']) && !empty($profile['profile'][0]['email']) != NULL) ? $profile['profile'][0]['email'] : NULL;
-
-        if ($email != NULL) {
-          if (!empty($_SESSION['access_token'])) {
-            $profilePicPath = $profile['profile'][0]['avatar'];
-          } else {
+        if (!empty($_SESSION['access_token']) && !empty($profile['profile']) && !empty($profile['profile'][0]['avatar'])) {
+          $profilePicPath = $profile['profile'][0]['avatar'];
+        }
+        else {
+          $email = (!empty($profile['profile']) && !empty($profile['profile'][0]['email']) != NULL) ? $profile['profile'][0]['email'] : NULL;
+          if ($email != NULL) {
             $profilePicPath = $profileControllerVar->getGravatar($email, $default_property, $size, $profilePicPath);
           }
         }
