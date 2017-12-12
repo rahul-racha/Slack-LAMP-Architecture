@@ -1,5 +1,5 @@
 <?php
-include_once $_SESSION['basePath'].'errors.php';
+//include_once $_SESSION['basePath'].'errors.php';
 require_once $_SESSION['basePath'].'models/login.php';
   class GithubAuth {
     private $clientID = 'ce65d405e8f8a5c1c267';
