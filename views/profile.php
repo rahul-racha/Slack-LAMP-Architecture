@@ -219,7 +219,7 @@ function computePostRatings($postInfo, $relPostInfo) {
                     <span>".$emoCount["likes"]."</span>
                     <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
                     <span>".$emoCount["dislikes"]."</span>";
-            ?></br></br>
+            ?><br><br>
           <div class="col-xs-12" id="toggle_button_id">
             <span>Click to enable/disable token-verification</span>
             <input id="toggle-event" type="checkbox" data-toggle="toggle">
