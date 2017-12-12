@@ -175,7 +175,8 @@
        //2-FA member functions
        public function prepareToken($userID, $workspaceUrl) {
          //$tokenString = hash('sha256', microtime(TRUE).rand().$_SERVER['REMOTE_ADDR']);
-         $tokenString = hash('sha256', mt_rand().$_SERVER['REMOTE_ADDR']);
+         //$tokenString = hash('sha256', mt_rand().$_SERVER['REMOTE_ADDR']);
+         $tokenString = md5(uniqid(rand(), true));
          $result = "false";
          $span = 5;
          $expire = time() + ($span * 60);
@@ -213,9 +214,9 @@
 
          // Additional headers
          $headers[] = 'To: '.$recName.' <'.$recipient.'>';
-         $headers[] = 'To: '.$senderName.' <'.$sender.'>';
+         $headers[] = 'From: '.$senderName.' <'.$sender.'>';
          // Mail it
-         $result = mail($recipient, $subject, $message, implode("\r\n", $headers));
+         $result = mail($recipient, $subject, $message, implode("\r\n", $headers), "-f rrach001@odu.edu");
          return $result;
        }
 
