@@ -82,7 +82,10 @@
         <div class="client_message_header col-xs-12 row change_row_prop">
           <!-- header -->
           <div class="client_channel_title col-xs-8">
-            <h5 class="client_channel_title_view"><strong><?php echo $channelHeading;?></strong></h5>
+            <h5 class="client_channel_title_view"><strong><?php
+            $sessionHeading = isset($_SESSION['channelHeading']) ? $_SESSION['channelHeading'] : NULL;
+            echo $sessionHeading;
+            ?></strong></h5>
           </div>
           <div class="right-inner-addon serch_users_in_workspace col-xs-3">
             <!-- <i class="fa fa-search" aria-hidden="true"></i> -->
@@ -98,7 +101,7 @@
             <a class="client_invite_users_link" href="#" data-toggle="modal" id="removeUserLink" data-target = "#removeUsers">
               <i class="fa fa fa-trash-o" aria-hidden="true"></i>
             </a>
-            <button type="button" id="archiveButton" value="<?php echo $_POST["channel"]; ?>" class="btn btn-primary"><?php echo $chStatus; ?></button>
+            <button type="button" id="archiveButton" value="<?php echo $_SESSION["channel"]; ?>" class="btn btn-primary"><?php echo $_SESSION["chStatus"]; ?></button>
           </div>
         </div>
         <div class="client_user_search_suggestions">
@@ -110,9 +113,9 @@
           <?php
             $retChannel=0;
             $_SESSION['loadCount'] = 5;
-            $channel_name = isset($_POST["channel"]) ? $_POST["channel"] : NULL;
+            //$channel_name = isset($_POST["channel"]) ? $_POST["channel"] : NULL;
             // echo $channel_name;
-            displayMessages($retChannel,$channel_name);
+            displayMessages($retChannel);
           ?>
         </div>
           <!-- messge container -->
@@ -138,12 +141,12 @@
   						<form method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
                 <textarea id="textArea" class="client_message_entry_textarea col-xs-11" name="textarea" placeholder="
                 <?php
-                $chname = isset($_POST["channel"]) ? $_POST["channel"] : NULL;
-                echo "Message "."@".$chname ?>" required></textarea>
-                <input type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-                <input type="hidden" name="channelHeading" value="<?php echo $channelHeading; ?>"/>
-                <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
-                <input id="retChannel" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
+                $chname = isset($_SESSION["channel"]) ? $_SESSION["channel"] : NULL;
+                echo "Message "."@".$chname; ?>" required></textarea>
+                <!-- <input type="hidden" name="channel" value="<?php //echo $_POST["channel"]; ?>"/>
+                <input type="hidden" name="channelHeading" value="<?php //echo $channelHeading; ?>"/>
+                <input type="hidden" name="chStatus" value="<?php //echo $chStatus; ?>"/>
+                <input id="retChannel" type="hidden" name="channel" value="<?php //echo $_POST["channel"]; ?>"/> -->
                 <input id="SubmitButton" class="col-xs-1 client_messsage_entry_submit_button" type="submit" name="submit"/>
               </form>
           </div>
@@ -230,9 +233,9 @@
               <input type="text" class="form-control typeahead" name="addUserExistingChannel[]" id="invitingNewUsers">
             </div>
             <div class = "inviteUserClass">
-              <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
-              <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-              <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+              <!-- <input type="hidden" name = "channel" value = "<?php //echo $_POST['channel']; ?>" >
+              <input type="hidden" name="channelHeading" value="<?php //echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input type="hidden" name="chStatus" value="<?php //echo $chStatus; ?>"/> -->
               <input type="hidden" name="inviteUsersExistingChannel" value = "inviteUser">
               <input type="submit" value="Invite" class="btn btn-primary btn-sm">
             </div>
@@ -259,9 +262,9 @@
               <input type="text" class="form-control typeahead" name="removeUserExistingChannel[]" id="removingNewUsers">
             </div>
             <div class = "delUserClass">
-              <input type="hidden" name = "channel" value = "<?php echo $_POST['channel']; ?>" >
-              <input type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-              <input type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+              <!-- <input type="hidden" name = "channel" value = "<?php //echo $_POST['channel']; ?>" >
+              <input type="hidden" name="channelHeading" value="<?php //echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input type="hidden" name="chStatus" value="<?php //echo $chStatus; ?>"/> -->
               <input type="hidden" name="removeUsersExistingChannel" value = "removeUser">
               <input type="submit" value="Remove" class="btn btn-primary btn-sm">
             </div>
@@ -282,12 +285,12 @@
           <h4 class="modal-title">Add Snippet</h4>
         </div>
         <div class="modal-body">
-          <input id="retchannel_code_snippet" type="hidden" name="channel" value="
+          <!-- <input id="retchannel_code_snippet" type="hidden" name="channel" value="
           <?php
-          $chname = isset($_POST['channel']) ? $_POST['channel'] : NULL;
-          echo $chname; ?>"/>
-          <input id="retHeading_code_snippet" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-          <input id="retStatus_code_snippet" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+          //$chname = isset($_POST['channel']) ? $_POST['channel'] : NULL;
+          //echo $chname; ?>"/>
+          <input id="retHeading_code_snippet" type="hidden" name="channelHeading" value="<?php //echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+          <input id="retStatus_code_snippet" type="hidden" name="chStatus" value="<?php //echo $chStatus; ?>"/> -->
           <textarea class="client_code_snippet_textarea" rows="9"></textarea>
         </div>
         <div class="modal-footer">
@@ -308,9 +311,9 @@
           <div>
             <span>Images from web</span>
             <div>
-              <input id="retChannel_web_image" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>">
-              <input id="retHeading_web_image" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-              <input id="retStatus_web_image" type="hidden" name="chStatus" value="<?php echo $_POST["chStatus"]; ?>"/>
+              <!-- <input id="retChannel_web_image" type="hidden" name="channel" value="<?php //echo $_POST["channel"]; ?>">
+              <input id="retHeading_web_image" type="hidden" name="channelHeading" value="<?php //echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input id="retStatus_web_image" type="hidden" name="chStatus" value="<?php //echo $_POST["chStatus"]; ?>"/> -->
               <input style="width:100%" class="client_image_upload_from_url">
             </div>
             <div>
@@ -343,9 +346,9 @@
                 </span>
               </span>
               <input type="text" class="form-control client_image_upload_read" readonly>
-              <input id="retchannel_upload_image" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-              <input id="retHeading_upload_image" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-              <input id="retStatus_upload_image" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+              <!-- <input id="retchannel_upload_image" type="hidden" name="channel" value="<?php //echo $_POST["channel"]; ?>"/>
+              <input id="retHeading_upload_image" type="hidden" name="channelHeading" value="<?php //echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input id="retStatus_upload_image" type="hidden" name="chStatus" value="<?php //echo $chStatus; ?>"/> -->
             </div>
             <img id='img-upload' alt=""/>
           </div>
@@ -378,9 +381,9 @@
                 </span>
               </span>
               <input type="text" class="form-control client_file_upload_read" readonly>
-              <input id="retchannel_upload_file" type="hidden" name="channel" value="<?php echo $_POST["channel"]; ?>"/>
-              <input id="retHeading_upload_file" type="hidden" name="channelHeading" value="<?php echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
-              <input id="retStatus_upload_file" type="hidden" name="chStatus" value="<?php echo $chStatus; ?>"/>
+              <!-- <input id="retchannel_upload_file" type="hidden" name="channel" value="<?php //echo $_POST["channel"]; ?>"/>
+              <input id="retHeading_upload_file" type="hidden" name="channelHeading" value="<?php //echo isset($_POST["channelHeading"]) ? $_POST["channelHeading"] : NULL; ?>"/>
+              <input id="retStatus_upload_file" type="hidden" name="chStatus" value="<?php //echo $chStatus; ?>"/> -->
             </div>
             <img id='file-upload' alt=""/>
           </div>
