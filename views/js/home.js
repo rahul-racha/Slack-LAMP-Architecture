@@ -26,7 +26,7 @@ $(document).ready(function(){
 		$(document).on("click","#archiveButton",function(e) {
 		//$("#archiveButton").on("click",function(e) {
 			var status = $("#archiveButton").text();
-			var channel = $("#archiveButton").attr("value");
+			//var channel = $("#archiveButton").attr("value");
 			if (status == "Archive") {
 				status = "archived";
 			} else {
@@ -35,7 +35,7 @@ $(document).ready(function(){
 			$.ajax({
 				method: 'post',
 				url: './router.php',
-				data: {'channel_status': {'status': status, 'channel': channel}},
+				data: {'channel_status': {'status': status/*, 'channel': channel*/}},
 				dataType: 'text',
 				success: function(data) {
 					if (data == "true") {
@@ -85,7 +85,7 @@ $(document).ready(function(){
 		};
 
 		$(document).on("click","#removeUserLink",function(e){
-			var channel = $(".delUserClass > :input[name=channel]").val();
+			var channel = "dummy";//$(".delUserClass > :input[name=channel]").val();
 			var userList = null;
 			$.ajax({
 				method: 'post',
@@ -114,7 +114,7 @@ $(document).ready(function(){
 		});
 
 		$(document).on("click","#inviteUserLink",function(e){
-			var channel = $(".inviteUserClass > :input[name=channel]").val();
+			var channel = "dummy";//$(".inviteUserClass > :input[name=channel]").val();
 			var userList = null;
 			$.ajax({
 				method: 'post',
@@ -191,16 +191,16 @@ $(document).ready(function(){
 
 		$(document).on("click",".delPost",function(e){
 		// $(".delPost").on("click", function(e) {
-			var channelName = $(".chNameForMsg").attr("value");
+			//var channelName = $(".chNameForMsg").attr("value");
 			var msgID = parseInt(e.currentTarget.id);
-			var retHeading = $(".delHeading").val();
-			var retStatus = $(".delStatus").val();
+			// var retHeading = $(".delHeading").val();
+			// var retStatus = $(".delStatus").val();
 
 			$.ajax({
 				method: 'post',
 				url: './router.php',
-				data: { 'deletePostID': msgID, 'channel': channelName, 'channelHeading':
-								retHeading, 'chStatus': retStatus},
+				data: { 'deletePostID': msgID/*, 'channel': channelName, 'channelHeading':
+								retHeading, 'chStatus': retStatus*/},
 				dataType: 'text',
 				success: function(data) {
 					if (data == "true") {
@@ -375,16 +375,16 @@ $(document).ready(function(){
 			$("#client_web_image_to_post #msg-log").html();
 			var image_upload_from_url_path = $(".client_image_upload_from_url").val();
 			if ($.trim(image_upload_from_url_path) != "") {
-				var retChannel = $("#client_web_image_to_post #retChannel_web_image").val();
-				var retHeading = $("#client_web_image_to_post #retHeading_web_image").val();
-				var retStatus = $("#client_web_image_to_post #retStatus_web_image").val();
+				// var retChannel = $("#client_web_image_to_post #retChannel_web_image").val();
+				// var retHeading = $("#client_web_image_to_post #retHeading_web_image").val();
+				// var retStatus = $("#client_web_image_to_post #retStatus_web_image").val();
 
 				$.ajax({
 					method: 'post',
 					url: './router.php',
 					//data: {'image_insertion_from_url':{'image_upload_from_url_path':image_upload_from_url_path,'retChannel':retChannel}},
-					data: {'image_upload_from_url_path': image_upload_from_url_path,'channel':retChannel, 'channelHeading': retHeading,
-								'chStatus': retStatus},
+					data: {'image_upload_from_url_path': image_upload_from_url_path/*,'channel':retChannel, 'channelHeading': retHeading,
+								'chStatus': retStatus*/},
 					dataType: 'text',
 					success: function(data){
 						if (data != null && data != "") {
@@ -456,9 +456,9 @@ $(document).ready(function(){
 			var file_upload_path = $(".client_file_upload_read").val();
 			if($.trim(file_upload_path) != "")
 			{
-				var retChannel = $("#client_upload_file_to_post #retchannel_upload_file").val();
-				var retHeading = $("#client_upload_file_to_post #retHeading_upload_file").val();
-				var retStatus = $("#client_upload_file_to_post #retStatus_upload_file").val();
+				// var retChannel = $("#client_upload_file_to_post #retchannel_upload_file").val();
+				// var retHeading = $("#client_upload_file_to_post #retHeading_upload_file").val();
+				// var retStatus = $("#client_upload_file_to_post #retStatus_upload_file").val();
 
 				//var file_data = $('#client_upload_image_to_post #imgInp').files[0];
 				var form_data = new FormData($('#uploadFileForm')[0]);
@@ -537,9 +537,9 @@ $(document).ready(function(){
 			var image_upload_path = $(".client_image_upload_read").val();
 			if($.trim(image_upload_path) != "")
 			{
-				var retChannel = $("#client_upload_image_to_post #retChannel_upload_image").val();
-				var retHeading = $("#client_upload_image_to_post #retHeading_upload_image").val();
-				var retStatus = $("#client_upload_image_to_post #retStatus_upload_image").val();
+				// var retChannel = $("#client_upload_image_to_post #retChannel_upload_image").val();
+				// var retHeading = $("#client_upload_image_to_post #retHeading_upload_image").val();
+				// var retStatus = $("#client_upload_image_to_post #retStatus_upload_image").val();
 
 				//var file_data = $('#client_upload_image_to_post #imgInp').files[0];
 				var form_data = new FormData($('#uploadImageForm')[0]);
@@ -573,18 +573,18 @@ $(document).ready(function(){
 		});
 
 		// code snippet ajax
-		$(".client_snippet_submit").on("click",function(e){
+		$(".client_snippet_submit").on("click",function(e) {
 			var snippet_text = $(".client_code_snippet_textarea").val();
 
-			var retChannel = $("#client_code_snippet #retChannel_code_snippet").val();
-			var retHeading = $("#client_code_snippet #retHeading_code_snippet").val();
-			var retStatus = $("#client_code_snippet #retStatus_code_snippet").val();
+			// var retChannel = $("#client_code_snippet #retChannel_code_snippet").val();
+			// var retHeading = $("#client_code_snippet #retHeading_code_snippet").val();
+			// var retStatus = $("#client_code_snippet #retStatus_code_snippet").val();
 
 			$.ajax({
 				method: 'post',
 				url: './router.php',
-				data: {'snippet_text':snippet_text,'channel':retChannel, 'channelHeading': retHeading,
-							'chStatus': retStatus},
+				data: {'snippet_text':snippet_text/*,'channel':retChannel, 'channelHeading': retHeading,
+							'chStatus': retStatus*/},
 				dataType: 'text',
 				success: function(data){
 					window.location.href='./home.php';
@@ -599,11 +599,11 @@ $(document).ready(function(){
 		$(document).on("click",".client_posts_load_more",function(e){
 		// $(".client_posts_load_more").on("click",function(e){
 			var retChannel = parseInt($(".post_load_retChannel").val());
-			var Channel_name = $(".post_load_ret_channel_name").val();
+			//var Channel_name = $(".post_load_ret_channel_name").val();
 			$.ajax({
 				method:'post',
 				url: './homepage.php',
-				data: {'pagination':{'retChannel':retChannel,'Channel_name':Channel_name}},
+				data: {'pagination':{'retChannel':retChannel/*,'Channel_name':Channel_name*/}},
 				dataType: 'text',
 				success: function(data){
 					$('.loadMoreButton').remove();

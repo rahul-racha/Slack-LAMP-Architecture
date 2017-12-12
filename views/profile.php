@@ -208,13 +208,13 @@ function computePostRatings($postInfo, $relPostInfo) {
               echo "<div class='star-ratings-sprite'>
                       <span style='width:".$postRating."%' class='star-ratings-sprite-rating'></span>
                     </div>
-                    <span style='margin-left:2%;'>".$postRating."%></span>";
+                    <span style='margin-left:2%;'>".$postRating."</span>";
 
               echo "<h6>Reaction Metrics:</h6>";
               echo "<div class='star-ratings-sprite'>
                       <span style='width:".$rxnRating."%' class='star-ratings-sprite-rating'></span>
                     </div>
-                    <span style='margin-left:2%;'>".$rxnRating."%</span>
+                    <span style='margin-left:2%;'>".$rxnRating."</span>
                     <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
                     <span>".$emoCount["likes"]."</span>
                     <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>

@@ -47,12 +47,12 @@
         $profilePicPath = "images/users/default-profile-pic.jpg";
 
         $profile = $homeControlVar->getProfile($_SESSION['userid'], $workspaceUrl);
-        $email = (!empty($profile['profile']) && !empty($profile['profile'][0]['email']) != NULL) ? $profile['profile'][0]['email'] : NULL;
-
-        if ($email != NULL) {
-          if (!empty($_SESSION['access_token'])) {
-            $profilePicPath = $profile['profile'][0]['avatar'];
-          } else {
+      if (!empty($_SESSION['access_token']) && isset($_SESSION['github_avatar'])/*!empty($profile['profile']) && !empty($profile['profile'][0]['avatar'])*/) {
+          $profilePicPath = $_SESSION['github_avatar'];//$profile['profile'][0]['avatar'];
+        }
+        else {
+          $email = (!empty($profile['profile']) && !empty($profile['profile'][0]['email']) != NULL) ? $profile['profile'][0]['email'] : NULL;
+          if ($email != NULL) {
             $profilePicPath = $profileControllerVar->getGravatar($email, $default_property, $size, $profilePicPath);
           }
         }
@@ -123,6 +123,7 @@
             <div class="client_profile_pic_upload_submit">
               <form id="default-pic-form" method="post" action="<?php echo htmlspecialchars('router.php'); ?>">
                 <input type="hidden" name="profile_id" value="<?php echo $_SESSION['userid'] ?>">
+                <input type="hidden" name="hidden-pic" value="<?php echo $profilePicPath;?>">
                 <button type="submit" value="reset" class="btn btn-default">reset to your default image</button>
               </form>
             </div>

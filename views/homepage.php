@@ -21,52 +21,61 @@
 
 
   if (isset($_POST["channel"])) {
+		//echo "I am Calling channel";
     global $channelName;
     $channelName = $_POST["channel"];
-  } else if (isset($_SESSION['channel'])) {
-    global $channelName;
-    $_POST["channel"] = $_SESSION['channel'];
-    $channelName = $_POST["channel"];
-    unset($_SESSION['channel']);
-  }
+		$_SESSION['channel'] = $_POST["channel"];
+	}
+  // } else if (isset($_SESSION['channel'])) {
+  //   global $channelName;
+  //   $_POST["channel"] = $_SESSION['channel'];
+  //   $channelName = $_POST["channel"];
+  //   unset($_SESSION['channel']);
+  // }
 
 	if (isset($_POST["channelHeading"])) {
+		//echo "I am Calling channel heading";
 		global $channelHeading;
 		$channelHeading = $_POST["channelHeading"];
-	} else if (isset($_SESSION['channelHeading'])) {
-    global $channelHeading;
-    $_POST["channelHeading"] = $_SESSION['channelHeading'];
-    $channelHeading = $_POST["channelHeading"];
-    unset($_SESSION['channelHeading']);
+		$_SESSION['channelHeading'] = $_POST["channelHeading"];
 	}
+	// } else if (isset($_SESSION['channelHeading'])) {
+  //   global $channelHeading;
+  //   $_POST["channelHeading"] = $_SESSION['channelHeading'];
+  //   $channelHeading = $_POST["channelHeading"];
+  //   unset($_SESSION['channelHeading']);
+	// }
 
 	if (isset($_POST["chStatus"])) {
+		//echo "I am Calling channel status";
 		global $chStatus;
 		if ($_POST["chStatus"] == "archived") {
 			$chStatus = "Unarchive";
-			$_POST["chStatus"] = $chStatus;
+			//$_POST["chStatus"] = $chStatus;
 		} else if ($_POST["chStatus"] == "unarchived") {
 			$chStatus = "Archive";
-			$_POST["chStatus"] = $chStatus;
+			//$_POST["chStatus"] = $chStatus;
 		} else {
 			$chStatus = $_POST["chStatus"];
 		}
-	} else if (isset($_SESSION['chStatus'])) {
-		global $chStatus;
-		if ($_SESSION["chStatus"] == "archived") {
-			$chStatus = "Unarchive";
-			$_POST["chStatus"] = $chStatus;
-		} else if ($_SESSION["chStatus"] == "unarchived") {
-			$chStatus = "Archive";
-			$_POST["chStatus"] = $chStatus;
-		} else {
-			$_POST["chStatus"] = $_SESSION['chStatus'];
-			$chStatus = $_POST["chStatus"];
-		}
-		//$_SESSION['chStatus'];
-		//$chStatus = $_POST["chStatus"];
-		unset($_SESSION['chStatus']);
+		$_SESSION['chStatus'] = $chStatus;
 	}
+	// } else if (isset($_SESSION['chStatus'])) {
+	// 	global $chStatus;
+	// 	if ($_SESSION["chStatus"] == "archived") {
+	// 		$chStatus = "Unarchive";
+	// 		$_POST["chStatus"] = $chStatus;
+	// 	} else if ($_SESSION["chStatus"] == "unarchived") {
+	// 		$chStatus = "Archive";
+	// 		$_POST["chStatus"] = $chStatus;
+	// 	} else {
+	// 		$_POST["chStatus"] = $_SESSION['chStatus'];
+	// 		$chStatus = $_POST["chStatus"];
+	// 	}
+	// 	//$_SESSION['chStatus'];
+	// 	//$chStatus = $_POST["chStatus"];
+	// 	unset($_SESSION['chStatus']);
+	// }
 
 
 
@@ -78,10 +87,11 @@
 		global $channelHeading;
 		global $chStatus;
     $channelList = $homeControlVar->viewChannels($workspaceUrl);
-    if (!isset($_SESSION['channel']) && !isset($_POST["channel"])) {
+	if (!isset($_SESSION['channel'])/* && !isset($_POST["channel"])*/) {
 			$symbol = NULL;
 			if (!empty($channelList)) {
       	$channelName = $channelList[0]['channel'];
+				$_SESSION['channel'] = $channelList[0]['channel'];
       	$_POST["channel"] = $channelList[0]['channel'];
 				if ($channelList[0]['type'] == "Public") {
 					$symbol = "#";
@@ -89,10 +99,11 @@
 					$symbol = "∆";
 				}
 				$channelHeading = $symbol." ".$channelName;
-				$_POST['$channelHeading'] = $channelHeading;
+				//$_POST['$channelHeading'] = $channelHeading;
+				$_SESSION['channelHeading'] = $channelHeading;
 			}
     }
-		if (!isset($_SESSION["chStatus"]) && !isset($_POST["chStatus"])) {
+	if (!isset($_SESSION["chStatus"])/* && !isset($_POST["chStatus"])*/) {
 			if (!empty($channelList)) {
 				$temp = $channelList[0]['status'];
 				if ($temp == "archived") {
@@ -100,7 +111,8 @@
 				} else if ($temp == "unarchived") {
 					$chStatus = "Archive";
 				}
-				$_POST["chStatus"] = $chStatus;
+				//$_POST["chStatus"] = $chStatus;
+				$_SESSION['chStatus'] = $chStatus;
 			}
 		}
 
@@ -142,20 +154,21 @@
 			}
   }
 
-  function displayMessages($retChannel,$Channel_name) {
+  function displayMessages($retChannel) {
     global $homeControlVar;
     global $workspaceUrl;
 		global $channelName;
 		global $channelHeading;
 		global $chStatus;
 
-		$_SESSION['channel'] = $channelName;
-		$_SESSION['channelHeading'] = $channelHeading;
-		$_SESSION['chStatus'] = $chStatus;
+		// $_SESSION['channel'] = $channelName;
+		// $_SESSION['channelHeading'] = $channelHeading;
+		// $_SESSION['chStatus'] = $chStatus;
 		// echo $workspaceUrl;
 		// echo $retChannel;
 		// echo $Channel_name;
-    $channelMessages = $homeControlVar->viewMessages($Channel_name, $workspaceUrl, $retChannel);
+		$channelSession = isset($_SESSION['channel']) ? $_SESSION['channel'] : NULL;
+    $channelMessages = $homeControlVar->viewMessages($channelSession/*$Channel_name*/, $workspaceUrl, $retChannel);
 		// echo "msgid:".$retChannel;
 		// echo sizeof($channelMessages);
     $i = 1;
@@ -163,8 +176,8 @@
 		$msgId = NULL;
 		$firstMsgId = NULL;
 		$loadMore = "";
-		$head = isset($channelHeading)? $channelHeading: NULL;
-		$st = isset($chStatus)? $chStatus: NULL;
+		$head = isset($_SESSION['channelHeading']/*$channelHeading*/)? $_SESSION['channelHeading']/*$channelHeading*/: NULL;
+		$st = isset($_SESSION['chStatus']/*$chStatus*/)? $_SESSION['chStatus']/*$chStatus*/: NULL;
     foreach ($channelMessages as $key => $value) {
       $CurrentTime = new DateTime($value["created_time"]);
       $strip = $CurrentTime->format('H:i @Y-m-d');
@@ -218,13 +231,13 @@
 	                  </label> &#160; &#160;
 	                  <span id = 'dislikeResponse".$msgId."'>".$dislikeCount."</span>".
 
-										"<input type='hidden' name='threadId' value=".$msgId.">
-										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+										"<input type='hidden' name='threadId' value=".$msgId.">".
 
-			              <input type='hidden' class='delHeading' name='channelHeading' value=".$head.">
-			              <input type='hidden' class='delStatus' name='chStatus' value=".$st.">
+										//<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+			              //<input type='hidden' class='delHeading' name='channelHeading' value=".$head.">
+			              //<input type='hidden' class='delStatus' name='chStatus' value=".$st.">
 
-										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
+										"<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
                 </div>";
 
@@ -265,22 +278,22 @@
 	                  </label> &#160; &#160;
 	                  <span id = 'dislikeResponse".$msgId."'>".$dislikeCount."</span>".
 
-										"<input type='hidden' name='threadId' value=".$msgId.">
-										<input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+										"<input type='hidden' name='threadId' value=".$msgId.">".
+										// <input type='hidden' class='chNameForMsg' name='channel' value= ".$_POST['channel'].">
+                    //
+										// <input type='hidden' class='delHeading' name='channelHeading' value=".$head.">
+			              // <input type='hidden' class='delStatus' name='chStatus' value=".$st.">
 
-										<input type='hidden' class='delHeading' name='channelHeading' value=".$head.">
-			              <input type='hidden' class='delStatus' name='chStatus' value=".$st.">
-
-										<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
+										"<input type='submit' id=".$msgId." class='threadIdSubmit' name='threadIdSubmit' value='reply'>
 										<input type='submit' id=".$msgId." class='delPost' name='delPost' value='delete'>
                 </div>";
 			}
 		//}
 		$i++;
     }
-		$loadMore = "<div class='col-xs-12 loadMoreButton'>
-							<input type='hidden' class='post_load_ret_channel_name' value='".$Channel_name."'/>
-							<input type='hidden' class='post_load_retChannel' value='".$_SESSION["loadCount"]."'/>
+		$loadMore = "<div class='col-xs-12 loadMoreButton'>".
+							//<input type='hidden' class='post_load_ret_channel_name' value='".$Channel_name."'/>
+							"<input type='hidden' class='post_load_retChannel' value='".$_SESSION["loadCount"]."'/>
 							<div style='text-align:center'>
 							<input type='submit' class='client_posts_load_more' value='load more'/>
 							</div>
@@ -314,9 +327,9 @@
 	// pagination
 	if(isset($_POST["pagination"])){
 		$retChannel = intval($_POST["pagination"]["retChannel"]);
-		$Channel_name = $_POST["pagination"]["Channel_name"];
+		//$Channel_name = NULL;//$_POST["pagination"]["Channel_name"];
 		$_SESSION["loadCount"] = $_SESSION["loadCount"] + 5;
-		displayMessages($retChannel,$Channel_name);
+		displayMessages($retChannel);
 		// echo $str;
 	}
 	if(isset($_POST["toggle_value"])){
