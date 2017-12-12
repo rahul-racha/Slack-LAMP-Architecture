@@ -187,8 +187,8 @@
 									 <img src=".$value['avatar']." class='client_pic_display'>
 								 </div>
 								 <div class='message_content_wrapper col-xs-10'>
-								 		<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
-	                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+								 		<strong class = 'UserName'>".$value["first_name"]."&#160 &#160".$value["last_name"].
+	                  "</strong> &#160 &#160 &#160 <span class = 'TimeStamp'>".$strip."</span>
 	                  <ul class = 'MessageUL'>";
 
 										if ($value["message"] != NULL && !empty($value["message"])){
@@ -209,13 +209,13 @@
 										}
 										$name=$name. "</ul>
 
-	                  <label class='like' name='like' id=".$msgId." style='cursor:pointer;'>
+	                  <label class='like' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-	                  </label>&nbsp &nbsp
+	                  </label>&#160 &#160
 	                  <span id = 'likeResponse".$msgId."'> ".$likeCount."</span>
-	                  <label class='dislike' name='dislike' id=".$msgId." style='cursor:pointer;'>
+	                  <label class='dislike' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
-	                  </label> &nbsp &nbsp
+	                  </label> &#160 &#160
 	                  <span id = 'dislikeResponse".$msgId."'>".$dislikeCount."</span>".
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
@@ -234,8 +234,8 @@
 									 <img src=".$value['avatar']." class='client_pic_display'>
 								 </div>
 								 <div class='message_content_wrapper col-xs-10'>
-								 		<strong class = 'UserName'>".$value["first_name"]."&nbsp &nbsp".$value["last_name"].
-	                  "</strong> &nbsp &nbsp &nbsp <span class = 'TimeStamp'>".$strip."</span>
+								 		<strong class = 'UserName'>".$value["first_name"]."&#160 &#160".$value["last_name"].
+	                  "</strong> &#160 &#160 &#160 <span class = 'TimeStamp'>".$strip."</span>
 	                  <ul class = 'MessageUL'>";
 										$value["image_path"];
 										if($value["message"] != NULL && !empty($value["message"])){
@@ -258,11 +258,11 @@
 
 	                  <label class='like' name='like' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-up' aria-hidden='true'></i>
-	                   </label>&nbsp &nbsp
+	                   </label>&#160 &#160
 	                  <span id = 'likeResponse".$msgId."'> ".$likeCount."</span>
 	                  <label class='dislike' name='dislike' id=".$msgId." style='cursor:pointer;'>
 	                  <i class='fa fa-thumbs-o-down' aria-hidden='true'></i>
-	                  </label> &nbsp &nbsp
+	                  </label> &#160 &#160
 	                  <span id = 'dislikeResponse".$msgId."'>".$dislikeCount."</span>".
 
 										"<input type='hidden' name='threadId' value=".$msgId.">
