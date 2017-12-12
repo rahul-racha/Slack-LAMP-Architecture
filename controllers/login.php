@@ -21,11 +21,44 @@
           $profileInfo = $this->loginModelVar->verifyCredentials($userid, $password);
           if ($profileInfo[0]["isExists"] == true)
           {
-            $_SESSION['userid'] = $userid;
-            $_SESSION['password'] = $password;
-            $_SESSION['userRole'] = $profileInfo[0]["role"];
-            header("location:views/home.php#bottom");
-            session_write_close();
+            if ($profileInfo[0]["two_factor"] == 0) {
+              $_SESSION['userid'] = $userid;
+              $_SESSION['password'] = $password;
+              $_SESSION['userRole'] = $profileInfo[0]["role"];
+              header("location:views/home.php#bottom");
+              session_write_close();
+            } else {
+              $_SESSION['userid_pending'] = $userid;
+              $_SESSION['password_pending'] = $password;
+              $_SESSION['userRole_pending'] = $profileInfo[0]["role"];
+
+              $workspaceUrl = "musicf17.slack.com";
+              $sender = "rrach001@odu.edu";
+              $recipient = $profileInfo[0]["email"];
+              $subject = "Authenticate your account";
+              $senderName = "CS-518 Slack Team";
+              $recName = $profileInfo[0]["first_name"].' '.$profileInfo[0]["last_name"];
+              $tokenInfo = array();
+              $tokenInfo = $this->prepareToken($userid, $workspaceUrl);
+              if (!empty($tokenInfo) && isset($tokenInfo['result'])
+                  && $tokenInfo['result'] == "true" && isset($tokenInfo['token_value'])
+                  && isset($tokenInfo['time_span'])) {
+                //$token_val = isset($tokenInfo['token_value']) ? $tokenInfo['token_value'] : NULL;
+                $result = $this->handleMail($sender, $recipient, $subject, $tokenInfo['token_value'],
+                                           $tokenInfo['time_span'], $senderName, $recName);
+                if ($result == true) {
+                  header('location:views/twoFA.php?userID='.$userid);
+                } else {
+                  $_SESSION['invalidCredentials'] = 'true';
+                  $_SESSION['reason'] = 'mail';
+                  header("location:views/login.php");
+                }
+              } else {
+                $_SESSION['invalidCredentials'] = 'true';
+                $_SESSION['reason'] = 'mail';
+                header("location:views/login.php");
+              }
+            }
           } else {
 
             $_SESSION['invalidCredentials'] = 'true';
@@ -137,6 +170,74 @@
            $profilePath = $localDefaultPic;
          }
          return $profilePath;
+       }
+
+       //2-FA member functions
+       public function prepareToken($userID, $workspaceUrl) {
+         //$tokenString = hash('sha256', microtime(TRUE).rand().$_SERVER['REMOTE_ADDR']);
+         //$tokenString = hash('sha256', mt_rand().$_SERVER['REMOTE_ADDR']);
+         $tokenString = md5(uniqid(rand(), true));
+         $result = "false";
+         $span = 5;
+         $expire = time() + ($span * 60);
+         $expire_format = date("Y-m-d H:i:s", $expire);
+         $affectedRows = $this->loginModelVar->updateTokenForUser($userID, $tokenString, $expire_format, $workspaceUrl);
+         if ($affectedRows > 0) {
+           $result = "true";
+         }
+         $response = array('result' => $result, 'token_value' => $tokenString, 'time_span' => $span);
+         return $response;
+       }
+
+
+
+       public function handleMail($sender, $recipient, $subject, $token_value,
+                                  $time_span, $senderName, $recName) {
+         $message = "
+          <!DOCTYPE html>
+          <html lang='en'>
+            <head>
+              <title>Slack</title>
+            </head>
+            <body>
+              <h2>Slack Verification</h2>
+              <div>
+                <p>Enter the token <strong>".$token_value."</strong> to sign in.<br/> The token expires in " .
+                $time_span." minutes.
+                </p>
+              </div>
+            </body>
+          </html>
+         ";
+         $headers[] = 'MIME-Version: 1.0';
+         $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+
+         // Additional headers
+         $headers[] = 'To: '.$recName.' <'.$recipient.'>';
+         $headers[] = 'From: '.$senderName.' <'.$sender.'>';
+         // Mail it
+         $result = mail($recipient, $subject, $message, implode("\r\n", $headers), "-f rrach001@odu.edu");
+         return $result;
+       }
+
+       public function verifyUserToken($token_val, $userID, $workspaceUrl) {
+         $tokenData = array();
+         $isSuccess = array();
+         $tokenData = $this->loginModelVar->getTokenForUser($userID, $workspaceUrl);
+         if ($token_val == $tokenData[0]['token']) {
+           $current_time = date("Y-m-d H:i:s", time());
+           if ($current_time < $tokenData[0]['expire_time']) {
+             $isSuccess["result"] = "true";
+             $isSuccess["message"] = "success";
+           } else {
+             $isSuccess["result"] = "false";
+             $isSuccess["message"] = "token expired";
+           }
+         } else {
+           $isSuccess["result"] = "false";
+           $isSuccess["message"] = "invalid token";
+         }
+         return $isSuccess;
        }
     }
 

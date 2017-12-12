@@ -1,0 +1,10 @@
+.client_twoFA_wrapper{
+  top: 104px;
+}
+.client_twoFA_input_tag{
+  height: 38px;
+  width: 600px;
+}
+.client_twoFA_submit{
+  padding: 1%;
+}

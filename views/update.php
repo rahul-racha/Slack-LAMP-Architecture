@@ -11,7 +11,7 @@
   $homeControlVar = new HomeController();
   $redirectionURL = "profile.php?userid=".$_SESSION['userid'];
   if (isset($_POST["g-recaptcha-response"])) {
-    global $response;
+    //global $response;
     $response = $_POST["g-recaptcha-response"];
   }
 
@@ -35,6 +35,7 @@
     // }
 
     if ($captcha_success->success==false) {
+      $_SESSION["captcha_failure"] = "false";
       $profileControllerVar->redirectToView($redirectionURL);
     } else if ($captcha_success->success==true) {
         $workspaceUrl = "musicf17.slack.com";
@@ -57,6 +58,7 @@
         }
     }
   } else {
+    $_SESSION["captcha_failure"] = "false";
     $profileControllerVar->redirectToView($redirectionURL);
   }
 ?>

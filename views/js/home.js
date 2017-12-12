@@ -1,5 +1,8 @@
 
 $(document).ready(function(){
+		var userID = $("#client_user_id_for_home").val();
+		var userRole = $("#client_user_role_for_home").val();
+
 		if (userRole == "admin") {
 			$(".delPost").show();
 			$(".fa-trash-o").show();
@@ -372,9 +375,9 @@ $(document).ready(function(){
 			$("#client_web_image_to_post #msg-log").html();
 			var image_upload_from_url_path = $(".client_image_upload_from_url").val();
 			if ($.trim(image_upload_from_url_path) != "") {
-				var retChannel = $("#client_web_image_to_post #retChannel").val();
-				var retHeading = $("#client_web_image_to_post #retHeading").val();
-				var retStatus = $("#client_web_image_to_post #retStatus").val();
+				var retChannel = $("#client_web_image_to_post #retChannel_web_image").val();
+				var retHeading = $("#client_web_image_to_post #retHeading_web_image").val();
+				var retStatus = $("#client_web_image_to_post #retStatus_web_image").val();
 
 				$.ajax({
 					method: 'post',
@@ -453,9 +456,9 @@ $(document).ready(function(){
 			var file_upload_path = $(".client_file_upload_read").val();
 			if($.trim(file_upload_path) != "")
 			{
-				var retChannel = $("#client_upload_file_to_post #retChannel").val();
-				var retHeading = $("#client_upload_file_to_post #retHeading").val();
-				var retStatus = $("#client_upload_file_to_post #retStatus").val();
+				var retChannel = $("#client_upload_file_to_post #retchannel_upload_file").val();
+				var retHeading = $("#client_upload_file_to_post #retHeading_upload_file").val();
+				var retStatus = $("#client_upload_file_to_post #retStatus_upload_file").val();
 
 				//var file_data = $('#client_upload_image_to_post #imgInp').files[0];
 				var form_data = new FormData($('#uploadFileForm')[0]);
@@ -534,9 +537,9 @@ $(document).ready(function(){
 			var image_upload_path = $(".client_image_upload_read").val();
 			if($.trim(image_upload_path) != "")
 			{
-				var retChannel = $("#client_upload_image_to_post #retChannel").val();
-				var retHeading = $("#client_upload_image_to_post #retHeading").val();
-				var retStatus = $("#client_upload_image_to_post #retStatus").val();
+				var retChannel = $("#client_upload_image_to_post #retChannel_upload_image").val();
+				var retHeading = $("#client_upload_image_to_post #retHeading_upload_image").val();
+				var retStatus = $("#client_upload_image_to_post #retStatus_upload_image").val();
 
 				//var file_data = $('#client_upload_image_to_post #imgInp').files[0];
 				var form_data = new FormData($('#uploadImageForm')[0]);
@@ -573,9 +576,9 @@ $(document).ready(function(){
 		$(".client_snippet_submit").on("click",function(e){
 			var snippet_text = $(".client_code_snippet_textarea").val();
 
-			var retChannel = $("#client_code_snippet #retChannel").val();
-			var retHeading = $("#client_code_snippet #retHeading").val();
-			var retStatus = $("#client_code_snippet #retStatus").val();
+			var retChannel = $("#client_code_snippet #retChannel_code_snippet").val();
+			var retHeading = $("#client_code_snippet #retHeading_code_snippet").val();
+			var retStatus = $("#client_code_snippet #retStatus_code_snippet").val();
 
 			$.ajax({
 				method: 'post',

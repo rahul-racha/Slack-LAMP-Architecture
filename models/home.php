@@ -26,7 +26,7 @@
       $dbConVar = new dbConnect();
       $conn = $dbConVar->createConnectionObject();
       $userProfile = array();
-      $getProfile = "SELECT U.user_id as user_id, first_name, last_name, email, avatar, role
+      $getProfile = "SELECT U.user_id as user_id, first_name, last_name, email, avatar, role, two_factor
                     FROM user_info AS U INNER JOIN workspace AS W ON U.user_id = W.user_id
                     WHERE U.user_id = '$name' AND W.url = '$workspace'";
       $result = mysqli_query($conn, $getProfile);
@@ -39,6 +39,7 @@
             $row["last_name"] = $this->validateInputs($row["last_name"]);
             $row["email"] = $this->validateInputs($row["email"]);
             $row["role"] = $this->validateInputs($row["role"]);
+            $row["two_factor"] = $this->validateInputs($row["two_factor"]);
            array_push($userProfile, $row);
          }
        }
@@ -918,6 +919,20 @@
       $stmt->execute();
       $affectedRows = $stmt->affected_rows;
       $stmt->close();
+      $dbConVar->closeConnectionObject($conn);
+      return $affectedRows;
+    }
+
+    public function updateTwoFactor($userID, $isEnable) {
+      $dbConVar = new dbConnect();
+      $conn = $dbConVar->createConnectionObject();
+      $update = "UPDATE user_info
+                 SET two_factor = ?
+                 WHERE user_id = ?";
+      $stmt = $conn->prepare($update);
+      $stmt->bind_param("ss", $isEnable, $userID);
+      $stmt->execute();
+      $affectedRows = $stmt->affected_rows;
       $dbConVar->closeConnectionObject($conn);
       return $affectedRows;
     }

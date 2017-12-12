@@ -35,11 +35,21 @@
   if (isset($_POST["channel"])) {
     global $channelName;
     $channelName = $_POST["channel"];
+  }else if (isset($_SESSION['channel'])) {
+    global $channelName;
+    $_POST["channel"] = $_SESSION['channel'];
+    $channelName = $_POST["channel"];
+    unset($_SESSION['channel']);
   }
 
   if (isset($_POST["channelHeading"])) {
 		global $channelHeading;
 		$channelHeading = $_POST["channelHeading"];
+	} else if (isset($_SESSION['channelHeading'])) {
+    global $channelHeading;
+    $_POST["channelHeading"] = $_SESSION['channelHeading'];
+    $channelHeading = $_POST["channelHeading"];
+    unset($_SESSION['channelHeading']);
 	}
 
   if (isset($_POST["chStatus"])) {
@@ -53,6 +63,19 @@
 		} else {
 			$chStatus = $_POST["chStatus"];
 		}
+	}else if (isset($_SESSION['chStatus'])) {
+		global $chStatus;
+		if ($_SESSION["chStatus"] == "archived") {
+			$chStatus = "Unarchive";
+			$_POST["chStatus"] = $chStatus;
+		} else if ($_SESSION["chStatus"] == "unarchived") {
+			$chStatus = "Archive";
+			$_POST["chStatus"] = $chStatus;
+		} else {
+			$_POST["chStatus"] = $_SESSION['chStatus'];
+			$chStatus = $_POST["chStatus"];
+		}
+    unset($_SESSION['chStatus']);
 	}
 
   if (isset($_POST["textarea"])) {
@@ -67,6 +90,9 @@
     $channelName = $_POST['channel'];
     $purpose = $_POST['purpose'];
     $channeltype = $_POST['channelType'];
+    $_SESSION['channel'] = $channelName;
+		$_SESSION['channelHeading'] = $channelHeading;
+		$_SESSION['chStatus'] = $chStatus;
 
     if ($_POST["chStatus"] == "archived") {
 			$chStatus = "Unarchive";
@@ -205,6 +231,9 @@
   if(isset($_POST['UserName'])){
     global $homeControlVar;
     global $workspaceUrl;
+    $_SESSION['channel'] = $channelName;
+    $_SESSION['channelHeading'] = $channelHeading;
+    $_SESSION['chStatus'] = $chStatus;
     $userList =$homeControlVar->getUsersForPattern($_POST['UserName'], $workspaceUrl);
     echo json_encode($userList);
   }
@@ -222,6 +251,9 @@
     $snippet = NULL;
     $filePath = NULL;
     $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
+    $_SESSION['channel'] = $channelName;
+    $_SESSION['channelHeading'] = $channelHeading;
+    $_SESSION['chStatus'] = $chStatus;
   }
 
   if (isset($_POST['deletePostID'])) {
@@ -246,6 +278,9 @@
       $reactionResponse = array();
       $msgId = $_POST['insertReaction']['msgId'];
       $emoName = $_POST['insertReaction']['emoName'];
+      $_SESSION['channel'] = $channelName;
+      $_SESSION['channelHeading'] = $channelHeading;
+      $_SESSION['chStatus'] = $chStatus;
       //$isInsert = $_POST['insertReaction']['isInsert'];
       //$reactionsData = array();
       //$reactionsData=json_decode(stripslashes($_POST['reactionsData']));
@@ -404,13 +439,17 @@
       global $channelHeading;
       global $chStatus;
 
+      $channelName = $_SESSION['channel'];
+      $channelHeading = $_SESSION['channelHeading'];
+      $chStatus = $_SESSION['chStatus'];
+
       $thread_message = NULL;
       $snippet = $_POST["snippet_text"];
       $image_path = NULL;
       $threadId = NULL;
       $messageType = 'post';
       $filePath = NULL;
-      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$thread_id,$messageType,$workspaceUrl);
+      $message = $homeControlVar->insertMessage($channelName,$thread_message,$image_path,$filePath,$snippet,$threadId,$messageType,$workspaceUrl);
 
       $_SESSION['channel'] = $channelName;
       $_SESSION['channelHeading'] = $channelHeading;
@@ -429,6 +468,9 @@
       $status = $_POST["channel_status"]["status"];
       $channelName = $_POST["channel_status"]["channel"];
       $isSuccess = $homeControlVar->updateChannelStatus($channelName, $workspaceUrl, $status);
+      $_SESSION['channel'] = $channelName;
+      $_SESSION['channelHeading'] = $channelHeading;
+      $_SESSION['chStatus'] = $chStatus;
       echo $isSuccess;
     }
 
@@ -438,6 +480,9 @@
       global $channelName;
       $channelName = $_POST["getUsersForChannel"];
       $userList = $homeControlVar->retUsersFromChannel($channelName, $workspaceUrl);
+      $_SESSION['channel'] = $channelName;
+      $_SESSION['channelHeading'] = $channelHeading;
+      $_SESSION['chStatus'] = $chStatus;
       echo json_encode($userList);
     }
 
@@ -447,6 +492,9 @@
     global $channelName;
     $channelName = $_POST["inviteUsersForChannel"];
     $userList = $homeControlVar->retInviteUsersForChannel($channelName, $workspaceUrl);
+    $_SESSION['channel'] = $channelName;
+    $_SESSION['channelHeading'] = $channelHeading;
+    $_SESSION['chStatus'] = $chStatus;
     echo json_encode($userList);
   }
 
@@ -457,7 +505,37 @@
     $profile_id = $_POST["profile_id"];
     $profileObject = array("file_name"=>$avatar_path, "profile_id"=>$profile_id);
     $response = $profileControllerVar->updateProfile($profileObject);
+    $_SESSION['channel'] = $channelName;
+    $_SESSION['channelHeading'] = $channelHeading;
+    $_SESSION['chStatus'] = $chStatus;
     echo $response;
+  }
+
+  if (isset($_POST['token_string'])) {
+    global $loginControllerVar;
+    global $workspaceUrl;
+    $token_val = $_POST['token_string'];
+    $userID = $_POST['userID'];
+    $isSuccess = array();
+    $isSuccess = $loginControllerVar->verifyUserToken($token_val, $userID, $workspaceUrl);
+    if (isset($isSuccess['result']) && $isSuccess['result'] == "true") {
+      $_SESSION['userid'] = $_SESSION['userid_pending'];
+      $_SESSION['password'] = $_SESSION['password_pending'];
+      $_SESSION['userRole'] = $_SESSION['userRole_pending'];
+      unset($_SESSION['userid_pending']);
+      unset($_SESSION['password_pending']);
+      unset($_SESSION['userRole_pending']);
+      header("location:home.php");
+    } else {
+      unset($_SESSION['userid_pending']);
+      unset($_SESSION['password_pending']);
+      unset($_SESSION['userRole_pending']);
+
+      $_SESSION['invalidCredentials'] = 'true';
+      $_SESSION['reason'] = 'token';
+      header("location:login.php");
+    }
+
   }
 
 ?>
