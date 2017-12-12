@@ -46,7 +46,7 @@ $(document).ready(function(){
         $.ajax({
           url: $("#default-pic-form").attr("action"),
           type: $("#default-pic-form").attr("method"),
-          data: {"default-image-reset": $("#default-profile-pic").attr("src"),
+          data: {"default-image-reset": $("#default-pic-form input[name='hidden-pic']").attr("value"),
                 "profile_id": $("#default-pic-form input[name='profile_id']").attr("value")},
           dataType: 'text',
           success: function(data) {
