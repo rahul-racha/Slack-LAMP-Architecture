@@ -37,6 +37,14 @@ A Web application developed using [LAMP](https://en.wikipedia.org/wiki/LAMP_(sof
 |-------------------------------------------------------------|--------------------------------------------------------------|
 |<img src="./resources/github.png" height="350"/>  |  <img src="./resources/recaptcha.png" height="350"/> | 
 
+# Requirements
+- LAMP stack
+- PHP 7
 
+# Code Style
+- The project uses Model-View-Controller (MVC) architectural pattern.
+- All the client-side resources are available in the views folder.
+- Client requests are directed to the controller by creating an instance of a controller class and calling its methods.
+- MySQL Database operations such as SELECT, INSERT and DELETE are handled in the Model classes.
 
 
