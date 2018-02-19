@@ -27,3 +27,8 @@ A Web application developed using [LAMP](https://en.wikipedia.org/wiki/LAMP_(sof
 | Reactions                                                     |
 |---------------------------------------------------------------|
 |<img src="./resources/reaction_1.png" height="350"/>           |
+
+## 3. Channel Membership and Administration
+- Users can create channels (both public and private) and invite members to the channels.
+- Admins can edit channel membership, delete posts, archive and unarchive a channel.
+- No further posts, reactions and channel modification are allowed in archived channels..
